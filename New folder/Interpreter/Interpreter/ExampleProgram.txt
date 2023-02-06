@@ -1,0 +1,10 @@
+﻿my_var <- GetTeammateOfType Tank
+# Comment here
+Heal my_var
+if 5 + 10 < 20 {
+	Attack my_var
+}
+counter <- 0
+while counter < 20 {
+	counter <- counter + 1
+}
