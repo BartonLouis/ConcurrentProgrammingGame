@@ -42,9 +42,10 @@ public class ControlPanelManager : MonoBehaviour
         GameObject lastButton = Instantiate(ControlPanelAddButtonPrefab, Parent);
     }
 
-    public void Edit(int index)
+    public void Edit(string filename)
     {
-        Debug.Log("Editing Script Number: " + index);
+        Hide();
+        IDEController.OpenIDE(filename);
     }
 
     public void Delete(int index)

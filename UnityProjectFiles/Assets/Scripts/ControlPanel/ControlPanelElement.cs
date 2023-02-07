@@ -20,7 +20,7 @@ public class ControlPanelElement : MonoBehaviour
 
     public void EditButtonClicked()
     {
-        manager.Edit(index);
+        manager.Edit(scriptName);
     }
 
     public void DeleteButtonClicked()
