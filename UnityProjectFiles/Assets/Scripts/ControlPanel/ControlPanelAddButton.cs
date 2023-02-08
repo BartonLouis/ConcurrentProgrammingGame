@@ -30,7 +30,6 @@ public class ControlPanelAddButton : MonoBehaviour
 
     private void LoadButtons()
     {
-        Debug.Log("Loading Button");
         foreach(Transform child in Parent)
         {
             Destroy(child.gameObject);
@@ -49,14 +48,11 @@ public class ControlPanelAddButton : MonoBehaviour
 
     public void LoadScript(string filename)
     {
-        Debug.Log("Loading: " + filename);
-        manager.Add(filename);
+        manager.Load(filename);
     }
 
     public void NewScript()
     {
-        Debug.Log("Creating new Script!");
-        manager.Hide();
-        IDEController.OpenIDE();
+        manager.New();
     }
 }

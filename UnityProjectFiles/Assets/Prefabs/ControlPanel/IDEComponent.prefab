@@ -1464,7 +1464,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5868041051108668965}
         m_TargetAssemblyTypeName: IDEController, Assembly-CSharp
-        m_MethodName: Submit
+        m_MethodName: SubmitClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -12,6 +12,7 @@ public class ControlPanelManager : MonoBehaviour
     [SerializeField] Transform Parent;
     [SerializeField] Animator animator;
 
+    private GameSetupController controller;
     private List<string> scripts = new List<string>();
 
     private void Awake()
@@ -22,10 +23,10 @@ public class ControlPanelManager : MonoBehaviour
     private void Start()
     {
         scripts = new List<string>();
-        Load();
+        controller = GameSetupController.instance;
     }
     
-    private void Load()
+    public void Load()
     {
         foreach(Transform child in Parent)
         {
@@ -42,17 +43,29 @@ public class ControlPanelManager : MonoBehaviour
         GameObject lastButton = Instantiate(ControlPanelAddButtonPrefab, Parent);
     }
 
-    public void Edit(string filename)
+    public void New()
     {
-        Hide();
-        IDEController.OpenIDE(filename);
+        controller.CreateScriptStart();
+    }
+
+    public void Edit(string filename, int scriptIndex)
+    {
+        controller.EditScriptStart(filename, scriptIndex);
+    }
+
+    public void Remove(int index)
+    {
+        controller.RemoveScript(index);
     }
 
     public void Delete(int index)
     {
-        Debug.Log("Deleting Script Number: " + index);
         scripts.RemoveAt(index);
-        Load();
+    }
+
+    public void DeleteAll(string name)
+    {
+        scripts.RemoveAll((s) => { return s == name; });
     }
 
     public void Hide()
@@ -73,12 +86,19 @@ public class ControlPanelManager : MonoBehaviour
         animator.SetBool("Open", true);
     }
 
+    public void EditComplete(string filename, int index)
+    {
+        scripts[index] = filename;
+    }
+
     public void Add(string filename)
     {
-        Debug.Log("Adding a new Script: " + filename);
-        // Add script and reload
         scripts.Add(filename);
-        Load();
+    }
+
+    public void Load(string filename)
+    {
+        controller.LoadScript(filename);
     }
 
 }
