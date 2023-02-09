@@ -22,6 +22,7 @@ public class IDEController : MonoBehaviour
     private GameSetupController controller;
     private Animator anim;
     private bool clicked = false;
+    private bool nameChanged = false;
     private int scriptIndex = -1;
     private IDEMode mode;
     
@@ -51,6 +52,7 @@ public class IDEController : MonoBehaviour
         Clear();
         anim.SetBool("Open", true);
         mode = IDEMode.CREATE;
+        nameChanged = false;
     }
 
     public void Open(string name, int index)
@@ -61,13 +63,18 @@ public class IDEController : MonoBehaviour
         clicked = false;
         anim.SetBool("Open", true);
         mode = IDEMode.EDIT;
+        nameChanged = false;
     }
 
-    public void ValueChanged()
+    public void CodeChanged()
     {
         clicked = false;
     }
     
+    public void NameChanged()
+    {
+        nameChanged = true;
+    }
 
     public void SubmitClicked()
     {
@@ -101,8 +108,9 @@ public class IDEController : MonoBehaviour
             anim.SetBool("Submitting", false);
             anim.SetTrigger("Error");
         // If filename already exists, give the option to overwrite or change filename
-        } else if (FileManager.GetFileNames().Contains(scriptName.text) && !clicked)
+        } else if (FileManager.GetFileNames().Contains(scriptName.text) && !clicked && (mode != IDEMode.EDIT || (mode == IDEMode.EDIT && nameChanged)))
         {
+            nameChanged = false;
             clicked = true;
             debugConsole.text = "A script with that name already exists\n\t press Submit again to overwrite file...";
             anim.SetBool("Submitting", false);

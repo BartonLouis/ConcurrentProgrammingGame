@@ -68,11 +68,21 @@ public class ControlPanelManager : MonoBehaviour
         scripts.RemoveAll((s) => { return s == name; });
     }
 
+    public void DeleteScript(string name)
+    {
+        controller.DeleteScript(name);
+    }
+
     public void Hide()
     {
         foreach(Transform child in Parent)
         {
             child.GetComponent<Animator>().SetBool("Open", false);
+            try
+            {
+                child.GetComponent<ControlPanelAddButton>().Hide();
+            }
+            catch (Exception) { }
         }
         animator.SetBool("Open", false);
     }
@@ -82,6 +92,11 @@ public class ControlPanelManager : MonoBehaviour
         foreach (Transform child in Parent)
         {
             child.GetComponent<Animator>().SetBool("Open", true);
+            try
+            {
+                child.GetComponent<ControlPanelAddButton>().Show();
+            }
+            catch (Exception) { }
         }
         animator.SetBool("Open", true);
     }

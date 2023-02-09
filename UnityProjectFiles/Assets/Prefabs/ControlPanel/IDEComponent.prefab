@@ -1772,7 +1772,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5868041051108668965}
         m_TargetAssemblyTypeName: IDEController, Assembly-CSharp
-        m_MethodName: ValueChanged
+        m_MethodName: CodeChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2340,7 +2340,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5868041051108668965}
         m_TargetAssemblyTypeName: IDEController, Assembly-CSharp
-        m_MethodName: ValueChanged
+        m_MethodName: NameChanged
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

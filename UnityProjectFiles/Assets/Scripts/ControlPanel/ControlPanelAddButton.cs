@@ -11,6 +11,7 @@ public class ControlPanelAddButton : MonoBehaviour
     [SerializeField] GameObject ChooseOption;
     [SerializeField] Transform Parent;
     [SerializeField] GameObject SubButtonPrefab;
+    [SerializeField] GameObject FinalButtonPrefab;
     private ControlPanelManager manager;
 
 
@@ -37,13 +38,11 @@ public class ControlPanelAddButton : MonoBehaviour
         foreach(string filename in FileManager.GetFileNames())
         {
             GameObject btn = Instantiate(SubButtonPrefab, Parent);
-            btn.GetComponent<SubButton>().isForNewScript = false;
-            btn.GetComponent<SubButton>().manager = this;
-            btn.GetComponent<SubButton>().fileName = filename;
+            btn.GetComponent<ChooseScript>().manager = this;
+            btn.GetComponent<ChooseScript>().fileName = filename;
         }
-        GameObject lastBtn = Instantiate(SubButtonPrefab, Parent);
-        lastBtn.GetComponent<SubButton>().isForNewScript = true;
-        lastBtn.GetComponent<SubButton>().manager = this;
+        GameObject lastBtn = Instantiate(FinalButtonPrefab, Parent);
+        lastBtn.GetComponent<NewScriptButton>().manager = this;
     }
 
     public void LoadScript(string filename)
@@ -54,5 +53,26 @@ public class ControlPanelAddButton : MonoBehaviour
     public void NewScript()
     {
         manager.New();
+    }
+
+    public void DeleteScript(string scriptName)
+    {
+        manager.DeleteScript(scriptName);
+    }
+
+    public void Hide()
+    {
+        foreach (Transform child in Parent)
+        {
+            child.GetComponent<Animator>().SetBool("Open", false);
+        }
+    }
+
+    public void Show()
+    {
+        foreach (Transform child in Parent)
+        {
+            child.GetComponent<Animator>().SetBool("Open", true);
+        }
     }
 }
