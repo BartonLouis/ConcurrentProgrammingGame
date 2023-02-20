@@ -13,7 +13,9 @@ public class FileManager : MonoBehaviour
         FileInfo[] files = d.GetFiles();
         foreach (FileInfo info in files)
         {
-            filenames.Add(info.Name);
+            if (info.Name != "logs.txt") {
+                filenames.Add(info.Name);
+            }
         }
         return filenames;
     }

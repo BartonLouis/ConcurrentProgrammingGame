@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Interpreter;
 
 public class ControlPanelManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ControlPanelManager : MonoBehaviour
     [SerializeField] Animator animator;
 
     private GameSetupController controller;
-    private List<string> scripts = new List<string>();
+    private List<Tuple<string, ClassValue.ClassType>> scripts = new List<Tuple<string, ClassValue.ClassType>>();
 
     private void Awake()
     {
@@ -22,7 +23,7 @@ public class ControlPanelManager : MonoBehaviour
 
     private void Start()
     {
-        scripts = new List<string>();
+        scripts = new List<Tuple<string, ClassValue.ClassType>>();
         controller = GameSetupController.instance;
     }
     
@@ -33,11 +34,12 @@ public class ControlPanelManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         int index = 0;
-        foreach (string name in scripts)
+        foreach (Tuple<string, ClassValue.ClassType> script in scripts)
         {
             GameObject btnObj = Instantiate(ControlElementPrefab, Parent);
             btnObj.GetComponent<ControlPanelElement>().index = index;
-            btnObj.GetComponent<ControlPanelElement>().scriptName = name;
+            btnObj.GetComponent<ControlPanelElement>().scriptName = script.Item1;
+            btnObj.GetComponent<ControlPanelElement>().ClassType = script.Item2;
             index++;
         }
         GameObject lastButton = Instantiate(ControlPanelAddButtonPrefab, Parent);
@@ -65,7 +67,7 @@ public class ControlPanelManager : MonoBehaviour
 
     public void DeleteAll(string name)
     {
-        scripts.RemoveAll((s) => { return s == name; });
+        scripts.RemoveAll((s) => { return s.Item1 == name; });
     }
 
     public void DeleteScript(string name)
@@ -103,17 +105,22 @@ public class ControlPanelManager : MonoBehaviour
 
     public void EditComplete(string filename, int index)
     {
-        scripts[index] = filename;
+        scripts[index]= new Tuple<string, ClassValue.ClassType>(filename, scripts[index].Item2);
     }
 
     public void Add(string filename)
     {
-        scripts.Add(filename);
+        scripts.Add(new Tuple<string, ClassValue.ClassType>(filename, ClassValue.ClassType.Damage));
     }
 
     public void Load(string filename)
     {
         controller.LoadScript(filename);
+    }
+
+    public void UpdateClass(int index, ClassValue.ClassType classType)
+    {
+        scripts[index] = new Tuple<string, ClassValue.ClassType>(scripts[index].Item1, classType);
     }
 
 }

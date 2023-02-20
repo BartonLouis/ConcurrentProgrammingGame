@@ -1,34 +1,41 @@
 grammar LanguageParser;
+
 program
 	: expr=expression							# SingleExpr
 	| expr=expression NEWLINE prog=program		# MultipleExpr
 	;
 
+// Visit Immediately
 expression
 	: instruction								
-	| selection									
+	| selection									 
 	| iteration										
 	;
 
+// Visit Immediately
 instruction
 	: operation									
 	| assignment								
 	;
 
+// Queue evaluation
 selection
 	: IF expr=boolExpr '{' NEWLINE prog=program NEWLINE '}'					# SingleIf
 	| IF expr=boolExpr '{' NEWLINE prog=program NEWLINE '}' else=elseBlock	# ExtendedIf
 	;
 
+// Immediately enter program expression
 elseBlock
 	: ELSE '{' NEWLINE prog=program NEWLINE '}'								# Else
 	| ELSE select=selection													# ElseIf
 	;
 
+// Queue evaluation
 iteration
 	: WHILE expr=boolExpr '{' NEWLINE prog=program NEWLINE '}'				# While 
 	;
 
+// Queue operation
 operation
 	: ATTACK a=atom							# Attack
 	| HEALSELF								# HealSelf
@@ -41,17 +48,19 @@ operation
 	| CHARGEUP								# ChargeUp
 	| SENDMESSAGETO a1=atom a2=atom			# SendMessageTo
 	| SENDMESSAGETOALL a=atom				# SendMessageToAll
-	| LISTEN								# Listen
 	| YIELD									# Yield
 	;
 
+// Queue evalution
 assignment
 	: v=var '<-' a=atom						# AtomAssignment
 	| v=var '<-' expr=mathExpr				# MathExprAssignment
 	| v=var '<-' expr=boolExpr				# BoolExprAssignment
 	| v=var '<-' f=function					# FunctionAssignment
+	| v=var '<-' LISTEN						# ListenAssignment
 	;
 
+// Visit immediately
 function
 	: GETENEMYOFTYPE a=atom					# GetEnemyOfType
 	| GETTEAMMATEOFTYPE a=atom				# GetTeammateOfType
@@ -67,25 +76,28 @@ function
 	| GETTIMELEFT							# GetTimeLeft
 	;
 
+// Visit immediately
 mathExpr
 	: '(' expr=mathExpr ')'						# MathParen
-	| e1=mathExpr ('*'|'/') e2=mathExpr			# MathMulDiv
-	| e1=mathExpr ('+'|'-') e2=mathExpr			# MathAddSub
-	| e1=mathExpr '^' e2=mathExpr				# MathPow
-	| e1=mathExpr '%' e2=mathExpr				# MathMod
-	| atom										# MathAtom
+	| e1=mathExpr op=('*'|'/') e2=mathExpr		# MathMulDiv
+	| e1=mathExpr op=('+'|'-') e2=mathExpr		# MathAddSub
+	| e1=mathExpr op='^' e2=mathExpr			# MathPow
+	| e1=mathExpr op='%' e2=mathExpr			# MathMod
+	| a=atom									# MathAtom
 	;
 
+// Visit immediately
 boolExpr
 	: '(' expr=boolExpr ')'										# BoolParen
 	| e1=boolExpr AND e2=boolExpr								# BoolAnd
 	| e1=boolExpr OR e2=boolExpr								# BoolOr
 	| NOT expr=boolExpr											# BoolNot
 	| a=atom													# BoolAtom
-	| e1=boolExpr ('=='|'!=') e2=boolExpr						# BoolEq
-	| e1=mathExpr ('<'|'>'|'<='|'>='|'=='|'!=') e2=mathExpr		# MathEq
+	| e1=boolExpr op=('=='|'!=') e2=boolExpr					# BoolEq
+	| e1=mathExpr op=('<'|'>'|'<='|'>='|'=='|'!=') e2=mathExpr	# MathEq
 	;
 
+// Visit Immediately
 atom
 	: var		
 	| literal	
@@ -97,7 +109,7 @@ var : ID
 literal
 	: message	
 	| side		
-	| bool		
+	| boolean		
 	| class		
 	| INT		
 	| STRING	
@@ -105,7 +117,7 @@ literal
 
 message : '{' a1=atom ',' a2=atom '}';
 side	: LEFT | RIGHT ;
-bool	: TRUE | FALSE ;
+boolean	: TRUE | FALSE ;
 class	: DAMAGE | SUPPORT | TANK | ANY ;
 
 compileUnit

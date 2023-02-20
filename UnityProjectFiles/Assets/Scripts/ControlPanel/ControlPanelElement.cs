@@ -1,21 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using Interpreter;
 
 public class ControlPanelElement : MonoBehaviour
 {
     [HideInInspector] public int index = 0;
     [HideInInspector] public string scriptName;
-    private ControlPanelManager manager;
+    [HideInInspector] public ClassValue.ClassType ClassType = ClassValue.ClassType.Damage;
 
     [SerializeField] TextMeshProUGUI NameText;
+    [SerializeField] Image CharacterIcon;
     [SerializeField] Animator animator;
+    [SerializeField] Sprite DamageIcon;
+    [SerializeField] Sprite SupportIcon;
+    [SerializeField] Sprite TankIcon;
+
+    private ControlPanelManager manager;
+    
+
     private void Start()
     {
         NameText.text = scriptName;
         animator.SetBool("Open", true);
         manager = ControlPanelManager.instance;
+        switch (ClassType)
+        {
+            case ClassValue.ClassType.Damage:
+                CharacterIcon.sprite = DamageIcon;
+                break;
+            case ClassValue.ClassType.Support:
+                CharacterIcon.sprite = SupportIcon;
+                break;
+            case ClassValue.ClassType.Tank:
+                CharacterIcon.sprite = TankIcon;
+                break;
+
+        }
     }
 
     public void EditButtonClicked()
@@ -28,9 +51,23 @@ public class ControlPanelElement : MonoBehaviour
         manager.Remove(index);
     }
 
-    public void EditComplete(string name)
+    public void IconClicked()
     {
-        scriptName = name;
-        NameText.text = scriptName;
+        switch (ClassType)
+        {
+            case ClassValue.ClassType.Damage:
+                ClassType = ClassValue.ClassType.Support;
+                CharacterIcon.sprite = SupportIcon;
+                break;
+            case ClassValue.ClassType.Support:
+                ClassType = ClassValue.ClassType.Tank;
+                CharacterIcon.sprite = TankIcon;
+                break;
+            case ClassValue.ClassType.Tank:
+                ClassType = ClassValue.ClassType.Damage;
+                CharacterIcon.sprite = DamageIcon;
+                break;
+        }
+        manager.UpdateClass(index, ClassType);
     }
 }

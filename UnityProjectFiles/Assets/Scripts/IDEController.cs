@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
 using Interpreter;
 
 public class IDEController : MonoBehaviour
@@ -78,54 +77,47 @@ public class IDEController : MonoBehaviour
 
     public void SubmitClicked()
     {
-        anim.SetBool("Submitting", true);
-        StartCoroutine(Submit());
-    }
-
-    public void Close()
-    {
-        anim.SetBool("Submitting", false);
-        anim.SetBool("Open", false);
-    }
-
-    IEnumerator Submit()
-    {
-        yield return new WaitForSeconds(1);
         string expression = code.text;
         string filename = scriptName.text;
-        bool parseSuccessful = true;
-        // Check that script has been given name
+        RuntimeInstance runtimeInstance = new RuntimeInstance(expression);
+        bool parseSuccessful = runtimeInstance.GetParseResult();
         if (scriptName.text == "")
         {
             debugConsole.text = "No Name Provided!";
-            anim.SetBool("Submitting", false);
             anim.SetTrigger("Error");
         }
         // Check that some code has been submitted
         else if (code.text == "")
         {
             debugConsole.text = "No Code Provided!";
-            anim.SetBool("Submitting", false);
             anim.SetTrigger("Error");
-        // If filename already exists, give the option to overwrite or change filename
-        } else if (FileManager.GetFileNames().Contains(scriptName.text) && !clicked && (mode != IDEMode.EDIT || (mode == IDEMode.EDIT && nameChanged)))
+            // If filename already exists, give the option to overwrite or change filename
+        }
+        else if (FileManager.GetFileNames().Contains(scriptName.text) && !clicked && (mode != IDEMode.EDIT || (mode == IDEMode.EDIT && nameChanged)))
         {
             nameChanged = false;
             clicked = true;
             debugConsole.text = "A script with that name already exists\n\t press Submit again to overwrite file...";
-            anim.SetBool("Submitting", false);
-            anim.SetTrigger("Error");
-        // Check that parse is successful
-        } else if (parseSuccessful)
-        {
-            CompleteSubmit(filename, expression);
-        // Give error message
-        } else
-        {
-            debugConsole.text = "Parse Unsuccessful!";
-            anim.SetBool("Submitting", false);
             anim.SetTrigger("Error");
         }
+        else if (parseSuccessful)
+        {
+            CompleteSubmit(filename, expression);
+        }
+        else
+        {
+            debugConsole.text = "Parse Unsuccessful!";
+            foreach (string error in runtimeInstance.GetErrors())
+            {
+                debugConsole.text += $"\n\t {error}";
+            }
+            anim.SetTrigger("Error");
+        }
+    }
+
+    public void Close()
+    {
+        anim.SetBool("Open", false);
     }
 
     private void CompleteSubmit(string filename, string expression)
