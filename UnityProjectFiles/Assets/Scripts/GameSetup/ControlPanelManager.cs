@@ -13,7 +13,7 @@ public class ControlPanelManager : MonoBehaviour
     [SerializeField] Transform Parent;
     [SerializeField] Animator animator;
 
-    private GameSetupController controller;
+    private GameController Controller;
     private List<Tuple<string, ClassValue.ClassType>> scripts = new List<Tuple<string, ClassValue.ClassType>>();
 
     private void Awake()
@@ -24,10 +24,10 @@ public class ControlPanelManager : MonoBehaviour
     private void Start()
     {
         scripts = new List<Tuple<string, ClassValue.ClassType>>();
-        controller = GameSetupController.instance;
+        Controller = GameController.instance;
     }
     
-    public void Load()
+    public void Load(int maxPlayers)
     {
         foreach(Transform child in Parent)
         {
@@ -42,37 +42,50 @@ public class ControlPanelManager : MonoBehaviour
             btnObj.GetComponent<ControlPanelElement>().ClassType = script.Item2;
             index++;
         }
-        GameObject lastButton = Instantiate(ControlPanelAddButtonPrefab, Parent);
+        if (scripts.Count < maxPlayers)
+        {
+            GameObject lastButton = Instantiate(ControlPanelAddButtonPrefab, Parent);
+        }
     }
 
     public void New()
     {
-        controller.CreateScriptStart();
+        Controller.CreateScriptStart();
     }
 
     public void Edit(string filename, int scriptIndex)
     {
-        controller.EditScriptStart(filename, scriptIndex);
+        Controller.EditScriptStart(filename, scriptIndex);
     }
 
     public void Remove(int index)
     {
-        controller.RemoveScript(index);
+        Controller.RemoveScript(index);
     }
 
     public void Delete(int index)
     {
         scripts.RemoveAt(index);
+        Controller.RemovePlayer(index);
     }
 
     public void DeleteAll(string name)
     {
-        scripts.RemoveAll((s) => { return s.Item1 == name; });
+        scripts.RemoveAll((s) => {
+            if (s.Item1 == name)
+            {
+                Controller.RemovePlayer(scripts.IndexOf(s));
+                return true;
+            } else
+            {
+                return false;
+            }
+        });
     }
 
     public void DeleteScript(string name)
     {
-        controller.DeleteScript(name);
+        Controller.DeleteScript(name);
     }
 
     public void Hide()
@@ -111,11 +124,12 @@ public class ControlPanelManager : MonoBehaviour
     public void Add(string filename)
     {
         scripts.Add(new Tuple<string, ClassValue.ClassType>(filename, ClassValue.ClassType.Damage));
+        Controller.AddPlayer();
     }
 
     public void Load(string filename)
     {
-        controller.LoadScript(filename);
+        Controller.LoadScript(filename);
     }
 
     public void UpdateClass(int index, ClassValue.ClassType classType)

@@ -55,7 +55,7 @@ namespace ThreadScheduler
             toReturn += $"\n\t Cores: ";
             foreach (Core core in Cores)
             {
-                toReturn += $"\n\t\t{core.ToString()}";
+                toReturn += $"\n\t\t{core}";
             }
 
             return toReturn;

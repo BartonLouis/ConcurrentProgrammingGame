@@ -18,7 +18,7 @@ public class IDEController : MonoBehaviour
     public TMP_InputField scriptName;
     public TextMeshProUGUI debugConsole;
 
-    private GameSetupController controller;
+    private GameController Controller;
     private Animator anim;
     private bool clicked = false;
     private bool nameChanged = false;
@@ -35,7 +35,7 @@ public class IDEController : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        controller = GameSetupController.instance;
+        Controller = GameController.instance;
     }
 
     public void Clear()
@@ -115,6 +115,19 @@ public class IDEController : MonoBehaviour
         }
     }
 
+    public void ExitClicked()
+    {
+        if (!clicked)
+        {
+            clicked = true;
+            debugConsole.text = "Any unsaved changes will be lost..." +
+                "\nAre you sure you want to exit without saving?";
+        } else
+        {
+            Controller.CancelScript();
+        }
+    }
+
     public void Close()
     {
         anim.SetBool("Open", false);
@@ -126,10 +139,10 @@ public class IDEController : MonoBehaviour
         ControlPanelManager.instance.Show();
         if (mode == IDEMode.CREATE)
         {
-            controller.CreateScriptComplete(filename);
+            Controller.CreateScriptComplete(filename);
         } else
         {
-            controller.EditScriptComplete(filename, scriptIndex);
+            Controller.EditScriptComplete(filename, scriptIndex);
         }
     }
 
