@@ -57,6 +57,11 @@ public class PlayControls : MonoBehaviour
         Debug.Log("StepButtonPressed");
     }
 
+    public void Error()
+    {
+        Anim.SetTrigger("Error");
+    }
+
     public void FastButtonPressed()
     {
         Debug.Log("FastButtonPressed");

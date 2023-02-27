@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Interpreter;
 
 public class GameController : MonoBehaviour
 {
@@ -33,6 +34,10 @@ public class GameController : MonoBehaviour
         // Initial Setup
         IDE.Clear();
         CharacterPanel.Load(MaxPlayers);
+        Team1.SetNumSpawns(MaxPlayers);
+        Team2.SetNumSpawns(MaxPlayers);
+        Team1.Init();
+        Team2.Init();
     }
 
     // Setup Control
@@ -112,9 +117,14 @@ public class GameController : MonoBehaviour
         CharacterPanel.Load(MaxPlayers);
     }
 
-    public void AddPlayer()
+    public void AddPlayer(ClassValue.ClassType classType)
     {
-        Team1.AddPlayer();
+        Team1.AddPlayer(classType);
+    }
+
+    public void UpdatePlayerClass(int index, ClassValue.ClassType classType)
+    {
+        Team1.UpdatePlayer(index, classType);
     }
 
     public void RemovePlayer(int index)
@@ -126,8 +136,13 @@ public class GameController : MonoBehaviour
 
     public void GameStart()
     {
-        CharacterPanel.Hide();
-        PlayControls.GameStart();
+        if (Team1.IsFull(MinPlayers, MaxPlayers))
+        {
+            CharacterPanel.Hide();
+            PlayControls.GameStart();
+        } else {
+            PlayControls.Error();
+        }
     }
 
     public void GameStop()

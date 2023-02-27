@@ -1,22 +1,42 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Interpreter;
 
 public class TeamCenter : MonoBehaviour
 {
     private List<GameObject> Players;
     private List<GameObject> EmptySlots;
-    public GameObject PlayerPrefab;
     public GameObject EmptySlotPrefab;
-    public float radius = 5f;
-    public float numSpawns = 5;
+
+    public GameObject DamagePrefab;
+    public GameObject SupportPrefab;
+    public GameObject TankPrefab;
+
+    public float Xradius = 10f;
+    public float Yradius = 2f;
     public int direction = -1;
 
+    private float NumSpawns = 5;
 
-    private void Start()
+
+    public void Init()
     {
+
         Players = new List<GameObject>();
         EmptySlots = new List<GameObject>();
         Reload();
+    }
+
+    
+
+    public void SetNumSpawns(int numSpawns)
+    {
+        NumSpawns = numSpawns;
+    }
+
+    public bool IsFull(int minPlayers, int maxPlayers)
+    {
+        return (Players.Count >= minPlayers && Players.Count <= maxPlayers);
     }
 
     public void RemovePlayer(int index)
@@ -26,16 +46,49 @@ public class TeamCenter : MonoBehaviour
         Reload();
     }
 
-    public void AddPlayer()
+    public void AddPlayer(ClassValue.ClassType classType)
     {
-        GameObject player = Instantiate(PlayerPrefab, transform.position, Quaternion.identity);
+        GameObject player;
+        switch (classType)
+        {
+            case ClassValue.ClassType.Damage:
+                player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
+                break;
+            case ClassValue.ClassType.Support:
+                player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
+                break;
+            default:
+                player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
+                break;
+        }
+        player.transform.localScale = new Vector3(player.transform.localScale.x * direction, player.transform.localScale.y, player.transform.localScale.z);
         Players.Add(player);
+        Reload();
+    }
+
+    public void UpdatePlayer(int index, ClassValue.ClassType classType)
+    {
+        Destroy(Players[index]); GameObject player;
+        switch (classType)
+        {
+            case ClassValue.ClassType.Damage:
+                player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
+                break;
+            case ClassValue.ClassType.Support:
+                player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
+                break;
+            default:
+                player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
+                break;
+        }
+        player.transform.localScale = new Vector3(player.transform.localScale.x * direction, player.transform.localScale.y, player.transform.localScale.z);
+        Players[index] = player;
         Reload();
     }
 
     void Reload()
     {
-        float nextAngle = 2 * Mathf.PI / numSpawns;
+        float nextAngle = 2 * Mathf.PI / NumSpawns;
         // First Character should be at the front
         float angle = (Mathf.PI/180) * 90 - direction * 90* (Mathf.PI/180);
         foreach(GameObject emptySlot in EmptySlots)
@@ -44,17 +97,14 @@ public class TeamCenter : MonoBehaviour
         }
         EmptySlots.Clear();
 
-        for (int index = 0; index < numSpawns; index ++){
-            float x = Mathf.Cos(angle) * radius;
-            float y = Mathf.Sin(angle) * radius;
-            Debug.Log("Here");
+        for (int index = 0; index < NumSpawns; index ++){
+            float x = Mathf.Cos(angle) * Xradius;
+            float y = Mathf.Sin(angle) * Yradius;
             if (index < Players.Count)
             {
-                Debug.Log("Here 2");
                 Players[index].transform.position = new Vector2(transform.position.x + x, transform.position.y+y);
             } else
             {
-                Debug.Log("Here 3");
                 GameObject emptySlot = Instantiate(EmptySlotPrefab, transform.position, Quaternion.identity);
                 emptySlot.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
                 EmptySlots.Add(emptySlot);
