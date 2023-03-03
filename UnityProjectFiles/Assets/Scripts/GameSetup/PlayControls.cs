@@ -27,17 +27,6 @@ public class PlayControls : MonoBehaviour
         Anim = GetComponent<Animator>();
         Controller = GameController.instance;
     }
-
-    public void PlayButtonPressed()
-    {
-        Debug.Log("Play Button Pressed");
-    }
-
-    public void PauseButtonPressed()
-    {
-        Debug.Log("PauseButtonPressed");
-    }
-
     public void ExpandButtonPressed()
     {
         Expanded = !Expanded;
@@ -45,31 +34,42 @@ public class PlayControls : MonoBehaviour
         {
             ExpandButton.sprite = DownIcon;
             Controller.MinimiseControlBar();
-        } else
+        }
+        else
         {
             ExpandButton.sprite = UpIcon;
             Controller.ExpandControlBar();
         }
     }
 
+    public void PlayButtonPressed()
+    {
+        Debug.Log("Play Button Pressed");
+        Controller.Play();
+    }
+
+    public void PauseButtonPressed()
+    {
+        Debug.Log("PauseButtonPressed");
+        Controller.Pause();
+    }
+
+
     public void StepButtonPressed()
     {
         Debug.Log("StepButtonPressed");
-    }
-
-    public void Error()
-    {
-        Anim.SetTrigger("Error");
+        Controller.Step();
     }
 
     public void FastButtonPressed()
     {
         Debug.Log("FastButtonPressed");
+        Controller.FastForward();
     }
 
     public void StopButtonPressed()
     {
-        Controller.GameStop();
+        Controller.Stop();
     }
 
     public void BeginGamePressed()
@@ -95,5 +95,9 @@ public class PlayControls : MonoBehaviour
     public void IDEClose()
     {
         Anim.SetBool("IDEOpen", false);
+    }
+    public void Error()
+    {
+        Anim.SetTrigger("Error");
     }
 }

@@ -9,6 +9,7 @@ namespace Interpreter
     // the int returned when visiting a node represents if that action was successful or not.
     public class RuntimeInstance : LanguageParserBaseVisitor<Value>
     {
+
         public enum RunTimeState
         {
             Loading,        // Loading the next instruction
@@ -51,6 +52,7 @@ namespace Interpreter
 
         private bool ValidProgram = false;
         private ErrorListener ErrorListener;
+        public Character Character;
 
         public RuntimeInstance(LanguageParserParser.ProgramContext Root)
         {
@@ -183,7 +185,8 @@ namespace Interpreter
             OnExecute = () =>
             {
                 // If the expression evaluates to true, visit the internal node
-                if (Visit(context.expr).GetAsBoolean().Value)
+                Value value = Visit(context.expr);
+                if (value != null && value.GetAsBoolean().Value)
                 {
                     NextInstructionCallStack.Push(context.prog);
                 }
@@ -199,8 +202,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                // If the expression evaluates to true, visit the internal node
-                if (Visit(context.expr).GetAsBoolean().Value)
+                Value value = Visit(context.expr);
+                if (value != null && value.GetAsBoolean().Value)
                 {
                     NextInstructionCallStack.Push(context.prog);
                 }
@@ -230,7 +233,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                if (Visit(context.expr).GetAsBoolean().Value)
+                Value value = Visit(context.expr);
+                if (value != null && value.GetAsBoolean().Value)
                 {
                     NextInstructionCallStack.Push(context);
                     NextInstructionCallStack.Push(context.prog);
@@ -313,6 +317,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Attack();
                 return null;
             };
             return null;
@@ -324,6 +329,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.HealSelf();
                 return null;
             };
             return null;
@@ -335,6 +341,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.DefendSelf();
                 return null;
             };
             return null;
@@ -346,6 +353,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Heal();
                 return null;
             };
             return null;
@@ -357,6 +365,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Boost();
                 return null;
             };
             return null;
@@ -368,6 +377,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Defend();
                 return null;
             };
             return null;
@@ -380,6 +390,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Block();
                 return null;
             };
             return null;
@@ -391,6 +402,7 @@ namespace Interpreter
             State = RunTimeState.Locking;
             OnExecute = () =>
             {
+                Character.Lock();
                 return null;
             };
             return null;
@@ -402,6 +414,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.ChargeUp();
                 return null;
             };
             return null;
@@ -413,6 +426,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.SendMessageTo();
                 return null;
             };
             return null;
@@ -424,6 +438,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.SendMessageToAll();
                 return null;
             };
             return null;
@@ -435,6 +450,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Character.Yield();
                 return null;
             };
             return null;

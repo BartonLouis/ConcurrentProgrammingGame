@@ -124,7 +124,7 @@ public class ControlPanelManager : MonoBehaviour
     public void Add(string filename)
     {
         scripts.Add(new Tuple<string, ClassValue.ClassType>(filename, ClassValue.ClassType.Damage));
-        Controller.AddPlayer(ClassValue.ClassType.Damage);
+        Controller.AddPlayer(ClassValue.ClassType.Damage, filename);
     }
 
     public void Load(string filename)
@@ -135,7 +135,7 @@ public class ControlPanelManager : MonoBehaviour
     public void UpdateClass(int index, ClassValue.ClassType classType)
     {
         scripts[index] = new Tuple<string, ClassValue.ClassType>(scripts[index].Item1, classType);
-        Controller.UpdatePlayerClass(index, classType);
+        Controller.UpdatePlayerClass(index, classType, scripts[index].Item1);
     }
 
 }
