@@ -28,7 +28,6 @@ public abstract class Character : MonoBehaviour
     private List<KeyValuePair<float, int>> DamageMultipliers;
     private List<KeyValuePair<float, int>> DefenseMultipliers;
 
-
     private float currentHealth;
     private bool alive = true;
     private bool charged = false;
@@ -50,6 +49,14 @@ public abstract class Character : MonoBehaviour
         currentHealth = BaseMaxHealth;
         charged = false;
         alive = true;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Damage(10);
+        }
     }
 
     public void Step()
@@ -101,6 +108,7 @@ public abstract class Character : MonoBehaviour
         amount *= totalMultiplier;
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
+        Debug.Log(this.ToString() + " Taking " + amount + " damage. Health remaining:" + currentHealth);
     }
 
     public void Heal(float amount)
@@ -220,6 +228,11 @@ public abstract class Character : MonoBehaviour
     public virtual void Yield()
     {
         Debug.Log("Yielding");
+    }
+
+    public void ReceiveMessage(MessageValue message)
+    {
+        RuntimeInstance.ReceiveMessage(message);
     }
 
     public override string ToString()

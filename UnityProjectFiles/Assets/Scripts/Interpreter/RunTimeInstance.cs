@@ -144,6 +144,10 @@ namespace Interpreter
                         if (MessageQueue.Count > 0)
                         {
                             State = RunTimeState.Executing;
+                        } else
+                        {
+                            OnExecute?.Invoke();
+                            State = RunTimeState.Loading;
                         }
                         break;
                     case RunTimeState.Locking:
@@ -169,6 +173,11 @@ namespace Interpreter
                 }
             }
             Console.WriteLine("");
+        }
+
+        public void ReceiveMessage(MessageValue message)
+        {
+
         }
 
 
