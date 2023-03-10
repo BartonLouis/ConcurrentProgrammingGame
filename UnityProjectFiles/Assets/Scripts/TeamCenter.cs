@@ -88,7 +88,12 @@ public class TeamCenter : MonoBehaviour
 
     public void UpdatePlayer(int index, ClassValue.ClassType classType, string filename)
     {
-        Destroy(Players[index]); GameObject player;
+        if (classType == ClassValue.ClassType.Any)
+        {
+            classType = Players[index].GetComponent<Character>().ClassType;
+        }
+        Destroy(Players[index]);
+        GameObject player;
         switch (classType)
         {
             case ClassValue.ClassType.Damage:

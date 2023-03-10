@@ -11,6 +11,11 @@ public class PlayControls : MonoBehaviour
     [SerializeField] Sprite UpIcon;
     [SerializeField] Sprite DownIcon;
     [SerializeField] Image ExpandButton;
+
+    [SerializeField] Image PlayButton;
+    [SerializeField] Image PauseButton;
+    [SerializeField] Image FastButton;
+
     private bool Expanded = true;
 
     private Animator Anim;
@@ -44,31 +49,43 @@ public class PlayControls : MonoBehaviour
 
     public void PlayButtonPressed()
     {
-        Debug.Log("Play Button Pressed");
+        PlayButton.color = Color.grey;
+        PauseButton.color = Color.white;
+        FastButton.color = Color.white;
         Controller.Play();
     }
 
     public void PauseButtonPressed()
     {
-        Debug.Log("PauseButtonPressed");
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.grey;
+        FastButton.color = Color.white;
         Controller.Pause();
     }
 
 
     public void StepButtonPressed()
     {
-        Debug.Log("StepButtonPressed");
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.grey;
+        FastButton.color = Color.white;
+        Controller.Pause();
         Controller.Step();
     }
 
     public void FastButtonPressed()
     {
-        Debug.Log("FastButtonPressed");
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.white;
+        FastButton.color = Color.grey;
         Controller.FastForward();
     }
 
     public void StopButtonPressed()
     {
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.white;
+        FastButton.color = Color.white;
         Controller.Stop();
     }
 
@@ -79,11 +96,17 @@ public class PlayControls : MonoBehaviour
 
     public void GameStart()
     {
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.grey;
+        FastButton.color = Color.white;
         Anim.SetTrigger("GameStart");
     }
 
     public void GameStop()
     {
+        PlayButton.color = Color.white;
+        PauseButton.color = Color.white;
+        FastButton.color = Color.white;
         Anim.SetTrigger("GameEnd");
     }
 

@@ -1,9 +1,8 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime;
-
+using UnityEngine;
 namespace Interpreter
 {
     // the int returned when visiting a node represents if that action was successful or not.
@@ -23,16 +22,16 @@ namespace Interpreter
         {
             {"BoolExpr",        () => {return 1;} },
             {"Assignment",      () => {return 1;} },
-            {"Attack",          () => {return 2;} },
-            {"HealSelf",        () => {return 3;} },
-            {"DefendSelf",      () => {return 3;} },
-            {"Heal",            () => {return 2;} },
-            {"Boost",           () => {return 3;} },
-            {"Defend",          () => {return 4;} },
-            {"Block",           () => {return 5;} },
-            {"Lock",            () => {return 3;} },
-            {"ChargeUp",        () => {return 4;} },
-            {"SendMessageTo",   () => {return 3;} },
+            {"Attack",          () => {return 4;} },
+            {"HealSelf",        () => {return 6;} },
+            {"DefendSelf",      () => {return 6;} },
+            {"Heal",            () => {return 4;} },
+            {"Boost",           () => {return 6;} },
+            {"Defend",          () => {return 8;} },
+            {"Block",           () => {return 10;} },
+            {"Lock",            () => {return 6;} },
+            {"ChargeUp",        () => {return 8;} },
+            {"SendMessageTo",   () => {return 6;} },
             {"SendMessageToAll",() => {
                 // Logic to get the number of players alive and multiple by cost of sending one message
                 // Todo
@@ -53,6 +52,8 @@ namespace Interpreter
         private bool ValidProgram = false;
         private ErrorListener ErrorListener;
         public Character Character;
+        public EnergyBar EnergyBar;
+        private BattleModel BattleModel;
 
         public RuntimeInstance(LanguageParserParser.ProgramContext Root)
         {
@@ -68,12 +69,12 @@ namespace Interpreter
             this.Root = Root;
             NextInstructionCallStack = new Stack<RuleContext>();
             NextInstructionCallStack.Push(Root);
+            BattleModel = BattleModel.instance;
         }
 
         public RuntimeInstance(string source)
         {
             // Use this class to pass through raw source code. If the program is valid then it will allow the program to be run as normal, otherwise it will generate error messages
-
             AntlrInputStream inputStream = new AntlrInputStream(source);
             LanguageParserLexer lexer = new LanguageParserLexer(inputStream);
 
@@ -99,6 +100,11 @@ namespace Interpreter
                 NextInstructionCallStack.Push(Root);
             }
         }
+        
+        public void BindEnergyBar(EnergyBar energyBar)
+        {
+            EnergyBar = energyBar;
+        }
 
         public bool GetParseResult()
         {
@@ -121,11 +127,13 @@ namespace Interpreter
                         if (NextInstructionCallStack.Count > 0)
                         {
                             Visit(NextInstructionCallStack.Pop());
+                            EnergyBar.Setup(WaitTime);
                         }
                         break;
                     case RunTimeState.Waiting:
                         // Move forward one time step
                         WaitTime--;
+                        EnergyBar.Step();
                         if (WaitTime == 0)
                         {
                             State = RunTimeState.Executing;
@@ -143,7 +151,8 @@ namespace Interpreter
                         // Once time is complete, check every update if cable is free, then lock it
                         bool free = false;
                         WaitTime--;
-                        if (free && WaitTime <= 0)
+                        WaitTime = Math.Max(WaitTime, 0);
+                        if (free && WaitTime == 0)
                         {
                             OnExecute?.Invoke();
                             State = RunTimeState.Loading;
@@ -155,6 +164,7 @@ namespace Interpreter
                         WaitTime = 0;
                         OnExecute = null;
                         State = RunTimeState.Loading;
+                        EnergyBar.Complete();
                         break;
                 }
             }
@@ -317,7 +327,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.Attack();
+                Value target = Visit(context.a);
+                Character.Attack(target);
                 return null;
             };
             return null;
@@ -353,7 +364,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.Heal();
+                Value target = Visit(context.a);
+                Character.Heal(target);
                 return null;
             };
             return null;
@@ -365,7 +377,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.Boost();
+                Value target = Visit(context.a);
+                Character.Boost(target);
                 return null;
             };
             return null;
@@ -377,7 +390,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.Defend();
+                Value target = Visit(context.a);
+                Character.Defend(target);
                 return null;
             };
             return null;
@@ -390,7 +404,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.Block();
+                Value target = Visit(context.a);
+                Character.Block(target);
                 return null;
             };
             return null;
@@ -402,7 +417,8 @@ namespace Interpreter
             State = RunTimeState.Locking;
             OnExecute = () =>
             {
-                Character.Lock();
+                Value side = Visit(context.a);
+                Character.Lock(side);
                 return null;
             };
             return null;
@@ -426,7 +442,9 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.SendMessageTo();
+                Value player = Visit(context.a1);
+                Value message = Visit(context.a2);
+                Character.SendMessageTo(player, message);
                 return null;
             };
             return null;
@@ -438,7 +456,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Character.SendMessageToAll();
+                Value message = Visit(context.a);
+                Character.SendMessageToAll(message);
                 return null;
             };
             return null;
@@ -460,73 +479,83 @@ namespace Interpreter
         public override Value VisitGetEnemyOfType([NotNull] LanguageParserParser.GetEnemyOfTypeContext context)
         {
             // Logic to Get an enemy of type a
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.GetEnemyOfType(Character, a);
+            
         }
 
         public override Value VisitGetTeammateOfType([NotNull] LanguageParserParser.GetTeammateOfTypeContext context)
         {
             // Logic to get a teammate of type a
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.GetTeammateOfType(Character, a);
         }
 
         public override Value VisitGetHealth([NotNull] LanguageParserParser.GetHealthContext context)
         {
             // Logic to get the current health of this character
-            return null;
+            return BattleModel.GetHealth(Character);
         }
 
         public override Value VisitGetMaxHealth([NotNull] LanguageParserParser.GetMaxHealthContext context)
         {
             // Logic to get the max health of this character
-            return null;
+            return BattleModel.GetMaxHealth(Character);
         }
 
         public override Value VisitIsFullHealth([NotNull] LanguageParserParser.IsFullHealthContext context)
         {
             // Logic to check if the character is full health
-            return null;
+            return BattleModel.IsMaxHealth(Character);
         }
 
         public override Value VisitIsCharged([NotNull] LanguageParserParser.IsChargedContext context)
         {
             // Logic to check if a character is charged up fo an attack
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.IsCharged(a);
         }
 
         public override Value VisitIsNone([NotNull] LanguageParserParser.IsNoneContext context)
         {
             // Logic to check if a given value is null
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.IsNone(a);
         }
 
         public override Value VisitIsNotNone([NotNull] LanguageParserParser.IsNotNoneContext context)
         {
             // Logic to check if a given value is not null
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.IsNotNone(a);
         }
 
         public override Value VisitGetPlayerComponent([NotNull] LanguageParserParser.GetPlayerComponentContext context)
         {
             // Logic to get the player component of a given message object
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.GetPlayerComponent(a);
         }
 
         public override Value VisitGetTextComponent([NotNull] LanguageParserParser.GetTextComponentContext context)
         {
             // Logic to get the text component of a given message object
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.GetTextComponent(a);
         }
 
         public override Value VisitGetClass([NotNull] LanguageParserParser.GetClassContext context)
         {
             // Logic to get the class of a given player object
-            return null;
+            Value a = Visit(context.a);
+            return BattleModel.GetClass(a);
         }
 
         public override Value VisitGetTimeLeft([NotNull] LanguageParserParser.GetTimeLeftContext context)
         {
             // Logic to check how much time is left on the current turn
-            return null;
+            // This is not implemented
+            return new IntValue(1);
         }
 
 
@@ -736,5 +765,6 @@ namespace Interpreter
             }
             return null;
         }
+
     }
 }

@@ -1,5 +1,4 @@
-﻿counter <- 0
-while counter < 3{
-	counter <- counter + 1
-	Attack enemy
-}
+﻿teammate <- GetTeammateOfType Support
+Defend teammate
+enemy <- GetEnemyOfType Any
+Block enemy

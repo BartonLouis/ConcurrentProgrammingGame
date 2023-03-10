@@ -66,6 +66,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c749f4fa08dc2bc4e8a7feea2227870e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnergyBarPrefab: {fileID: 4522602057010068491, guid: 413d59df7b28bde4cafa0b6defa5400d,
+    type: 3}
+  CharacterBasePrefab: {fileID: 6337310759392919899, guid: 8ebf49ed53a1e0140a8e2634c2d2112a,
+    type: 3}
   BaseMaxHealth: 100
   BaseDamage: 20
   BaseSelfHeal: 10
@@ -77,6 +81,7 @@ MonoBehaviour:
   ClassType: 0
   Team: {fileID: 0}
   CharacterNum: 0
+  ScriptFilename: 
 --- !u!1 &1000011164445256
 GameObject:
   m_ObjectHideFlags: 0

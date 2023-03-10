@@ -22,6 +22,9 @@ public class GameController : MonoBehaviour
     private PlayControls PlayControls;
     private PauseMenuController PauseMenu;
     private BattleModel BattleModel;
+    private ScheduleVisualiser ScheduleVisualiser;
+
+    
 
     [HideInInspector] public GameState CurrentGameState { get; set; }
     [HideInInspector] public bool Paused { get; set; }
@@ -31,13 +34,14 @@ public class GameController : MonoBehaviour
     [SerializeField] private TeamCenter Team2;
     [SerializeField] private int MinPlayers = 3;
     [SerializeField] private int MaxPlayers = 5;
+    [SerializeField] private int NumCores = 3;
     [Space(10)]
 
     // Gameplay attributes
     [SerializeField] private float PauseSpeed = 0;
     [SerializeField] private float PlaySpeed = 1;
     [SerializeField] private float FastSpeed = 2;
-    private float CurrentSpeed;
+    [HideInInspector] public float CurrentSpeed;
     private float CurrentTime = 1;
 
 
@@ -55,6 +59,7 @@ public class GameController : MonoBehaviour
         PlayControls = PlayControls.instance;
         PauseMenu = PauseMenuController.instance;
         BattleModel = BattleModel.instance;
+        ScheduleVisualiser = ScheduleVisualiser.instance;
 
         // Initial Setup
         IDE.Clear();
@@ -172,6 +177,8 @@ public class GameController : MonoBehaviour
         CharacterPanel.Show();
         CharacterPanel.EditComplete(filename, scriptIndex);
         CharacterPanel.Load(MaxPlayers);
+        Team1.UpdatePlayer(scriptIndex, ClassValue.ClassType.Any, filename);
+        Team2.UpdatePlayer(scriptIndex, ClassValue.ClassType.Any, filename);
         PlayControls.IDEClose();
     }
     
@@ -199,11 +206,13 @@ public class GameController : MonoBehaviour
     public void AddPlayer(ClassValue.ClassType classType, string filename)
     {
         Team1.AddPlayer(classType, filename);
+        Team2.AddPlayer(classType, filename);
     }
 
     public void UpdatePlayerClass(int index, ClassValue.ClassType classType, string filename)
     {
         Team1.UpdatePlayer(index, classType, filename);
+        Team2.UpdatePlayer(index, classType, filename);
     }
 
     public void RemovePlayer(int index)
@@ -222,7 +231,8 @@ public class GameController : MonoBehaviour
             List<Character> characters = new List<Character>();
             characters.AddRange(Team1.GetCharacters());
             characters.AddRange(Team2.GetCharacters());
-            BattleModel.StartBattle(characters.ToArray());
+            ScheduleVisualiser.Setup(NumCores);
+            BattleModel.StartBattle(characters.ToArray(), NumCores);
 
             // Setup UI elements
             CharacterPanel.Hide();
@@ -258,6 +268,7 @@ public class GameController : MonoBehaviour
     {
         if (CurrentGameState != GameState.Paused) CurrentGameState = GameState.Paused;
         BattleModel.Step();
+        ScheduleVisualiser.Step();
     }
 
     public void Stop()
@@ -268,5 +279,13 @@ public class GameController : MonoBehaviour
         if (characterPanelOpen) CharacterPanel.Show();
         CharacterPanel.Load(MaxPlayers);
         PlayControls.GameStop();
+        BattleModel.EndBattle();
+        ScheduleVisualiser.BattleEnd();
     }
+
+    public void AddVisualBlock(int coreIndex, Character character, int timeSteps)
+    {
+        ScheduleVisualiser.AddBlock(coreIndex, character, timeSteps);
+    }
+    
 }

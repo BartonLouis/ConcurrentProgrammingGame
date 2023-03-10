@@ -7,6 +7,7 @@ public class Tank : Character
 {
     void Start()
     {
+
         BaseMaxHealth = 150;
         BaseDamage = 20;
         BaseSelfHeal = 15;

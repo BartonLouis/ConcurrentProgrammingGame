@@ -18,21 +18,13 @@ namespace Interpreter
     }
     public class PlayerValue : Value
     {
-
-        public enum PlayerType
-        {
-            Enemy,
-            Teammate,
-            Self
-        }
-
-        private PlayerType Type { get; }
+        
+        
         // Likely going to change
-        private int PlayerRef { get; }
+        public Character PlayerRef { get; }
 
-        public PlayerValue(PlayerType type, int playerRef)
+        public PlayerValue(Character playerRef)
         {
-            Type = type;
             PlayerRef = playerRef;
         }
 
@@ -53,7 +45,7 @@ namespace Interpreter
 
         public override string ToString()
         {
-            return $"Player Object: ({Type.ToString()}, {PlayerRef})";
+            return $"Player Object: {PlayerRef}";
         }
     }
 
@@ -67,7 +59,7 @@ namespace Interpreter
             Any
         }
 
-        private ClassType Value { get; }
+        public ClassType Value { get; }
 
         public ClassValue(ClassType type)
         {
@@ -117,7 +109,7 @@ namespace Interpreter
             Right
         }
 
-        private Side Value { get; }
+        public Side Value { get; }
 
         public SideValue(Side value)
         {
@@ -147,8 +139,8 @@ namespace Interpreter
 
     public class MessageValue : Value
     {
-        private PlayerValue PlayerComponent { get; }
-        private StringValue StringComponent { get; }
+        public PlayerValue PlayerComponent { get; }
+        public StringValue StringComponent { get; }
 
         public MessageValue(PlayerValue playerComponent, StringValue stringComponent)
         {
@@ -169,7 +161,7 @@ namespace Interpreter
 
     public class IntValue : Value
     {
-        private int Value { get; }
+        public int Value { get; }
 
         public IntValue(int value)
         {
@@ -255,7 +247,7 @@ namespace Interpreter
 
     public class StringValue : Value
     {
-        private string Value { get; }
+        public string Value { get; }
 
         public StringValue(string value)
         {

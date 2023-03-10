@@ -11,7 +11,7 @@ namespace ThreadScheduler
         private readonly int NumCores;
         private readonly Core[] Cores;
 
-        private Random Rnd = new Random();
+        private System.Random Rnd = new Random();
         private readonly int MinThreadTime = 10;
         private readonly int MaxThreadTime = 20;
         private readonly int ForecastSize = 20;
