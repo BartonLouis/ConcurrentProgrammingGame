@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Interpreter;
+using TMPro;
 
 public class BattleModel : MonoBehaviour
 {
@@ -13,12 +14,15 @@ public class BattleModel : MonoBehaviour
     private Core[] Cores;
     private ThreadScheduler ThreadScheduler;
     private GameController Controller;
+    private TextMeshProUGUI DebugInfo;
 
-    [SerializeField] private int MinQueueTime = 5;
-    [SerializeField] private int MaxQueueTime = 15;
-    [SerializeField] private int ForecastSize = 50;
-    [SerializeField] private int YieldBoost = 1;
-    [SerializeField] private int PassivePriorityBoost = 1;
+    [SerializeField] private int ForecastSize;
+
+    private int MinQueueTime ;
+    private int MaxQueueTime;
+    private int YieldBoost;
+    private int PassivePriorityBoost;
+    private int MinTimeBetweenTurns;
 
     private System.Random Rnd;
 
@@ -31,6 +35,12 @@ public class BattleModel : MonoBehaviour
     public void Start()
     {
         Controller = GameController.instance;
+        MinQueueTime = GameController.MinQueueTime;
+        MaxQueueTime = GameController.MaxQueueTime;
+        YieldBoost = GameController.YieldBoost;
+        PassivePriorityBoost = GameController.PassivePriorityBoost;
+        MinTimeBetweenTurns = GameController.TimeBetweenTurns;
+        // DebugInfo = GameObject.Find("DebugArea").GetComponent<TextMeshProUGUI>();
     }
 
     public void StartBattle(Character[] characters, int numCores)
@@ -47,9 +57,15 @@ public class BattleModel : MonoBehaviour
         {
             Cores[i] = new Core(i);
         }
-
-        ThreadScheduler = new ThreadScheduler(Characters, Cores, MinQueueTime, MaxQueueTime, ForecastSize, YieldBoost, PassivePriorityBoost);
+        for (int i = 0; i < numCores; i++)
+        {
+            AddVisualBlock(i, null, 1);
+        }
+        ThreadScheduler = new ThreadScheduler(Characters, Cores, MinQueueTime, MaxQueueTime, ForecastSize, YieldBoost, PassivePriorityBoost, MinTimeBetweenTurns);
+        
     }
+
+    
 
     public void EndBattle()
     {
@@ -109,7 +125,7 @@ public class BattleModel : MonoBehaviour
         foreach(Character c in Characters)
         {
             // If Character is alive and is on the same team and isn't the same as the character requesting a teammate and they have the requested class
-            if (c.IsAlive() && c.Team != character.Team && c.ClassType == classValue.Value)
+            if (c.IsAlive() && c.Team != character.Team && (c.ClassType == classValue.Value || c.ClassType == ClassValue.ClassType.Any))
             {
                 choices.Add(c);
             }
@@ -130,7 +146,7 @@ public class BattleModel : MonoBehaviour
         List<Character> choices = new List<Character>();
         foreach(Character c in Characters)
         {
-            if (c.IsAlive() && c.Team == character.Team && c != character && c.ClassType == classValue.Value)
+            if (c.IsAlive() && c.Team == character.Team && c != character && (c.ClassType == classValue.Value || c.ClassType == ClassValue.ClassType.Any))
             {
                 choices.Add(c);
             }

@@ -72,6 +72,7 @@ namespace Interpreter
             BattleModel = BattleModel.instance;
         }
 
+
         public RuntimeInstance(string source)
         {
             // Use this class to pass through raw source code. If the program is valid then it will allow the program to be run as normal, otherwise it will generate error messages
@@ -84,7 +85,7 @@ namespace Interpreter
             ErrorListener = new ErrorListener();
             parser.AddErrorListener(ErrorListener);
             LanguageParserParser.ProgramContext program = parser.program();
-
+            BattleModel = BattleModel.instance;
             if (!ErrorListener.ErrorsOccured())
             {
                 ValidProgram = true;
@@ -101,6 +102,11 @@ namespace Interpreter
             }
         }
         
+        public void BindCharacter(Character c)
+        {
+            Character = c;
+        }
+
         public void BindEnergyBar(EnergyBar energyBar)
         {
             EnergyBar = energyBar;
@@ -133,7 +139,8 @@ namespace Interpreter
                     case RunTimeState.Waiting:
                         // Move forward one time step
                         WaitTime--;
-                        EnergyBar.Step();
+                        if (EnergyBar!= null)
+                            EnergyBar.Step();
                         if (WaitTime == 0)
                         {
                             State = RunTimeState.Executing;
@@ -168,7 +175,10 @@ namespace Interpreter
                         WaitTime = 0;
                         OnExecute = null;
                         State = RunTimeState.Loading;
-                        EnergyBar.Complete();
+                        if (EnergyBar != null)
+                        {
+                            EnergyBar.Complete();
+                        }
                         break;
                 }
             }
@@ -490,7 +500,6 @@ namespace Interpreter
             // Logic to Get an enemy of type a
             Value a = Visit(context.a);
             return BattleModel.GetEnemyOfType(Character, a);
-            
         }
 
         public override Value VisitGetTeammateOfType([NotNull] LanguageParserParser.GetTeammateOfTypeContext context)

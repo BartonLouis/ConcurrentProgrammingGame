@@ -21,10 +21,11 @@ public class ThreadScheduler
     private readonly int ForecastSize = 20;
     private readonly int YieldBoost = 1;
     private readonly int PassivePriorityBuild = 1;
+    private readonly int MinTimeBetweenTurns = 0;
 
     private bool ShouldReschedule = false;
 
-    public ThreadScheduler(Character[] characters, Core[] cores, int minQueueTime, int maxQueueTime, int forecastSize, int yieldBoost, int passivePriorityBuild)
+    public ThreadScheduler(Character[] characters, Core[] cores, int minQueueTime, int maxQueueTime, int forecastSize, int yieldBoost, int passivePriorityBuild, int minTimeBetweenTurns)
     {
         Characters = characters.ToList();
         Cores = cores;
@@ -34,6 +35,7 @@ public class ThreadScheduler
         ForecastSize = forecastSize;
         YieldBoost = yieldBoost;
         PassivePriorityBuild = passivePriorityBuild;
+        MinTimeBetweenTurns = minTimeBetweenTurns;
 
         foreach (Character character in Characters)
         {
@@ -76,7 +78,7 @@ public class ThreadScheduler
     public void Step(int timeStep)
     {
         if (ShouldReschedule) Schedule(timeStep, ForecastSize, true);
-        else Schedule(timeStep + ForecastSize, 1, false);
+        else Schedule(timeStep + ForecastSize-1, 1, false);
         ShouldReschedule = false;
     }
 
@@ -94,8 +96,8 @@ public class ThreadScheduler
                 // and re-forecast the next steps
                 foreach (Character c in Characters)
                 {
-                    PriorityRecords[c].ClearFrom(startTime + 1);
-                    MinWaitTimeRecords[c].ClearFrom(startTime + 1);
+                    PriorityRecords[c].ClearFrom(startTime );
+                    MinWaitTimeRecords[c].ClearFrom(startTime);
                 }
             }
         
@@ -118,12 +120,12 @@ public class ThreadScheduler
                 foreach (Character character in PriorityRecords.Keys)
                 {
                     total += Math.Pow(PriorityRecords[character].GetAt(timeStep), 2) / totalPriority;
-                    if (total < random) continue;
+                    if (total < random || PriorityRecords[character].GetAt(timeStep) == 0 || MinWaitTimeRecords[character].GetAt(timeStep) > 0) continue;
 
                     // Step 3: Queue that character
                     int time = Rnd.Next(MinQueueTime, MaxQueueTime);
                     core.QueueFor(timeStep, character, time);
-                    MinWaitTimeRecords[character].SetAt(timeStep, time);
+                    MinWaitTimeRecords[character].SetAt(timeStep, time+MinTimeBetweenTurns);
                     PriorityRecords[character].SetAt(timeStep, 0);
                     break;
                 }
@@ -134,14 +136,14 @@ public class ThreadScheduler
             {
                 // Increment Priority for next step if priority > 0, else keep at 0
                 int p = PriorityRecords[character].GetAt(timeStep);
-                if (p > 0) PriorityRecords[character].SetAt(timeStep + 1, p + PassivePriorityBuild);
+                if (p > 0) { PriorityRecords[character].SetAt(timeStep + 1, p + PassivePriorityBuild);}
                 else PriorityRecords[character].SetAt(timeStep + 1, 0);
 
                 // Decrement min wait time if it's greater than 0
                 int w = MinWaitTimeRecords[character].GetAt(timeStep);
                 if (w > 0) MinWaitTimeRecords[character].SetAt(timeStep + 1, w - 1);
                 // If min wait time == 0, and the character doesn't have any priority, then give it some priority
-                else if (p == 0) PriorityRecords[character].SetAt(timeStep + 1, 1);
+                if (w-1 == 0) PriorityRecords[character].SetAt(timeStep + 1, 1);
             }
         }
     }
@@ -160,13 +162,21 @@ public class ThreadScheduler
         toReturn += "\n\nPriorities:";
         foreach (Character c in PriorityRecords.Keys)
         {
-            toReturn += "\n" + c.ToString() + ": " + PriorityRecords[c].GetAt(CurrentTime);
+            toReturn += "\n" + c.ToString() + ": \t\t";
+            for (int i = 0; i < CurrentTime; i++)
+            {
+                toReturn += ", " + i + ":" + PriorityRecords[c].GetAt(i);
+            }
         }
 
         toReturn += "\nMinTimeRecord:";
         foreach (Character c in MinWaitTimeRecords.Keys)
         {
-            toReturn += "\n" + c.ToString() + ": " + MinWaitTimeRecords[c].GetAt(CurrentTime);
+            toReturn += "\n" + c.ToString() + ": \t\t";
+            for (int i = 0; i < CurrentTime; i++)
+            {
+                toReturn += ", " + i + ":" + MinWaitTimeRecords[c].GetAt(i);
+            }
         }
         return toReturn;
     }

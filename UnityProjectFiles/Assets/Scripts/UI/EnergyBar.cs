@@ -46,6 +46,7 @@ public class EnergyBar : MonoBehaviour
 
     public void Complete()
     {
+        
         foreach(GameObject block in EnergyBlocks)
         {
             block.GetComponent<Animator>().SetTrigger("Active");

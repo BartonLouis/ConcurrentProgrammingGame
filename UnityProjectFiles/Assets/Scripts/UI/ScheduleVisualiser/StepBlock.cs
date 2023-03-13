@@ -12,10 +12,12 @@ public class StepBlock : MonoBehaviour
     public Sprite TankIcon;
     public Color EnemyColour;
     public Color TeammateColour;
+    public Color EmptySlotColour;
     private Transform Line;
 
     public Image Back;
     public Image Icon;
+    private bool empty = false;
 
     private bool active = false;
     public void Start()
@@ -27,6 +29,7 @@ public class StepBlock : MonoBehaviour
     {
         if (character != null)
         {
+            GetComponent<Animator>().SetTrigger("Normal");
             if (character.Team.TeamNum == 1)
             {
                 Back.color = TeammateColour;
@@ -50,14 +53,15 @@ public class StepBlock : MonoBehaviour
             }
         } else
         {
-            Back.color = Color.clear;
+            Back.color = EmptySlotColour;
             Icon.enabled = false;
+            empty = true;
         }
     }
 
     private void FixedUpdate()
     {
-        if (active) return;
+        if (active || empty) return;
         if (Line.position.x > transform.position.x)
         {
             active = true;

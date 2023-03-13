@@ -6,6 +6,9 @@ using Interpreter;
 public abstract class Character : MonoBehaviour
 {
     [SerializeField] GameObject EnergyBarPrefab;
+    [SerializeField] GameObject HealthBarPrefab;
+
+    [Space(10)]
     
     [SerializeField] protected float BaseMaxHealth  = 100;
     [SerializeField] protected float BaseDamage     = 20;
@@ -22,8 +25,11 @@ public abstract class Character : MonoBehaviour
 
     [HideInInspector] public string ScriptFilename;
 
+
+    private Animator Anim;
     private RuntimeInstance RuntimeInstance;
     private EnergyBar EnergyBar;
+    private HealthBar HealthBar;
 
     private List<KeyValuePair<float, int>> DamageMultipliers;
     private List<KeyValuePair<float, int>> DefenseMultipliers;
@@ -35,17 +41,30 @@ public abstract class Character : MonoBehaviour
 
     public void Setup()
     {
+        // Visual Elements
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
         GameObject energyBar = Instantiate(EnergyBarPrefab, worldCanvas.transform);
+        GameObject healthBar = Instantiate(HealthBarPrefab, worldCanvas.transform);
         energyBar.transform.position = transform.position;
+        healthBar.transform.position = transform.position;
         EnergyBar = energyBar.GetComponent<EnergyBar>();
-        string sourceCode = FileManager.LoadFile(ScriptFilename);
+        HealthBar = healthBar.GetComponent<HealthBar>();
+
+        HealthBar.SetMaxHealth(BaseMaxHealth);
+        HealthBar.SetHealth(BaseMaxHealth);
+
+        // Other bits
+        Anim = GetComponent<Animator>();
+        string sourceCode;
+        if (Team.TeamNum == 1) sourceCode = FileManager.LoadFile("Player", ScriptFilename);
+        else sourceCode = FileManager.LoadFile("Enemy", ScriptFilename);
         RuntimeInstance = new RuntimeInstance(sourceCode);
         RuntimeInstance.BindEnergyBar(EnergyBar);
-        RuntimeInstance.Character = this;
+        RuntimeInstance.BindCharacter(this);
 
         DamageMultipliers = new List<KeyValuePair<float, int>>();
         DefenseMultipliers = new List<KeyValuePair<float, int>>();
+
         currentHealth = BaseMaxHealth;
         charged = false;
         alive = true;
@@ -108,19 +127,25 @@ public abstract class Character : MonoBehaviour
         amount *= totalMultiplier;
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
-        Debug.Log(this.ToString() + " Taking " + amount + " damage. Health remaining:" + currentHealth);
+
+        HealthBar.SetHealth(currentHealth);
     }
 
     public void Heal(float amount)
     {
         currentHealth += amount;
         currentHealth = Mathf.Min(currentHealth, BaseMaxHealth);
+
+        HealthBar.SetHealth(currentHealth);
     }
 
     public void Die()
     {
-        Debug.Log(this + " Dieing");
+        Anim.SetBool("IsDead", true);
+        Anim.SetTrigger("Hurt");
         alive = false;
+        Destroy(EnergyBar.gameObject);
+        Destroy(HealthBar.gameObject);
     }
 
     public bool IsAlive()
@@ -151,7 +176,7 @@ public abstract class Character : MonoBehaviour
     public void EndOfStepUpdate()
     {
         // Every character runs this function at the end of each turn. 
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 && alive)
         {
             Die();
         }
@@ -242,6 +267,9 @@ public abstract class Character : MonoBehaviour
 
     public void OnGameEnd()
     {
-        Destroy(EnergyBar.gameObject);
+        if (EnergyBar != null)
+            Destroy(EnergyBar.gameObject);
+        if (HealthBar != null)
+            Destroy(HealthBar.gameObject);
     }
 }

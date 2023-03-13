@@ -28,8 +28,12 @@ public class MinTimeMap
 
     public void ClearFrom(int time)
     {
-        Dictionary<int, int>.KeyCollection times = WaitMap.Keys;
-        foreach (int t in times)
+        List<int> temp = new List<int>();
+        foreach (int t in WaitMap.Keys)
+        {
+            temp.Add(t);
+        }
+        foreach (int t in temp)
         {
             if (t >= time) WaitMap.Remove(t);
         }

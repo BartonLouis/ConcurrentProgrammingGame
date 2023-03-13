@@ -25,16 +25,18 @@ public class Core
 
     public void QueueFor(int startTime, Character character, int timeToQueue)
     {
-        for (int i = startTime; i < startTime + timeToQueue; i++)
-        {
-            Queue[i] = character;
-        }
         int maxTime = 0;
         foreach (int time in Queue.Keys)
         {
             if (time > maxTime) maxTime = time;
         }
-        if (startTime > maxTime) BattleModel.AddVisualBlock(Index, null, startTime - maxTime);
+        for (int i = startTime; i < startTime + timeToQueue; i++)
+        {
+            Queue[i] = character;
+        }
+        if (startTime > maxTime + 1) {
+            BattleModel.AddVisualBlock(Index, null, startTime - (maxTime+1));
+        }
         BattleModel.AddVisualBlock(Index, character, timeToQueue);
     }
 
@@ -78,8 +80,8 @@ public class Core
         }
         for (int time = 0; time <= maxTime; time++)
         {
-            if (Queue.ContainsKey(time)) toReturn += ", " + Queue[time].ToString(); 
-            else toReturn += ", ##";
+            if (Queue.ContainsKey(time)) toReturn += ", " + time +  ":"+ Queue[time].ToString(); 
+            else toReturn += ", " + time + ":##";
         }
         return toReturn;
     }

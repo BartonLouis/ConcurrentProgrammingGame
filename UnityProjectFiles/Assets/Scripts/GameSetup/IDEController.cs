@@ -57,7 +57,7 @@ public class IDEController : MonoBehaviour
     public void Open(string name, int index)
     {
         scriptIndex = index;
-        code.text = FileManager.LoadFile(name);
+        code.text = FileManager.LoadFile("Player", name);
         scriptName.text = name;
         clicked = false;
         anim.SetBool("Open", true);
@@ -93,7 +93,7 @@ public class IDEController : MonoBehaviour
             anim.SetTrigger("Error");
             // If filename already exists, give the option to overwrite or change filename
         }
-        else if (FileManager.GetFileNames().Contains(scriptName.text) && !clicked && (mode != IDEMode.EDIT || (mode == IDEMode.EDIT && nameChanged)))
+        else if (FileManager.GetFileNames("Player").Contains(scriptName.text) && !clicked && (mode != IDEMode.EDIT || (mode == IDEMode.EDIT && nameChanged)))
         {
             nameChanged = false;
             clicked = true;
@@ -135,7 +135,7 @@ public class IDEController : MonoBehaviour
 
     private void CompleteSubmit(string filename, string expression)
     {
-        FileManager.SaveFile(filename, expression);
+        FileManager.SaveFile("Player", filename, expression);
         ControlPanelManager.instance.Show();
         if (mode == IDEMode.CREATE)
         {

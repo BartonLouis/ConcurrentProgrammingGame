@@ -33,9 +33,7 @@ public class CoreLine : MonoBehaviour
 
     public void AddBlock(int turns)
     {
-        GameObject block = Instantiate(BlockPrefab, ContentBox);
-        block.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, turns * TurnSize + (turns - 1) * Spacing);
-        block.GetComponent<StepBlock>().SetCharacter(null);
+        AddBlock(turns, null);
     }
 
     private void Update()

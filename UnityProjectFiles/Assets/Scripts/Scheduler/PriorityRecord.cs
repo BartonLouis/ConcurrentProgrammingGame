@@ -11,7 +11,8 @@ public class PriorityRecord
     {
         PriorityMap = new Dictionary<int, int>
         {
-            [0] = 1
+            [0] = 1,
+            [1] = 1
         };
     }
 
@@ -28,8 +29,12 @@ public class PriorityRecord
 
     public void ClearFrom(int time)
     {
-        Dictionary<int, int>.KeyCollection times = PriorityMap.Keys;
-        foreach (int t in times)
+        List<int> temp = new List<int>();
+        foreach(int t in PriorityMap.Keys)
+        {
+            temp.Add(t);
+        }
+        foreach (int t in temp)
         {
             if (t >= time) PriorityMap.Remove(t);
         }

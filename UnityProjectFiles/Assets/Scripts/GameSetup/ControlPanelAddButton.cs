@@ -35,7 +35,7 @@ public class ControlPanelAddButton : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        foreach(string filename in FileManager.GetFileNames())
+        foreach(string filename in FileManager.GetFileNames("Player"))
         {
             GameObject btn = Instantiate(SubButtonPrefab, Parent);
             btn.GetComponent<ChooseScript>().manager = this;

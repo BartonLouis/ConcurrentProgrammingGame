@@ -20,14 +20,14 @@ public class MainMenuController : MonoBehaviour
     {
         Debug.Log("Campaign Button Pressed");
         AudioManager.instance.Play("MenuNavigate");
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("SkirmishSetup");
     }
 
     public void Skirmish()
     {
         Debug.Log("Skirmish Button Pressed");
         AudioManager.instance.Play("MenuNavigate");
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("SkirmishSetup");
     }
 
     public void SettingsOpen()

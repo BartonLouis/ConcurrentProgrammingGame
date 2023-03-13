@@ -3,11 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Interpreter;
+using System.IO;
 
 public class GameController : MonoBehaviour
 {
 
     public static GameController instance;
+
+    public static int MinPlayers = 3;
+    public static int MaxPlayers = 3;
+    public static int Team2Players = 3;
+    public static int Team2Difficulty = 1;
+    public static int NumCores = 3;
+    public static int MinQueueTime = 5;
+    public static int MaxQueueTime = 15;
+    public static int YieldBoost = 1;
+    public static int PassivePriorityBoost = 1;
+    public static int TimeBetweenTurns = 0;
+    private System.Random Rnd;
 
     public enum GameState
     {
@@ -24,7 +37,6 @@ public class GameController : MonoBehaviour
     private BattleModel BattleModel;
     private ScheduleVisualiser ScheduleVisualiser;
 
-    
 
     [HideInInspector] public GameState CurrentGameState { get; set; }
     [HideInInspector] public bool Paused { get; set; }
@@ -32,9 +44,6 @@ public class GameController : MonoBehaviour
     // Setup attributes
     [SerializeField] private TeamCenter Team1;
     [SerializeField] private TeamCenter Team2;
-    [SerializeField] private int MinPlayers = 3;
-    [SerializeField] private int MaxPlayers = 5;
-    [SerializeField] private int NumCores = 3;
     [Space(10)]
 
     // Gameplay attributes
@@ -60,12 +69,14 @@ public class GameController : MonoBehaviour
         PauseMenu = PauseMenuController.instance;
         BattleModel = BattleModel.instance;
         ScheduleVisualiser = ScheduleVisualiser.instance;
+        Rnd = new System.Random();
+
 
         // Initial Setup
         IDE.Clear();
         CharacterPanel.Load(MaxPlayers);
         Team1.SetNumSpawns(MaxPlayers);
-        Team2.SetNumSpawns(MaxPlayers);
+        Team2.SetNumSpawns(Team2Players);
         Team1.Init();
         Team2.Init();
         Team1.SetTeamNum(1);
@@ -74,6 +85,27 @@ public class GameController : MonoBehaviour
         CurrentGameState = GameState.Setup;
         CurrentSpeed = PlaySpeed;
         CurrentTime = 1;
+
+        // Populate Enemy Team
+        for (int i = 0; i < Team2Players; i++)
+        {
+            int choice = Rnd.Next(3);
+            ClassValue.ClassType playerClass;
+            switch (choice)
+            {
+                case 0:
+                    playerClass = ClassValue.ClassType.Damage;
+                    break;
+                case 1:
+                    playerClass = ClassValue.ClassType.Support;
+                    break;
+                default:
+                    playerClass = ClassValue.ClassType.Tank;
+                    break;
+            }
+            Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty + ".txt");
+
+        }
     }
 
     public void Update()
@@ -151,7 +183,7 @@ public class GameController : MonoBehaviour
 
     public void DeleteScript(string filename)
     {
-        FileManager.DeleteFile(filename);
+        FileManager.DeleteFile("Player", filename);
         CharacterPanel.DeleteAll(filename);
         CharacterPanel.Load(MaxPlayers);
     }
@@ -178,7 +210,6 @@ public class GameController : MonoBehaviour
         CharacterPanel.EditComplete(filename, scriptIndex);
         CharacterPanel.Load(MaxPlayers);
         Team1.UpdatePlayer(scriptIndex, ClassValue.ClassType.Any, filename);
-        Team2.UpdatePlayer(scriptIndex, ClassValue.ClassType.Any, filename);
         PlayControls.IDEClose();
     }
     
@@ -206,19 +237,16 @@ public class GameController : MonoBehaviour
     public void AddPlayer(ClassValue.ClassType classType, string filename)
     {
         Team1.AddPlayer(classType, filename);
-        Team2.AddPlayer(classType, filename);
     }
 
     public void UpdatePlayerClass(int index, ClassValue.ClassType classType, string filename)
     {
         Team1.UpdatePlayer(index, classType, filename);
-        Team2.UpdatePlayer(index, classType, filename);
     }
 
     public void RemovePlayer(int index)
     {
         Team1.RemovePlayer(index);
-        Team2.RemovePlayer(index);
     }
 
     // Battle Control
