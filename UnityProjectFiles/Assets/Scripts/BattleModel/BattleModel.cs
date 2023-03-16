@@ -24,6 +24,7 @@ public class BattleModel : MonoBehaviour
     private int PassivePriorityBoost;
     private int MinTimeBetweenTurns;
 
+    private bool shouldReschedule = false;
     private System.Random Rnd;
 
     public void Awake()
@@ -40,7 +41,8 @@ public class BattleModel : MonoBehaviour
         YieldBoost = GameController.YieldBoost;
         PassivePriorityBoost = GameController.PassivePriorityBoost;
         MinTimeBetweenTurns = GameController.TimeBetweenTurns;
-        // DebugInfo = GameObject.Find("DebugArea").GetComponent<TextMeshProUGUI>();
+
+        DebugInfo = GameObject.Find("DebugInfoInGame").GetComponent<TextMeshProUGUI>();
     }
 
     public void StartBattle(Character[] characters, int numCores)
@@ -57,15 +59,21 @@ public class BattleModel : MonoBehaviour
         {
             Cores[i] = new Core(i);
         }
-        for (int i = 0; i < numCores; i++)
-        {
-            AddVisualBlock(i, null, 1);
-        }
         ThreadScheduler = new ThreadScheduler(Characters, Cores, MinQueueTime, MaxQueueTime, ForecastSize, YieldBoost, PassivePriorityBoost, MinTimeBetweenTurns);
         
     }
 
-    
+    public void SetShouldReschedule()
+    {
+        shouldReschedule = true;
+        ThreadScheduler.SetShouldReschedule();
+    }
+
+    public void SetShouldReschedule(TeamCenter team)
+    {
+        shouldReschedule = true;
+        ThreadScheduler.SetShouldReschedule(team);
+    }
 
     public void EndBattle()
     {
@@ -84,18 +92,38 @@ public class BattleModel : MonoBehaviour
         {
             core.Step(CurrentTimeStep);
         }
-        CurrentTimeStep++;
         // Make the thread scheduler take a step
         foreach(Character c in Characters)
         {
-            c.EndOfStepUpdate();
+            if (c.IsAlive())
+            {
+                c.EndOfStepUpdate();
+            }
         }
         ThreadScheduler.Step(CurrentTimeStep);
+
+        
+        if (shouldReschedule)
+        {
+            List<List<KeyValuePair<Character, int>>> representation = ThreadScheduler.GetVisualRepresentation();
+            Controller.ResetScheduleVisualiser(representation);
+        }
+        shouldReschedule = false;
+        CurrentTimeStep++;
+        
+    }
+
+    public void RemoveCharacter(Character character)
+    {
+        ThreadScheduler.RemoveCharacter(character);
     }
 
     public void AddVisualBlock(int coreIndex, Character character, int timeQueued)
     {
-        Controller.AddVisualBlock(coreIndex, character, timeQueued);
+        if (!shouldReschedule)
+        {
+            Controller.AddVisualBlock(coreIndex, character, timeQueued);
+        }
     }
 
     // Public functions used to get information about the game
@@ -116,6 +144,7 @@ public class BattleModel : MonoBehaviour
     }
     
     public PlayerValue GetEnemyOfType(Character character, Value playerClass){
+        Debug.Log("Getting enemy of type: " + playerClass);
         if (playerClass == null) return null;
         ClassValue classValue = playerClass.GetAsClass();
         if (classValue == null) return null;

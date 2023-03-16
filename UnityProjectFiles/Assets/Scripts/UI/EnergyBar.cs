@@ -9,6 +9,8 @@ public class EnergyBar : MonoBehaviour
     public GameObject EnergyBlockPrefab;
     public Transform Parent;
     public Vector3 Offset;
+    public Color VisibleColour = new Color(0, 0, 0, 0.3f);
+    public Color HiddenColour = new Color(0, 0, 0, 0);
 
     private List<GameObject> EnergyBlocks;
     private int currentBlock;
@@ -32,6 +34,10 @@ public class EnergyBar : MonoBehaviour
         for(int i = 0; i < numEnergyBlocks; i++)
         {
             GameObject block = Instantiate(EnergyBlockPrefab, Parent);
+            foreach (Transform child in block.transform)
+            {
+                if (child.name == "Mask") child.GetComponent<Image>().color = HiddenColour;
+            }
             EnergyBlocks.Add(block);
         }
     }
@@ -40,7 +46,7 @@ public class EnergyBar : MonoBehaviour
     {
         GameObject block = EnergyBlocks[currentBlock];
         Animator animator = block.GetComponent<Animator>();
-        animator.SetTrigger("Full");
+        animator.SetBool("Full", true);
         currentBlock++;
     }
 
@@ -49,7 +55,26 @@ public class EnergyBar : MonoBehaviour
         
         foreach(GameObject block in EnergyBlocks)
         {
-            block.GetComponent<Animator>().SetTrigger("Active");
+            block.GetComponent<Animator>().SetBool("Active", true);
+            block.GetComponent<Animator>().SetBool("Full", false);
+        }
+    }
+
+    public void Show()
+    {
+        foreach (GameObject block in EnergyBlocks)
+        {
+            block.GetComponent<Animator>().ResetTrigger("Hide");
+            block.GetComponent<Animator>().SetTrigger("Show");
+        }
+    }
+
+    public void Hide()
+    {
+        foreach (GameObject block in EnergyBlocks)
+        {
+            block.GetComponent<Animator>().ResetTrigger("Show");
+            block.GetComponent<Animator>().SetTrigger("Hide");
         }
     }
 

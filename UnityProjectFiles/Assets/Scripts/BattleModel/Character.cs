@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 using Interpreter;
 
 public abstract class Character : MonoBehaviour
 {
     [SerializeField] GameObject EnergyBarPrefab;
     [SerializeField] GameObject HealthBarPrefab;
+    [SerializeField] GameObject PlatformPrefab;
+    [SerializeField] GameObject DamageTextPrefab;
 
     [Space(10)]
     
@@ -28,8 +31,10 @@ public abstract class Character : MonoBehaviour
 
     private Animator Anim;
     private RuntimeInstance RuntimeInstance;
+
     private EnergyBar EnergyBar;
     private HealthBar HealthBar;
+    private PlayerPlatform Platform;
 
     private List<KeyValuePair<float, int>> DamageMultipliers;
     private List<KeyValuePair<float, int>> DefenseMultipliers;
@@ -37,6 +42,9 @@ public abstract class Character : MonoBehaviour
     private float currentHealth;
     private bool alive = true;
     private bool charged = false;
+    private bool tookTurn = false;
+
+    private BattleModel BattleModel;
     
 
     public void Setup()
@@ -45,13 +53,16 @@ public abstract class Character : MonoBehaviour
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
         GameObject energyBar = Instantiate(EnergyBarPrefab, worldCanvas.transform);
         GameObject healthBar = Instantiate(HealthBarPrefab, worldCanvas.transform);
+        GameObject platform = Instantiate(PlatformPrefab, transform);
         energyBar.transform.position = transform.position;
         healthBar.transform.position = transform.position;
         EnergyBar = energyBar.GetComponent<EnergyBar>();
         HealthBar = healthBar.GetComponent<HealthBar>();
+        Platform = platform.GetComponent<PlayerPlatform>();
 
         HealthBar.SetMaxHealth(BaseMaxHealth);
         HealthBar.SetHealth(BaseMaxHealth);
+        Platform.SetTeam(Team);
 
         // Other bits
         Anim = GetComponent<Animator>();
@@ -68,11 +79,13 @@ public abstract class Character : MonoBehaviour
         currentHealth = BaseMaxHealth;
         charged = false;
         alive = true;
+
+        BattleModel = BattleModel.instance;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && BattleModel.instance.CurrentTimeStep > 0)
         {
             Damage(10);
         }
@@ -80,6 +93,7 @@ public abstract class Character : MonoBehaviour
 
     public void Step()
     {
+        tookTurn = true;
         RuntimeInstance.Step();
         List<KeyValuePair<float, int>> toRemove = new List<KeyValuePair<float, int>>();
         // Decrement all multipliers and remove them if they have 0 time steps left
@@ -117,10 +131,11 @@ public abstract class Character : MonoBehaviour
 
     public void Damage(float amount)
     {
+        Debug.Log("Taking Damage");
         float totalMultiplier = 1;
-        foreach(KeyValuePair<float, int> multipler in DefenseMultipliers)
+        foreach(KeyValuePair<float, int> multiplier in DefenseMultipliers)
         {
-            totalMultiplier += multipler.Key;
+            totalMultiplier += multiplier.Key;
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         // Subtract adjusted amount from health and cap it at 0
@@ -129,6 +144,10 @@ public abstract class Character : MonoBehaviour
         currentHealth = Mathf.Max(currentHealth, 0);
 
         HealthBar.SetHealth(currentHealth);
+        GameObject worldCanvas = GameObject.Find("WorldCanvas");
+        HealthText text = Instantiate(DamageTextPrefab, worldCanvas.transform).GetComponent<HealthText>();
+        text.transform.position = transform.position;
+        text.Init(-amount);
     }
 
     public void Heal(float amount)
@@ -137,6 +156,10 @@ public abstract class Character : MonoBehaviour
         currentHealth = Mathf.Min(currentHealth, BaseMaxHealth);
 
         HealthBar.SetHealth(currentHealth);
+        GameObject worldCanvas = GameObject.Find("WorldCanvas");
+        HealthText text = Instantiate(DamageTextPrefab, transform.position, Quaternion.identity, worldCanvas.transform).GetComponent<HealthText>();
+        text.transform.position = transform.position;
+        text.Init(amount);
     }
 
     public void Die()
@@ -146,6 +169,8 @@ public abstract class Character : MonoBehaviour
         alive = false;
         Destroy(EnergyBar.gameObject);
         Destroy(HealthBar.gameObject);
+        BattleModel.RemoveCharacter(this);
+        BattleModel.SetShouldReschedule();
     }
 
     public bool IsAlive()
@@ -175,6 +200,18 @@ public abstract class Character : MonoBehaviour
 
     public void EndOfStepUpdate()
     {
+        // If the character is taking a step this turn then make the enrgy bar visible, otherwise make it invisible
+        if (tookTurn)
+        {
+            EnergyBar.Show();
+            Platform.Show();
+        }
+        else
+        {
+            EnergyBar.Hide();
+            Platform.Hide();
+        }
+        tookTurn = false;
         // Every character runs this function at the end of each turn. 
         if (currentHealth <= 0 && alive)
         {
@@ -184,6 +221,14 @@ public abstract class Character : MonoBehaviour
 
     public virtual void Attack(Value target)
     {
+        Character player;
+        try
+        {
+            player = target.GetAsPlayer().PlayerRef;
+        } catch (NullReferenceException ignored){
+            return;
+        }
+
         float damage = BaseDamage;
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multipler in DamageMultipliers)
@@ -192,7 +237,8 @@ public abstract class Character : MonoBehaviour
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         damage *= totalMultiplier;
-        Debug.Log(this + "Attacking");
+        Debug.Log("Dishing Out Damage");
+        player.Damage(damage);
     }
 
     public virtual void HealSelf()
@@ -271,5 +317,8 @@ public abstract class Character : MonoBehaviour
             Destroy(EnergyBar.gameObject);
         if (HealthBar != null)
             Destroy(HealthBar.gameObject);
+        if (Platform != null)
+            Destroy(Platform.gameObject);
+        Anim.SetTrigger("Default");
     }
 }

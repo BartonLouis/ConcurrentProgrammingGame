@@ -15,6 +15,7 @@ public class CoreLine : MonoBehaviour
     private int TurnSize;
     private System.Random Rnd;
     private Vector3 TargetPosition = Vector3.zero;
+    private Vector3 StartPosition;
 
     public void Awake()
     {
@@ -22,6 +23,11 @@ public class CoreLine : MonoBehaviour
         ContentBox.GetComponent<HorizontalLayoutGroup>().padding.left = StepSize / 2;
         TurnSize = StepSize - Spacing;
         Rnd = new System.Random();
+    }
+
+    public void Start()
+    {
+        StartPosition = ContentBox.transform.localPosition;
     }
 
     public void AddBlock(int turns, Character character)
@@ -51,7 +57,7 @@ public class CoreLine : MonoBehaviour
         }
     }
 
-    public void Step()
+    public void Step(int currentTimeStep)
     {
         // ContentBox.transform.position = new Vector3(ContentBox.position.x - StepSize, ContentBox.position.y, ContentBox.position.z);
         if (TargetPosition != Vector3.zero)
@@ -59,12 +65,25 @@ public class CoreLine : MonoBehaviour
             ContentBox.transform.localPosition = TargetPosition;
         } else
         {
-            TargetPosition = ContentBox.transform.localPosition;
+            TargetPosition = StartPosition;
         }
-        TargetPosition = new Vector3(TargetPosition.x - StepSize, ContentBox.localPosition.y, ContentBox.localPosition.z);
+        TargetPosition = new Vector3(StartPosition.x - currentTimeStep * StepSize, ContentBox.localPosition.y, ContentBox.localPosition.z);
         float distance = (ContentBox.transform.localPosition - TargetPosition).magnitude;
         if (GameController.instance.CurrentSpeed > 0) moveSpeed = distance * GameController.instance.CurrentSpeed;
         else moveSpeed = distance / 1;
+    }
+
+    public void Reset(List<KeyValuePair<Character, int>> representation)
+    {
+        foreach(Transform child in ContentBox)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (KeyValuePair<Character, int> block in representation)
+        {
+            if (block.Key == null) AddBlock(block.Value);
+            else AddBlock(block.Value, block.Key);
+        }
     }
 
 }

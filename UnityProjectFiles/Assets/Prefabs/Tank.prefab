@@ -70,6 +70,10 @@ MonoBehaviour:
     type: 3}
   HealthBarPrefab: {fileID: 1019763307383523487, guid: fc93bd18524e2c840a172e0ee0af150b,
     type: 3}
+  PlatformPrefab: {fileID: 1777563765519442289, guid: 338f183c73dd9ba40bf1e01093d5a267,
+    type: 3}
+  DamageTextPrefab: {fileID: 3839208161690721630, guid: aaf28185bdb270747b7bb4c5c6261927,
+    type: 3}
   BaseMaxHealth: 100
   BaseDamage: 20
   BaseSelfHeal: 10

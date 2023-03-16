@@ -253,7 +253,7 @@ public class GameController : MonoBehaviour
 
     public void GameStart()
     {
-        if (Team1.IsFull(MinPlayers, MaxPlayers))
+        if (Team1.IsFull(MinPlayers, MaxPlayers) && CurrentGameState == GameState.Setup)
         {
             // Setup Battle model
             List<Character> characters = new List<Character>();
@@ -296,7 +296,7 @@ public class GameController : MonoBehaviour
     {
         if (CurrentGameState != GameState.Paused) CurrentGameState = GameState.Paused;
         BattleModel.Step();
-        ScheduleVisualiser.Step();
+        ScheduleVisualiser.Step(BattleModel.CurrentTimeStep);
     }
 
     public void Stop()
@@ -314,6 +314,11 @@ public class GameController : MonoBehaviour
     public void AddVisualBlock(int coreIndex, Character character, int timeSteps)
     {
         ScheduleVisualiser.AddBlock(coreIndex, character, timeSteps);
+    }
+
+    public void ResetScheduleVisualiser(List<List<KeyValuePair<Character, int>>> representation)
+    {
+        ScheduleVisualiser.Reset(representation);
     }
     
 }

@@ -56,12 +56,12 @@ public class ThreadScheduler
         ShouldReschedule = true;
     }
 
-    public void SetShouldReschedule(int teamNum)
+    public void SetShouldReschedule(TeamCenter team)
     {
         ShouldReschedule = true;
         foreach (Character character in Characters)
         {
-            if (character != null && character.Team.TeamNum == teamNum)
+            if (character != null && character.Team.TeamNum == team.TeamNum)
                 PriorityRecords[character].Boost(YieldBoost);
         }
     }
@@ -77,8 +77,12 @@ public class ThreadScheduler
 
     public void Step(int timeStep)
     {
-        if (ShouldReschedule) Schedule(timeStep, ForecastSize, true);
-        else Schedule(timeStep + ForecastSize-1, 1, false);
+        if (ShouldReschedule)
+        {
+            Schedule(timeStep-1, ForecastSize+1, true);
+            Debug.Log("Rescheduling");
+        }
+        else Schedule(timeStep + ForecastSize - 1, 1, false);
         ShouldReschedule = false;
     }
 
@@ -120,7 +124,7 @@ public class ThreadScheduler
                 foreach (Character character in PriorityRecords.Keys)
                 {
                     total += Math.Pow(PriorityRecords[character].GetAt(timeStep), 2) / totalPriority;
-                    if (total < random || PriorityRecords[character].GetAt(timeStep) == 0 || MinWaitTimeRecords[character].GetAt(timeStep) > 0) continue;
+                    if (total < random || PriorityRecords[character].GetAt(timeStep) == 0) continue;
 
                     // Step 3: Queue that character
                     int time = Rnd.Next(MinQueueTime, MaxQueueTime);
@@ -143,7 +147,13 @@ public class ThreadScheduler
                 int w = MinWaitTimeRecords[character].GetAt(timeStep);
                 if (w > 0) MinWaitTimeRecords[character].SetAt(timeStep + 1, w - 1);
                 // If min wait time == 0, and the character doesn't have any priority, then give it some priority
-                if (w-1 == 0) PriorityRecords[character].SetAt(timeStep + 1, 1);
+                else if (PriorityRecords[character].GetAt(timeStep) == 0){
+                    PriorityRecords[character].SetAt(timeStep + 1, 1);
+                    MinWaitTimeRecords[character].SetAt(timeStep + 1, 0);
+                } else
+                {
+                    MinWaitTimeRecords[character].SetAt(timeStep + 1, 0);
+                }
             }
         }
     }
@@ -181,4 +191,15 @@ public class ThreadScheduler
         return toReturn;
     }
 
+
+    public List<List<KeyValuePair<Character, int>>> GetVisualRepresentation()
+    {
+        List<List<KeyValuePair<Character, int>>> toReturn = new List<List<KeyValuePair<Character, int>>>();
+        foreach(Core core in Cores)
+        {
+            toReturn.Add(core.GetRepresentation());
+        }
+
+        return toReturn;
+    }
 }

@@ -42,8 +42,12 @@ public class Core
 
     public void ClearFrom(int time)
     {
-        Dictionary<int, Character>.KeyCollection times = Queue.Keys;
-        foreach (int t in times)
+        List<int> temp = new List<int>();
+        foreach (int t in Queue.Keys)
+        {
+            temp.Add(t);
+        }
+        foreach (int t in temp)
         {
             if (t >= time) Queue.Remove(t);
         }
@@ -55,20 +59,7 @@ public class Core
             return Queue[time];
         return null;
     }
-
-    public Dictionary<Character, int> GetAnalysis(Character[] characters)
-    {
-        Dictionary<Character, int> toReturn = new Dictionary<Character, int>();
-        foreach (Character character in characters)
-        {
-            toReturn.Add(character, 0);
-        }
-        foreach (int timeStep in Queue.Keys)
-        {
-            toReturn[Queue[timeStep]]++;
-        }
-        return toReturn;
-    }
+    
 
     public override string ToString()
     {
@@ -83,6 +74,42 @@ public class Core
             if (Queue.ContainsKey(time)) toReturn += ", " + time +  ":"+ Queue[time].ToString(); 
             else toReturn += ", " + time + ":##";
         }
+        return toReturn;
+    }
+
+    public List<KeyValuePair<Character, int>> GetRepresentation()
+    {
+        List<KeyValuePair<Character, int>> toReturn = new List<KeyValuePair<Character, int>>();
+        // Step 1: Get the max time
+        int maxTime = 0;
+        foreach (int time in Queue.Keys)
+        {
+            if (time > maxTime) maxTime = time;
+        }
+
+        KeyValuePair<Character, int> current = new KeyValuePair<Character, int>();
+        for (int time = 0; time < maxTime; time++)
+        {
+            // If current is null then start a new current
+            if (current.Equals(new KeyValuePair<Character, int>()))
+            {
+                current = new KeyValuePair<Character, int>(GetAt(time), 1);
+            } 
+            else
+            {
+                // Else, check if character matches current time step, if so add 1
+                if (GetAt(time) == current.Key)
+                {
+                    current = new KeyValuePair<Character, int>(current.Key, current.Value + 1);
+                } else
+                {
+                    // Else, add current onto toReturn, reset current to new character, 0
+                    toReturn.Add(current);
+                    current = new KeyValuePair<Character, int>(GetAt(time), 1);
+                }
+            }
+
+        } 
         return toReturn;
     }
 

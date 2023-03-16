@@ -282,7 +282,7 @@ namespace Interpreter
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
             {
-                Environment.SetVariable(context.v.ID().GetText(), Visit(context.a));
+                Environment.SetVariable(context.v.ID().GetText(), VisitAtom(context.a));
                 return null;
             };
             return null;
@@ -296,7 +296,7 @@ namespace Interpreter
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
             {
-                Environment.SetVariable(context.v.ID().GetText(), Visit(context.expr));
+                Environment.SetVariable(context.v.ID().GetText(), VisitMathExpr(context.expr));
                 return null;
             };
             return null;
@@ -310,7 +310,7 @@ namespace Interpreter
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
             {
-                Environment.SetVariable(context.v.ID().GetText(), Visit(context.expr));
+                Environment.SetVariable(context.v.ID().GetText(), VisitBoolExpr(context.expr));
                 return null;
             };
             return null;
@@ -322,10 +322,10 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Environment.SetVariable(context.v.ID().GetText(), Visit(context.f));
+                Environment.SetVariable(context.v.ID().GetText(), VisitFunction(context.f));
                 return null;
             };
-            return base.VisitFunctionAssignment(context);
+            return null;
         }
 
         public override Value VisitListenAssignment([NotNull] LanguageParserParser.ListenAssignmentContext context)
@@ -337,7 +337,7 @@ namespace Interpreter
                 Environment.SetVariable(context.v.ID().GetText(), MessageQueue.Dequeue());
                 return null;
             };
-            return base.VisitListenAssignment(context);
+            return null;
         }
 
         public override Value VisitAttack([NotNull] LanguageParserParser.AttackContext context)
@@ -346,7 +346,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value target = Visit(context.a);
+                Debug.Log("Attacking");
+                Value target = VisitAtom(context.a);
                 Character.Attack(target);
                 return null;
             };
@@ -383,7 +384,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value target = Visit(context.a);
+                Value target = VisitAtom(context.a);
                 Character.Heal(target);
                 return null;
             };
@@ -396,7 +397,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value target = Visit(context.a);
+                Value target = VisitAtom(context.a);
                 Character.Boost(target);
                 return null;
             };
@@ -409,7 +410,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value target = Visit(context.a);
+                Value target = VisitAtom(context.a);
                 Character.Defend(target);
                 return null;
             };
@@ -423,7 +424,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value target = Visit(context.a);
+                Value target = VisitAtom(context.a);
                 Character.Block(target);
                 return null;
             };
@@ -436,7 +437,7 @@ namespace Interpreter
             State = RunTimeState.Locking;
             OnExecute = () =>
             {
-                Value side = Visit(context.a);
+                Value side = VisitAtom(context.a);
                 Character.Lock(side);
                 return null;
             };
@@ -461,8 +462,8 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value player = Visit(context.a1);
-                Value message = Visit(context.a2);
+                Value player = VisitAtom(context.a1);
+                Value message = VisitAtom(context.a2);
                 Character.SendMessageTo(player, message);
                 return null;
             };
@@ -475,7 +476,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Value message = Visit(context.a);
+                Value message = VisitAtom(context.a);
                 Character.SendMessageToAll(message);
                 return null;
             };
@@ -494,11 +495,13 @@ namespace Interpreter
             return null;
         }
 
+
         // Functions
         public override Value VisitGetEnemyOfType([NotNull] LanguageParserParser.GetEnemyOfTypeContext context)
         {
             // Logic to Get an enemy of type a
             Value a = Visit(context.a);
+            Debug.Log("Here");
             return BattleModel.GetEnemyOfType(Character, a);
         }
 
@@ -698,6 +701,7 @@ namespace Interpreter
 
         public override Value VisitVar([NotNull] LanguageParserParser.VarContext context)
         {
+            Debug.Log("Looking for variable");
             // Lookup a variables value in the environment table
             return Environment.Lookup(context.ID().GetText());
         }
@@ -782,6 +786,12 @@ namespace Interpreter
                 return new ClassValue(ClassValue.ClassType.Any);
             }
             return null;
+        }
+
+        public override Value VisitFunction([NotNull] LanguageParserParser.FunctionContext context)
+        {
+            
+            return base.VisitFunction(context);
         }
 
     }

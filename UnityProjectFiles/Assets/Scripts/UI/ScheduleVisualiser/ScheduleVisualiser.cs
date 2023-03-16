@@ -55,11 +55,20 @@ public class ScheduleVisualiser : MonoBehaviour
             CoreLines[coreIndex].AddBlock(steps, character);
         }
     }
-    public void Step()
+    public void Step(int currentTimeStep)
     {
         foreach(CoreLine core in CoreLines)
         {
-            core.Step();
+            core.Step(currentTimeStep);
+        }
+    }
+
+    public void Reset(List<List<KeyValuePair<Character, int>>> representation)
+    {
+        Debug.Log("Resetting");
+        for (int i = 0; i < representation.Count; i++)
+        {
+            CoreLines[i].Reset(representation[i]);
         }
     }
 }
