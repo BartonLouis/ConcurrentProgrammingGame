@@ -18,4 +18,52 @@ public class Support : Character
 
         ClassType = ClassValue.ClassType.Support;
     }
+    public override void Heal(Value target)
+    {
+        Character player;
+        try
+        {
+            player = target.GetAsPlayer().PlayerRef;
+        }
+        catch
+        {
+            return;
+        }
+
+        float amount = BaseTeamHeal;
+        float totalMultiplier = 1;
+        foreach (KeyValuePair<float, int> multipler in DamageMultipliers)
+        {
+            totalMultiplier += multipler.Key;
+        }
+        totalMultiplier = Mathf.Max(totalMultiplier, 0);
+        amount *= totalMultiplier;
+        player.Heal(amount);
+        Anim.SetTrigger("Cast");
+    }
+
+    public override void Boost(Value target)
+    {
+        Character player;
+        try
+        {
+            player = target.GetAsPlayer().PlayerRef;
+        }
+        catch
+        {
+            return;
+        }
+
+        float amount = BaseBoost;
+        float totalMultiplier = 1;
+        foreach (KeyValuePair<float, int> multipler in DamageMultipliers)
+        {
+            totalMultiplier += multipler.Key;
+        }
+        totalMultiplier = Mathf.Max(totalMultiplier, 0);
+        amount *= totalMultiplier;
+        player.AddDamageMultiplier(amount, BuffTime);
+        Anim.SetTrigger("Cast");
+    }
+
 }

@@ -242,6 +242,12 @@ MonoBehaviour:
     type: 3}
   DamageTextPrefab: {fileID: 3839208161690721630, guid: aaf28185bdb270747b7bb4c5c6261927,
     type: 3}
+  DefenseBuffStackPrefab: {fileID: 1187169171353678256, guid: b4e2de6aa59c6fa42a3203a71a352bb8,
+    type: 3}
+  BuffStackPrefab: {fileID: 6735046665856783642, guid: b1194c7b73d014b4087b4858fe232829,
+    type: 3}
+  DebuffStackPrefab: {fileID: 7721952348311973177, guid: 2f1e8e7a73d5e6349b3563989ab5f6ac,
+    type: 3}
   BaseMaxHealth: 100
   BaseDamage: 20
   BaseSelfHeal: 10

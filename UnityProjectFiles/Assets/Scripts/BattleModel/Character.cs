@@ -1,15 +1,20 @@
-using System.Collections;
+using Interpreter;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using Interpreter;
 
 public abstract class Character : MonoBehaviour
 {
+    [SerializeField] protected int BuffTime = 20;
+
+    [Space(10)]
+
     [SerializeField] GameObject EnergyBarPrefab;
     [SerializeField] GameObject HealthBarPrefab;
     [SerializeField] GameObject PlatformPrefab;
     [SerializeField] GameObject DamageTextPrefab;
+    [SerializeField] GameObject DefenseBuffStackPrefab;
+    [SerializeField] GameObject BuffStackPrefab;
+    [SerializeField] GameObject DebuffStackPrefab;
 
     [Space(10)]
     
@@ -29,15 +34,18 @@ public abstract class Character : MonoBehaviour
     [HideInInspector] public string ScriptFilename;
 
 
-    private Animator Anim;
-    private RuntimeInstance RuntimeInstance;
+    protected Animator Anim;
+    protected RuntimeInstance RuntimeInstance;
 
     private EnergyBar EnergyBar;
     private HealthBar HealthBar;
     private PlayerPlatform Platform;
+    private BuffStack DefenseStack;
+    private BuffStack BuffStack;
+    private BuffStack DebuffStack;
 
-    private List<KeyValuePair<float, int>> DamageMultipliers;
-    private List<KeyValuePair<float, int>> DefenseMultipliers;
+    protected List<KeyValuePair<float, int>> DamageMultipliers;
+    protected List<KeyValuePair<float, int>> DefenseMultipliers;
 
     private float currentHealth;
     private bool alive = true;
@@ -54,11 +62,20 @@ public abstract class Character : MonoBehaviour
         GameObject energyBar = Instantiate(EnergyBarPrefab, worldCanvas.transform);
         GameObject healthBar = Instantiate(HealthBarPrefab, worldCanvas.transform);
         GameObject platform = Instantiate(PlatformPrefab, transform);
+        GameObject defenseStack = Instantiate(DefenseBuffStackPrefab, worldCanvas.transform);
+        GameObject buffStack = Instantiate(BuffStackPrefab, worldCanvas.transform);
+        GameObject debuffStack = Instantiate(DebuffStackPrefab, worldCanvas.transform);
         energyBar.transform.position = transform.position;
         healthBar.transform.position = transform.position;
+        defenseStack.transform.position = transform.position;
+        buffStack.transform.position = transform.position;
+        debuffStack.transform.position = transform.position;
         EnergyBar = energyBar.GetComponent<EnergyBar>();
         HealthBar = healthBar.GetComponent<HealthBar>();
         Platform = platform.GetComponent<PlayerPlatform>();
+        DefenseStack = defenseStack.GetComponent<BuffStack>();
+        BuffStack = defenseStack.GetComponent<BuffStack>();
+        DebuffStack = defenseStack.GetComponent<BuffStack>();
 
         HealthBar.SetMaxHealth(BaseMaxHealth);
         HealthBar.SetHealth(BaseMaxHealth);
@@ -97,10 +114,14 @@ public abstract class Character : MonoBehaviour
         RuntimeInstance.Step();
         List<KeyValuePair<float, int>> toRemove = new List<KeyValuePair<float, int>>();
         // Decrement all multipliers and remove them if they have 0 time steps left
-        for(int i = 0; i < DamageMultipliers.Count; i++)
+        int numPositive = 0;
+        int numNegative = 0;
+        for (int i = 0; i < DamageMultipliers.Count; i++)
         {
             DamageMultipliers[i] = new KeyValuePair<float, int>(DamageMultipliers[i].Key, DamageMultipliers[i].Value - 1);
             if (DamageMultipliers[i].Value <= 0) toRemove.Add(DamageMultipliers[i]);
+            else if (DamageMultipliers[i].Key > 0) numPositive++;
+            else numNegative++;
         }
         foreach(KeyValuePair<float, int> multipler in toRemove)
         {
@@ -117,6 +138,9 @@ public abstract class Character : MonoBehaviour
         {
             DefenseMultipliers.Remove(multiplier);
         }
+        DefenseStack.ReDraw(DefenseMultipliers.Count);
+        BuffStack.ReDraw(numPositive);
+        DebuffStack.ReDraw(numNegative);
     }
 
     public void AddDefenseMultiplier(float multiplier, int time)
@@ -124,14 +148,14 @@ public abstract class Character : MonoBehaviour
         DefenseMultipliers.Add(new KeyValuePair<float, int>(multiplier, time));
     }
 
-    public void AddDamageMultipler(float multiplier, int time)
+    public void AddDamageMultiplier(float multiplier, int time)
     {
         DamageMultipliers.Add(new KeyValuePair<float, int>(multiplier, time));
     }
 
     public void Damage(float amount)
     {
-        Debug.Log("Taking Damage");
+        if (!alive) return;
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multiplier in DefenseMultipliers)
         {
@@ -169,6 +193,9 @@ public abstract class Character : MonoBehaviour
         alive = false;
         Destroy(EnergyBar.gameObject);
         Destroy(HealthBar.gameObject);
+        Destroy(DefenseStack.gameObject);
+        Destroy(BuffStack.gameObject);
+        Destroy(DebuffStack.gameObject);
         BattleModel.RemoveCharacter(this);
         BattleModel.SetShouldReschedule();
     }
@@ -225,7 +252,7 @@ public abstract class Character : MonoBehaviour
         try
         {
             player = target.GetAsPlayer().PlayerRef;
-        } catch (NullReferenceException ignored){
+        } catch {
             return;
         }
 
@@ -233,22 +260,42 @@ public abstract class Character : MonoBehaviour
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multipler in DamageMultipliers)
         {
-            totalMultiplier += multipler.Value;
+            totalMultiplier += multipler.Key;
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         damage *= totalMultiplier;
-        Debug.Log("Dishing Out Damage");
         player.Damage(damage);
+        Anim.SetTrigger("Attack");
     }
 
     public virtual void HealSelf()
     {
+        float amount = BaseSelfHeal;
+        float totalMultiplier = 1;
         Debug.Log(this + "Healing Self");
+        foreach (KeyValuePair<float, int> multipler in DamageMultipliers)
+        {
+            totalMultiplier += multipler.Key;
+        }
+        totalMultiplier = Mathf.Max(totalMultiplier, 0);
+        amount *= totalMultiplier;
+        Heal(amount);
+        Anim.SetTrigger("Cast");
     }
 
     public virtual void DefendSelf()
     {
+        float amount = BaseSelfDefend;
+        float totalMultiplier = 1;
         Debug.Log(this + "Defending Self");
+        foreach (KeyValuePair<float, int> multiplier in DamageMultipliers)
+        {
+            totalMultiplier += multiplier.Key;
+        }
+        totalMultiplier = Mathf.Max(totalMultiplier, 0);
+        amount *= totalMultiplier;
+        AddDefenseMultiplier(amount, 10);
+        Anim.SetTrigger("Cast");
     }
 
     public virtual void Heal(Value target)
@@ -319,6 +366,14 @@ public abstract class Character : MonoBehaviour
             Destroy(HealthBar.gameObject);
         if (Platform != null)
             Destroy(Platform.gameObject);
+        if (DefenseStack != null)
+            Destroy(DefenseStack.gameObject);
+        if (BuffStack != null)
+            Destroy(BuffStack.gameObject);
+        if (DebuffStack != null)
+            Destroy(DebuffStack.gameObject);
+        Anim.ResetTrigger("Attack");
+        Anim.ResetTrigger("Cast");
         Anim.SetTrigger("Default");
     }
 }

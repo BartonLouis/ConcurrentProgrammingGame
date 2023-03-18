@@ -71,6 +71,11 @@ namespace Interpreter
             return new StringValue(Value.ToString());
         }
 
+        public override ClassValue GetAsClass()
+        {
+            return this;
+        }
+
         public static BoolValue EQ(ClassValue c1, ClassValue c2)
         {
             if (c1.Value == ClassType.Any || c2.Value == ClassType.Any)

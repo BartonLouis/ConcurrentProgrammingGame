@@ -66,6 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c749f4fa08dc2bc4e8a7feea2227870e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BuffTime: 20
   EnergyBarPrefab: {fileID: 4522602057010068491, guid: 413d59df7b28bde4cafa0b6defa5400d,
     type: 3}
   HealthBarPrefab: {fileID: 1019763307383523487, guid: fc93bd18524e2c840a172e0ee0af150b,
@@ -73,6 +74,12 @@ MonoBehaviour:
   PlatformPrefab: {fileID: 1777563765519442289, guid: 338f183c73dd9ba40bf1e01093d5a267,
     type: 3}
   DamageTextPrefab: {fileID: 3839208161690721630, guid: aaf28185bdb270747b7bb4c5c6261927,
+    type: 3}
+  DefenseBuffStackPrefab: {fileID: 1187169171353678256, guid: b4e2de6aa59c6fa42a3203a71a352bb8,
+    type: 3}
+  BuffStackPrefab: {fileID: 6735046665856783642, guid: b1194c7b73d014b4087b4858fe232829,
+    type: 3}
+  DebuffStackPrefab: {fileID: 7721952348311973177, guid: 2f1e8e7a73d5e6349b3563989ab5f6ac,
     type: 3}
   BaseMaxHealth: 100
   BaseDamage: 20

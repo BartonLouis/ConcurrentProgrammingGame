@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Slider: {fileID: 1019763307383523482}
-  Offset: {x: -1, y: -0.5, z: 0}
+  Offset: {x: -1, y: -0.3, z: 0}
 --- !u!1 &1019763308230480577
 GameObject:
   m_ObjectHideFlags: 0

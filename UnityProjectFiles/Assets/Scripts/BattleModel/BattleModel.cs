@@ -144,17 +144,23 @@ public class BattleModel : MonoBehaviour
     }
     
     public PlayerValue GetEnemyOfType(Character character, Value playerClass){
-        Debug.Log("Getting enemy of type: " + playerClass);
-        if (playerClass == null) return null;
+        
+        if (playerClass == null)
+        {
+            return null;
+        }
         ClassValue classValue = playerClass.GetAsClass();
-        if (classValue == null) return null;
+
+        if (classValue == null) {
+            return null;
+        }
 
         // Logic to get a player reference
         List<Character> choices = new List<Character>();
         foreach(Character c in Characters)
         {
             // If Character is alive and is on the same team and isn't the same as the character requesting a teammate and they have the requested class
-            if (c.IsAlive() && c.Team != character.Team && (c.ClassType == classValue.Value || c.ClassType == ClassValue.ClassType.Any))
+            if (c.IsAlive() && c.Team != character.Team && (c.ClassType == classValue.Value || classValue.Value == ClassValue.ClassType.Any))
             {
                 choices.Add(c);
             }

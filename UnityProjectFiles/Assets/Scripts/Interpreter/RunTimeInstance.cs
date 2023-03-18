@@ -322,7 +322,7 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Environment.SetVariable(context.v.ID().GetText(), VisitFunction(context.f));
+                Environment.SetVariable(context.v.ID().GetText(), Visit(context.f));
                 return null;
             };
             return null;
@@ -346,7 +346,6 @@ namespace Interpreter
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
-                Debug.Log("Attacking");
                 Value target = VisitAtom(context.a);
                 Character.Attack(target);
                 return null;
@@ -501,7 +500,6 @@ namespace Interpreter
         {
             // Logic to Get an enemy of type a
             Value a = Visit(context.a);
-            Debug.Log("Here");
             return BattleModel.GetEnemyOfType(Character, a);
         }
 
@@ -701,7 +699,6 @@ namespace Interpreter
 
         public override Value VisitVar([NotNull] LanguageParserParser.VarContext context)
         {
-            Debug.Log("Looking for variable");
             // Lookup a variables value in the environment table
             return Environment.Lookup(context.ID().GetText());
         }

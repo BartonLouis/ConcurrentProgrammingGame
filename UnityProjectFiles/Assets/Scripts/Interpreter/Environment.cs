@@ -16,7 +16,7 @@ namespace Interpreter
 
         public void SetVariable(string name, Value value)
         {
-            Debug.Log("Setting : " + name);
+            Debug.Log("Setting : " + name + " " + value);
             if (Variables.ContainsKey(name))
             {
                 Variables[name] = value;
