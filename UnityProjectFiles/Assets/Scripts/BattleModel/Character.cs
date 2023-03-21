@@ -15,6 +15,8 @@ public abstract class Character : MonoBehaviour
     [SerializeField] GameObject DefenseBuffStackPrefab;
     [SerializeField] GameObject BuffStackPrefab;
     [SerializeField] GameObject DebuffStackPrefab;
+    [SerializeField] GameObject GetHitParticlePrefab;
+    [SerializeField] GameObject AttackParticlePrefab;
 
     [Space(10)]
     
@@ -171,6 +173,7 @@ public abstract class Character : MonoBehaviour
 
     public void Damage(float amount)
     {
+        Instantiate(GetHitParticlePrefab, transform.position, Quaternion.identity);
         if (!alive) return;
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multiplier in DefenseMultipliers)
@@ -282,6 +285,8 @@ public abstract class Character : MonoBehaviour
             damage *= totalMultiplier;
             player.Damage(damage);
             Anim.SetTrigger("Attack");
+            GameObject particles = Instantiate(AttackParticlePrefab, transform.position, Quaternion.identity);
+            particles.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         } catch {
             return;
         }

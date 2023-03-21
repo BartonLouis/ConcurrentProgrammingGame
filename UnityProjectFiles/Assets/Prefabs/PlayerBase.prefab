@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e8941e8da2451144b7e712c09586aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TeamColor: {r: 0, g: 0.5943396, b: 0, a: 1}
+  TeamColor: {r: 0, g: 1, b: 0, a: 1}
   EnemyColor: {r: 0.5, g: 0, b: 0, a: 1}
 --- !u!95 &3279213689153478254
 Animator:

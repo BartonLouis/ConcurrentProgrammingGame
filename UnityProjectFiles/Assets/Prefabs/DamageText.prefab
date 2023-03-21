@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DamageColor: {r: 0.6792453, g: 0, b: 0, a: 1}
   HealColor: {r: 0, g: 1, b: 0, a: 1}
-  lifetime: 1
+  lifetime: 2
 --- !u!95 &3839208161690721631
 Animator:
   serializedVersion: 4
