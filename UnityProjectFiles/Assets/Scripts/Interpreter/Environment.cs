@@ -16,7 +16,6 @@ namespace Interpreter
 
         public void SetVariable(string name, Value value)
         {
-            Debug.Log("Setting : " + name + " " + value);
             if (Variables.ContainsKey(name))
             {
                 Variables[name] = value;
@@ -25,15 +24,12 @@ namespace Interpreter
             {
                 Variables.Add(name, value);
             }
-            Debug.Log("Setting complete: " + name + " " + value);
         }
 
         public Value Lookup(string name)
         {
-            Debug.Log("Looking for: " + name);
             if (Variables.ContainsKey(name))
             {
-                Debug.Log("Found: " + Variables[name]);
                 return Variables[name];
             }
             else

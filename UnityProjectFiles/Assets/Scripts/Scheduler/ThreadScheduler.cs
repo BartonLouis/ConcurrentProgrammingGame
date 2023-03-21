@@ -62,7 +62,10 @@ public class ThreadScheduler
         foreach (Character character in Characters)
         {
             if (character != null && character.Team.TeamNum == team.TeamNum)
+            {
                 PriorityRecords[character].Boost(YieldBoost);
+                MinWaitTimeRecords[character].ClearFrom(CurrentTime);
+            }
         }
     }
 

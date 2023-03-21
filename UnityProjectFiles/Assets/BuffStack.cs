@@ -14,7 +14,6 @@ public class BuffStack : MonoBehaviour
 
     public void ReDraw(int numBuffs)
     {
-        Debug.Log("Redrawing: " + numBuffs);
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);

@@ -33,6 +33,7 @@ public class PauseMenuController : MonoBehaviour
 
     public void PauseButtonPressed()
     {
+        Debug.Log("Here");
         Controller.PauseGame();
     }
 

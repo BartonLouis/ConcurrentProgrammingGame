@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BuffTime: 20
-  EnergyBarPrefab: {fileID: 4522602057010068491, guid: 413d59df7b28bde4cafa0b6defa5400d,
+  EnergyBarPrefab: {fileID: 7804546253095224881, guid: 413d59df7b28bde4cafa0b6defa5400d,
     type: 3}
   HealthBarPrefab: {fileID: 1019763307383523487, guid: fc93bd18524e2c840a172e0ee0af150b,
     type: 3}

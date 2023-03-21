@@ -112,7 +112,8 @@ literal
 	| boolean		
 	| class		
 	| INT		
-	| STRING	
+	| STRING
+	| SELF
 	;
 
 message : '{' a1=atom ',' a2=atom '}';
@@ -194,6 +195,7 @@ DAMAGE	: 'Damage';
 SUPPORT	: 'Support';
 TANK	: 'Tank';
 ANY		: 'Any';
+SELF	: 'Self';
 INT		: ('-')? [0-9]+;
 STRING	: '"' [ a-zA-Z0-9]*? '"';
 ID		: (LOWERCASE | UPPERCASE | '_')+;

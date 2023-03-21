@@ -22,11 +22,11 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         GameObject background = GameObject.Find("ArenaBackground");
-        SpriteRenderer image = background.GetComponent<SpriteRenderer>();
-        MinX = image.transform.position.x - image.bounds.size.x / 2f;
-        MaxX = image.transform.position.x + image.bounds.size.x / 2f;
-        MinY = image.transform.position.y - image.bounds.size.y / 2f;
-        MaxY = image.transform.position.y + image.bounds.size.y / 2f;
+        RectTransform rect = background.GetComponent<RectTransform>();
+        MinX = rect.transform.position.x - rect.rect.width / 2f;
+        MaxX = rect.transform.position.x + rect.rect.width / 2f;
+        MinY = rect.transform.position.y - rect.rect.height / 2f;
+        MaxY = rect.transform.position.y + rect.rect.height / 2f;
 
         cam = Camera.main;
         UILayer = LayerMask.NameToLayer("UI");

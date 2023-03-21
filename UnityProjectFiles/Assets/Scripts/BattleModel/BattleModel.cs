@@ -27,6 +27,9 @@ public class BattleModel : MonoBehaviour
     private bool shouldReschedule = false;
     private System.Random Rnd;
 
+    private TeamCenter Team1;
+    private TeamCenter Team2;
+
     public void Awake()
     {
         instance = this;
@@ -45,7 +48,7 @@ public class BattleModel : MonoBehaviour
         DebugInfo = GameObject.Find("DebugInfoInGame").GetComponent<TextMeshProUGUI>();
     }
 
-    public void StartBattle(Character[] characters, int numCores)
+    public void StartBattle(Character[] characters, int numCores, TeamCenter t1, TeamCenter t2)
     {
         CurrentTimeStep = 0;
         Characters = characters;
@@ -59,6 +62,8 @@ public class BattleModel : MonoBehaviour
         {
             Cores[i] = new Core(i);
         }
+        Team1 = t1;
+        Team2 = t2;
         ThreadScheduler = new ThreadScheduler(Characters, Cores, MinQueueTime, MaxQueueTime, ForecastSize, YieldBoost, PassivePriorityBoost, MinTimeBetweenTurns);
         
     }
@@ -102,6 +107,10 @@ public class BattleModel : MonoBehaviour
         }
         ThreadScheduler.Step(CurrentTimeStep);
 
+        if (Team1.AllDead())
+            Controller.GameOver(Team2);
+        if (Team2.AllDead())
+            Controller.GameOver(Team1);
         
         if (shouldReschedule)
         {
@@ -181,7 +190,7 @@ public class BattleModel : MonoBehaviour
         List<Character> choices = new List<Character>();
         foreach(Character c in Characters)
         {
-            if (c.IsAlive() && c.Team == character.Team && c != character && (c.ClassType == classValue.Value || c.ClassType == ClassValue.ClassType.Any))
+            if (c.IsAlive() && c.Team == character.Team && c != character && (c.ClassType == classValue.Value || classValue.Value == ClassValue.ClassType.Any))
             {
                 choices.Add(c);
             }
@@ -209,7 +218,16 @@ public class BattleModel : MonoBehaviour
 
     public BoolValue IsNotNone(Value variable)
     {
-        return new BoolValue(variable != null);
+        if (variable == null) return new BoolValue(false);
+        try
+        {
+            Character c = variable.GetAsPlayer().PlayerRef;
+            return new BoolValue(c.IsAlive());
+        } catch
+        { 
+            return new BoolValue(variable != null);
+        }
+
     }
 
     public PlayerValue GetPlayerComponent(Value message)
@@ -237,6 +255,30 @@ public class BattleModel : MonoBehaviour
         if (playerValue == null) return null;
 
         return new ClassValue(playerValue.PlayerRef.ClassType);
+    }
+
+    public void SendMessageToAll(TeamCenter team, MessageValue message)
+    {
+        foreach (Character c in Characters)
+        {
+            if (c.IsAlive() && c.Team == team)
+            {
+                c.ReceiveMessage(message);
+            }
+        }
+    }
+
+    public int GetNumberOfTeammates(Character character)
+    {
+        int teammates = 0;
+        foreach (Character c in Characters)
+        {
+            if (c.IsAlive() && c != character && c.Team == character.Team)
+            {
+                teammates++;
+            }
+        }
+        return teammates;
     }
 
 }

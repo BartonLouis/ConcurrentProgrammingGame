@@ -13,7 +13,7 @@ public class Support : Character
         BaseTeamHeal = 40;
         BaseSelfDefend = 0.3f;
         BaseTeamDefend = 0.0f;
-        BaseBoost = 0.25f;
+        BaseBoost = 0.8f;
         BaseBlock = 0.0f;
 
         ClassType = ClassValue.ClassType.Support;

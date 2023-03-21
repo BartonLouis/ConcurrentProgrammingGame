@@ -151,4 +151,15 @@ public class TeamCenter : MonoBehaviour
             // angle += direction * nextAngle;
         }
     }
+
+    public bool AllDead()
+    {
+        List<Character> characters = GetCharacters();
+        foreach(Character c in characters)
+        {
+            if (c.IsAlive())
+                return false;
+        }
+        return true;
+    }
 }

@@ -42,7 +42,14 @@ public class PriorityRecord
 
     public void Boost(int amount)
     {
-        foreach (int timeStep in PriorityMap.Keys)
+        Debug.Log(amount);
+        List<int> keys = new List<int>();
+        foreach(int timeStep in PriorityMap.Keys)
+        {
+            // if (PriorityMap[timeStep] > 0)
+            keys.Add(timeStep);
+        }
+        foreach (int timeStep in keys)
         {
             PriorityMap[timeStep] += amount;
         }

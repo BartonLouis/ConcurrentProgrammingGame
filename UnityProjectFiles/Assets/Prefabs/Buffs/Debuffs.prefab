@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -9.2, y: -8.5}
-  m_SizeDelta: {x: 0.5, y: 3.4409}
+  m_SizeDelta: {x: 0.5, y: 3.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7620856759120906748
 MonoBehaviour:
@@ -78,4 +78,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BuffPrefab: {fileID: 196230458638708455, guid: 26e5599e5b687494a90ce6cbc96b268f,
     type: 3}
-  Offset: {x: 0.8, y: 1.5, z: 0}
+  Offset: {x: 1.1, y: 2, z: 0}

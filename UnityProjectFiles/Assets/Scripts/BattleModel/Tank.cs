@@ -12,16 +12,17 @@ public class Tank : Character
         BaseDamage = 20;
         BaseSelfHeal = 15;
         BaseTeamHeal = 0;
-        BaseSelfDefend = 0.4f;
-        BaseTeamDefend = 0.4f;
+        BaseSelfDefend = 0.6f;
+        BaseTeamDefend = 0.6f;
         BaseBoost = 0.0f;
-        BaseBlock = -0.2f;
+        BaseBlock = -0.5f;
 
         ClassType = ClassValue.ClassType.Tank;
     }
 
     public override void Defend(Value target)
     {
+        Debug.Log("Here " + target);
         Character player;
         try
         {
@@ -31,17 +32,16 @@ public class Tank : Character
         {
             return;
         }
+        Debug.Log("Defending " + player);
 
         float amount = BaseTeamDefend;
         float totalMultiplier = 1;
-        Debug.Log(this + "Defending Self");
         foreach (KeyValuePair<float, int> multiplier in DamageMultipliers)
         {
             totalMultiplier += multiplier.Key;
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
-        AddDefenseMultiplier(amount, 10);
         player.AddDefenseMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
     }
@@ -59,14 +59,12 @@ public class Tank : Character
         }
         float amount = BaseBlock;
         float totalMultiplier = 1;
-        Debug.Log(this + "Defending Self");
         foreach (KeyValuePair<float, int> multiplier in DamageMultipliers)
         {
             totalMultiplier += multiplier.Key;
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
-        AddDefenseMultiplier(amount, 10);
         player.AddDamageMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
     }

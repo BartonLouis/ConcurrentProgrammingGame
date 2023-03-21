@@ -74,8 +74,8 @@ public abstract class Character : MonoBehaviour
         HealthBar = healthBar.GetComponent<HealthBar>();
         Platform = platform.GetComponent<PlayerPlatform>();
         DefenseStack = defenseStack.GetComponent<BuffStack>();
-        BuffStack = defenseStack.GetComponent<BuffStack>();
-        DebuffStack = defenseStack.GetComponent<BuffStack>();
+        BuffStack = buffStack.GetComponent<BuffStack>();
+        DebuffStack = debuffStack.GetComponent<BuffStack>();
 
         HealthBar.SetMaxHealth(BaseMaxHealth);
         HealthBar.SetHealth(BaseMaxHealth);
@@ -138,19 +138,35 @@ public abstract class Character : MonoBehaviour
         {
             DefenseMultipliers.Remove(multiplier);
         }
-        DefenseStack.ReDraw(DefenseMultipliers.Count);
-        BuffStack.ReDraw(numPositive);
-        DebuffStack.ReDraw(numNegative);
+        if (DefenseStack != null)
+            DefenseStack.ReDraw(DefenseMultipliers.Count);
+        if (BuffStack != null)
+            BuffStack.ReDraw(numPositive);
+        if (DebuffStack != null)
+            DebuffStack.ReDraw(numNegative);
     }
 
     public void AddDefenseMultiplier(float multiplier, int time)
     {
+        if (!alive) return;
         DefenseMultipliers.Add(new KeyValuePair<float, int>(multiplier, time));
+        DefenseStack.ReDraw(DefenseMultipliers.Count);
     }
 
     public void AddDamageMultiplier(float multiplier, int time)
     {
         DamageMultipliers.Add(new KeyValuePair<float, int>(multiplier, time));
+        int positive = 0;
+        int negative = 0;
+        foreach (KeyValuePair<float, int> m in DamageMultipliers)
+        {
+            if (m.Key >= 0) positive++;
+            else negative++;
+        }
+        if (BuffStack != null)
+            BuffStack.ReDraw(positive);
+        if (DebuffStack != null)
+            DebuffStack.ReDraw(negative);
     }
 
     public void Damage(float amount)
@@ -191,6 +207,9 @@ public abstract class Character : MonoBehaviour
         Anim.SetBool("IsDead", true);
         Anim.SetTrigger("Hurt");
         alive = false;
+        tookTurn = false;
+        EnergyBar.Hide();
+        Platform.Hide();
         Destroy(EnergyBar.gameObject);
         Destroy(HealthBar.gameObject);
         Destroy(DefenseStack.gameObject);
@@ -252,27 +271,26 @@ public abstract class Character : MonoBehaviour
         try
         {
             player = target.GetAsPlayer().PlayerRef;
+
+            float damage = BaseDamage;
+            float totalMultiplier = 1;
+            foreach (KeyValuePair<float, int> multipler in DamageMultipliers)
+            {
+                totalMultiplier += multipler.Key;
+            }
+            totalMultiplier = Mathf.Max(totalMultiplier, 0);
+            damage *= totalMultiplier;
+            player.Damage(damage);
+            Anim.SetTrigger("Attack");
         } catch {
             return;
         }
-
-        float damage = BaseDamage;
-        float totalMultiplier = 1;
-        foreach(KeyValuePair<float, int> multipler in DamageMultipliers)
-        {
-            totalMultiplier += multipler.Key;
-        }
-        totalMultiplier = Mathf.Max(totalMultiplier, 0);
-        damage *= totalMultiplier;
-        player.Damage(damage);
-        Anim.SetTrigger("Attack");
     }
 
     public virtual void HealSelf()
     {
         float amount = BaseSelfHeal;
         float totalMultiplier = 1;
-        Debug.Log(this + "Healing Self");
         foreach (KeyValuePair<float, int> multipler in DamageMultipliers)
         {
             totalMultiplier += multipler.Key;
@@ -287,7 +305,6 @@ public abstract class Character : MonoBehaviour
     {
         float amount = BaseSelfDefend;
         float totalMultiplier = 1;
-        Debug.Log(this + "Defending Self");
         foreach (KeyValuePair<float, int> multiplier in DamageMultipliers)
         {
             totalMultiplier += multiplier.Key;
@@ -330,12 +347,31 @@ public abstract class Character : MonoBehaviour
 
     public virtual void SendMessageTo(Value player, Value message)
     {
-        Debug.Log(this + "Sending Message");
+        Character target;
+        try
+        {
+            Debug.Log("Sending " + message + " to " + player);
+            target = player.GetAsPlayer().PlayerRef;
+            if (target.IsAlive())
+                target.ReceiveMessage(message.GetAsMessage());
+        } catch
+        {
+            return;
+        }
     }
 
     public virtual void SendMessageToAll(Value message)
     {
-        Debug.Log("Sending Message To All");
+        try
+        {
+            MessageValue m = message.GetAsMessage();
+            Debug.Log("Sending Message To All: " + m);
+            BattleModel.SendMessageToAll(Team, m); 
+        } catch
+        {
+            Debug.Log("An Error occured");
+            return;
+        }
     }
 
     public virtual void Listen()
@@ -345,12 +381,15 @@ public abstract class Character : MonoBehaviour
 
     public virtual void Yield()
     {
+        BattleModel.SetShouldReschedule(Team);
         Debug.Log("Yielding");
     }
 
     public void ReceiveMessage(MessageValue message)
     {
+        Debug.Log("Here: " + message + " " + RuntimeInstance);
         RuntimeInstance.ReceiveMessage(message);
+        Debug.Log("Here2");
     }
 
     public override string ToString()

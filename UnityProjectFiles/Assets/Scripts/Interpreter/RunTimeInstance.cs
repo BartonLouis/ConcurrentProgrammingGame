@@ -18,26 +18,27 @@ namespace Interpreter
             Executing       // Perform action on completion of Listen or Wait
         }
 
-        private static readonly Dictionary<string, Func<int>> WaitTimes = new Dictionary<string, Func<int>>()
+        private static Dictionary<string, Func<Character, int>> WaitTimes = new Dictionary<string, Func<Character, int>>()
         {
-            {"BoolExpr",        () => {return 1;} },
-            {"Assignment",      () => {return 1;} },
-            {"Attack",          () => {return 4;} },
-            {"HealSelf",        () => {return 6;} },
-            {"DefendSelf",      () => {return 6;} },
-            {"Heal",            () => {return 4;} },
-            {"Boost",           () => {return 6;} },
-            {"Defend",          () => {return 8;} },
-            {"Block",           () => {return 10;} },
-            {"Lock",            () => {return 6;} },
-            {"ChargeUp",        () => {return 8;} },
-            {"SendMessageTo",   () => {return 6;} },
-            {"SendMessageToAll",() => {
+            {"BoolExpr",        (c) => {return 0;} },
+            {"Assignment",      (c) => {return 0;} },
+            {"Attack",          (c) => {return 8;} },
+            {"HealSelf",        (c) => {return 4;} },
+            {"DefendSelf",      (c) => {return 3;} },
+            {"Heal",            (c) => {return 3;} },
+            {"Boost",           (c) => {return 3;} },
+            {"Defend",          (c) => {return 4;} },
+            {"Block",           (c) => {return 6;} },
+            {"Lock",            (c) => {return 0;} },
+            {"ChargeUp",        (c) => {return 8;} },
+            {"SendMessageTo",   (c) => {return 1;} },
+            {"SendMessageToAll",(c) => {
                 // Logic to get the number of players alive and multiple by cost of sending one message
-                // Todo
-                return 10;}
+                // However, if the given player is a tank, then they have reduced cost as
+                if (c.ClassType == ClassValue.ClassType.Tank) return Mathf.Min(3,BattleModel.instance.GetNumberOfTeammates(c) * WaitTimes["SendMessageTo"](c)) ;
+                return BattleModel.instance.GetNumberOfTeammates(c) * WaitTimes["SendMessageTo"](c);}
             },
-            {"Yield",           () => {return 1;}}
+            {"Yield",           (c) => {return 0;}}
         };
 
         private int WaitTime;                       // Number of steps required before action complete
@@ -133,7 +134,24 @@ namespace Interpreter
                         if (NextInstructionCallStack.Count > 0)
                         {
                             Visit(NextInstructionCallStack.Pop());
-                            EnergyBar.Setup(WaitTime);
+                            if (State == RunTimeState.Listening)
+                            {
+                                EnergyBar.Setup("Listening...");
+                            } else if (State == RunTimeState.Locking)
+                            {
+                                EnergyBar.Setup("Locking...");
+                            } else
+                            {
+                                if (WaitTime == 0)
+                                {
+                                    OnExecute?.Invoke();
+                                    EnergyBar.Setup("Thinking...");
+                                    State = RunTimeState.Loading;
+                                } else
+                                {
+                                    EnergyBar.Setup(WaitTime);
+                                }
+                            }
                         }
                         break;
                     case RunTimeState.Waiting:
@@ -149,9 +167,6 @@ namespace Interpreter
                     case RunTimeState.Listening:
                         // Check for messages, do nothing if no messages
                         if (MessageQueue.Count > 0)
-                        {
-                            State = RunTimeState.Executing;
-                        } else
                         {
                             OnExecute?.Invoke();
                             State = RunTimeState.Loading;
@@ -187,7 +202,8 @@ namespace Interpreter
 
         public void ReceiveMessage(MessageValue message)
         {
-
+            Debug.Log("Message Received: " + message);
+            MessageQueue.Enqueue(message);
         }
 
 
@@ -209,7 +225,7 @@ namespace Interpreter
         public override Value VisitSingleIf([NotNull] LanguageParserParser.SingleIfContext context)
         {
             // Wait to evaluate expression
-            WaitTime = WaitTimes["BoolExpr"]();
+            WaitTime = WaitTimes["BoolExpr"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -227,7 +243,7 @@ namespace Interpreter
         public override Value VisitExtendedIf([NotNull] LanguageParserParser.ExtendedIfContext context)
         {
             // Wait to evaluate expression
-            WaitTime = WaitTimes["BoolExpr"]();
+            WaitTime = WaitTimes["BoolExpr"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -258,7 +274,7 @@ namespace Interpreter
 
         public override Value VisitWhile([NotNull] LanguageParserParser.WhileContext context)
         {
-            WaitTime = WaitTimes["BoolExpr"]();
+            WaitTime = WaitTimes["BoolExpr"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -277,7 +293,7 @@ namespace Interpreter
         public override Value VisitAtomAssignment([NotNull] LanguageParserParser.AtomAssignmentContext context)
         {
             // This instruction will take one time step to execute
-            WaitTime = WaitTimes["Assignment"]();
+            WaitTime = WaitTimes["Assignment"](Character);
             State = RunTimeState.Waiting;
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
@@ -291,7 +307,7 @@ namespace Interpreter
         public override Value VisitMathExprAssignment([NotNull] LanguageParserParser.MathExprAssignmentContext context)
         {
             // This instruction will take one time step to execute
-            WaitTime = WaitTimes["Assignment"]();
+            WaitTime = WaitTimes["Assignment"](Character);
             State = RunTimeState.Waiting;
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
@@ -305,7 +321,7 @@ namespace Interpreter
         public override Value VisitBoolExprAssignment([NotNull] LanguageParserParser.BoolExprAssignmentContext context)
         {
             // This instruction will take one time step to execute
-            WaitTime = WaitTimes["Assignment"]();
+            WaitTime = WaitTimes["Assignment"](Character);
             State = RunTimeState.Waiting;
             // Once the wait time is over, assign a value to the variable by evaluating the right expression
             OnExecute = () =>
@@ -318,7 +334,7 @@ namespace Interpreter
 
         public override Value VisitFunctionAssignment([NotNull] LanguageParserParser.FunctionAssignmentContext context)
         {
-            WaitTime = WaitTimes["Assignment"]();
+            WaitTime = WaitTimes["Assignment"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -330,7 +346,6 @@ namespace Interpreter
 
         public override Value VisitListenAssignment([NotNull] LanguageParserParser.ListenAssignmentContext context)
         {
-            WaitTime = WaitTimes["Listen"]();
             State = RunTimeState.Listening;
             OnExecute = () =>
             {
@@ -342,7 +357,7 @@ namespace Interpreter
 
         public override Value VisitAttack([NotNull] LanguageParserParser.AttackContext context)
         {
-            WaitTime = WaitTimes["Attack"]();
+            WaitTime = WaitTimes["Attack"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -355,7 +370,7 @@ namespace Interpreter
 
         public override Value VisitHealSelf([NotNull] LanguageParserParser.HealSelfContext context)
         {
-            WaitTime = WaitTimes["HealSelf"]();
+            WaitTime = WaitTimes["HealSelf"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -367,7 +382,7 @@ namespace Interpreter
 
         public override Value VisitDefendSelf([NotNull] LanguageParserParser.DefendSelfContext context)
         {
-            WaitTime = WaitTimes["DefendSelf"]();
+            WaitTime = WaitTimes["DefendSelf"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -379,7 +394,7 @@ namespace Interpreter
 
         public override Value VisitHeal([NotNull] LanguageParserParser.HealContext context)
         {
-            WaitTime = WaitTimes["Heal"]();
+            WaitTime = WaitTimes["Heal"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -392,7 +407,7 @@ namespace Interpreter
 
         public override Value VisitBoost([NotNull] LanguageParserParser.BoostContext context)
         {
-            WaitTime = WaitTimes["Boost"]();
+            WaitTime = WaitTimes["Boost"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -405,10 +420,11 @@ namespace Interpreter
 
         public override Value VisitDefend([NotNull] LanguageParserParser.DefendContext context)
         {
-            WaitTime = WaitTimes["Defend"]();
+            WaitTime = WaitTimes["Defend"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Debug.Log("Defend");
                 Value target = VisitAtom(context.a);
                 Character.Defend(target);
                 return null;
@@ -419,7 +435,7 @@ namespace Interpreter
 
         public override Value VisitBlock([NotNull] LanguageParserParser.BlockContext context)
         {
-            WaitTime = WaitTimes["Block"]();
+            WaitTime = WaitTimes["Block"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -432,7 +448,7 @@ namespace Interpreter
 
         public override Value VisitLock([NotNull] LanguageParserParser.LockContext context)
         {
-            WaitTime = WaitTimes["Lock"]();
+            WaitTime = WaitTimes["Lock"](Character);
             State = RunTimeState.Locking;
             OnExecute = () =>
             {
@@ -445,7 +461,7 @@ namespace Interpreter
 
         public override Value VisitChargeUp([NotNull] LanguageParserParser.ChargeUpContext context)
         {
-            WaitTime = WaitTimes["ChargeUp"]();
+            WaitTime = WaitTimes["ChargeUp"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -457,7 +473,7 @@ namespace Interpreter
 
         public override Value VisitSendMessageTo([NotNull] LanguageParserParser.SendMessageToContext context)
         {
-            WaitTime = WaitTimes["SendMessageTo"]();
+            WaitTime = WaitTimes["SendMessageTo"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -471,7 +487,7 @@ namespace Interpreter
 
         public override Value VisitSendMessageToAll([NotNull] LanguageParserParser.SendMessageToAllContext context)
         {
-            WaitTime = WaitTimes["SendMessageToAll"]();
+            WaitTime = WaitTimes["SendMessageToAll"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
@@ -484,10 +500,12 @@ namespace Interpreter
 
         public override Value VisitYield([NotNull] LanguageParserParser.YieldContext context)
         {
-            WaitTime = WaitTimes["Yield"]();
+            Debug.Log("Yielding");
+            WaitTime = WaitTimes["Yield"](Character);
             State = RunTimeState.Waiting;
             OnExecute = () =>
             {
+                Debug.Log("Yield Complete");
                 Character.Yield();
                 return null;
             };
@@ -713,6 +731,8 @@ namespace Interpreter
             else if (context.STRING() != null)
             {
                 return new StringValue(context.STRING().GetText().Replace("\"", ""));
+            } else if (context.SELF() != null){
+                return new PlayerValue(Character);
             }
             else if (context.message() != null)
             {
@@ -735,8 +755,8 @@ namespace Interpreter
         public override Value VisitMessage([NotNull] LanguageParserParser.MessageContext context)
         {
             return new MessageValue(
-                Visit(context.a1).GetAsPlayer(),
-                Visit(context.a2).GetAsString()
+                Visit(context.a1).GetAsPlayer(),    // player component first
+                Visit(context.a2).GetAsString()     // Text component second
             );
         }
 
@@ -785,11 +805,7 @@ namespace Interpreter
             return null;
         }
 
-        public override Value VisitFunction([NotNull] LanguageParserParser.FunctionContext context)
-        {
-            
-            return base.VisitFunction(context);
-        }
+        
 
     }
 }

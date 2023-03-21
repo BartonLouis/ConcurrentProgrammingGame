@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     public static int NumCores = 3;
     public static int MinQueueTime = 5;
     public static int MaxQueueTime = 15;
-    public static int YieldBoost = 1;
+    public static int YieldBoost = 5;
     public static int PassivePriorityBoost = 1;
     public static int TimeBetweenTurns = 0;
     private System.Random Rnd;
@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour
     private PauseMenuController PauseMenu;
     private BattleModel BattleModel;
     private ScheduleVisualiser ScheduleVisualiser;
+    private EndGameScreenController GameOverScreen;
 
 
     [HideInInspector] public GameState CurrentGameState { get; set; }
@@ -69,6 +70,7 @@ public class GameController : MonoBehaviour
         PauseMenu = PauseMenuController.instance;
         BattleModel = BattleModel.instance;
         ScheduleVisualiser = ScheduleVisualiser.instance;
+        GameOverScreen = EndGameScreenController.instance;
         Rnd = new System.Random();
 
 
@@ -260,7 +262,7 @@ public class GameController : MonoBehaviour
             characters.AddRange(Team1.GetCharacters());
             characters.AddRange(Team2.GetCharacters());
             ScheduleVisualiser.Setup(NumCores);
-            BattleModel.StartBattle(characters.ToArray(), NumCores);
+            BattleModel.StartBattle(characters.ToArray(), NumCores, Team1, Team2);
 
             // Setup UI elements
             CharacterPanel.Hide();
@@ -320,5 +322,33 @@ public class GameController : MonoBehaviour
     {
         ScheduleVisualiser.Reset(representation);
     }
+
+
+    // End of Game Sections
+
+    public void GameOver(TeamCenter winner)
+    {
+        Paused = true;
+        GameOverScreen.Show(winner == Team1);
+    }
+
+    public void EndGameNext()
+    {
+        Paused = false;
+        Debug.Log("Next Button Pressed");
+        GameOverScreen.Hide();
+        // Temporary, later on this will go to the next level
+        MainMenu();
+    }
+
+    public void EndGameRetry()
+    {
+        Paused = false;
+        Debug.Log("Retrying...");
+        GameOverScreen.Hide();
+        Stop();
+    }
+
+    
     
 }
