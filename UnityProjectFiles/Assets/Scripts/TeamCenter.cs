@@ -7,6 +7,7 @@ public class TeamCenter : MonoBehaviour
     private List<GameObject> Players;
     private List<GameObject> EmptySlots;
     public GameObject EmptySlotPrefab;
+    public GameObject ChargePointPrefab;
 
     public GameObject DamagePrefab;
     public GameObject SupportPrefab;
@@ -19,12 +20,35 @@ public class TeamCenter : MonoBehaviour
     public int TeamNum;
     private float NumSpawns = 5;
 
+    private List<GameObject> ChargePoints;
+
 
     public void Init()
     {
         Players = new List<GameObject>();
         EmptySlots = new List<GameObject>();
         Reload();
+
+        // Spawn charge points
+        float nextAngle = 2 * Mathf.PI / Mathf.Max(2, NumSpawns);
+        // First Character should be at the front
+        float angle = nextAngle / 2;
+        ChargePoints = new List<GameObject>();
+        for (int i = 0; i < Mathf.Max(2, NumSpawns); i++) {
+            float x = Mathf.Cos(angle + (Mathf.PI / 180) * 90 - direction * 90 * (Mathf.PI / 180)) * Xradius;
+            float y = Mathf.Sin(angle + (Mathf.PI / 180) * 90 - direction * 90 * (Mathf.PI / 180)) * Yradius;
+            GameObject chargePoint = Instantiate(ChargePointPrefab, transform.position, Quaternion.identity);
+            chargePoint.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
+            ChargePoints.Add(chargePoint);
+            if (angle <= 0)
+            {
+                angle = nextAngle - angle;
+            }
+            else
+            {
+                angle = -angle;
+            }
+        }
     }
 
     public void SetTeamNum(int num)
@@ -67,20 +91,17 @@ public class TeamCenter : MonoBehaviour
         {
             case ClassValue.ClassType.Damage:
                 player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
-                player.GetComponent<Damage>().Team = this;
-                player.GetComponent<Damage>().ScriptFilename = filename;
                 break;
             case ClassValue.ClassType.Support:
-                player = Instantiate(SupportPrefab,  transform.position, Quaternion.identity);
-                player.GetComponent<Support>().Team = this;
-                player.GetComponent<Support>().ScriptFilename = filename;
+                player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
                 break;
             default:
                 player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
-                player.GetComponent<Tank>().Team = this;
-                player.GetComponent<Tank>().ScriptFilename = filename;
                 break;
         }
+        Character c = player.GetComponent<Character>();
+        c.Team = this;
+        c.ScriptFilename = filename;
         player.transform.localScale = new Vector3(player.transform.localScale.x * direction, player.transform.localScale.y, player.transform.localScale.z);
         Players.Add(player);
         Reload();
@@ -98,20 +119,17 @@ public class TeamCenter : MonoBehaviour
         {
             case ClassValue.ClassType.Damage:
                 player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
-                player.GetComponent<Damage>().Team = this;
-                player.GetComponent<Damage>().ScriptFilename = filename;
                 break;
             case ClassValue.ClassType.Support:
                 player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
-                player.GetComponent<Support>().Team = this;
-                player.GetComponent<Support>().ScriptFilename = filename;
                 break;
             default:
                 player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
-                player.GetComponent<Tank>().Team = this;
-                player.GetComponent<Tank>().ScriptFilename = filename;
                 break;
         }
+        Character c = player.GetComponent<Character>();
+        c.Team = this;
+        c.ScriptFilename = filename;
         player.transform.localScale = new Vector3(player.transform.localScale.x * direction, player.transform.localScale.y, player.transform.localScale.z);
         Players[index] = player;
         Reload();
@@ -134,6 +152,17 @@ public class TeamCenter : MonoBehaviour
             if (index < Players.Count)
             {
                 Players[index].transform.position = new Vector2(transform.position.x + x, transform.position.y+y);
+                Character c = Players[index].GetComponent<Character>();
+                // Set the left and right chargePoints of that character
+                if (index % 2 == 0)
+                {
+                    c.SetLeft(ChargePoints[(int)Mathf.Min(index + 1, NumSpawns - 1)].GetComponent<ChargePoint>());
+                    c.SetRight(ChargePoints[(int)Mathf.Max(0, index - 1)].GetComponent<ChargePoint>());
+                } else
+                {
+                    c.SetRight(ChargePoints[(int)Mathf.Min(index + 1, NumSpawns - 1)].GetComponent<ChargePoint>());
+                    c.SetLeft(ChargePoints[(int)Mathf.Max(0, index - 1)].GetComponent<ChargePoint>());
+                }
             } else
             {
                 GameObject emptySlot = Instantiate(EmptySlotPrefab, transform.position, Quaternion.identity);
@@ -161,5 +190,21 @@ public class TeamCenter : MonoBehaviour
                 return false;
         }
         return true;
+    }
+
+    public void OnBattleBegin()
+    {
+        foreach (GameObject chargePoint in ChargePoints)
+        {
+            chargePoint.GetComponent<ChargePoint>().OnBattleBegin();
+        }
+    }
+
+    public void OnBattleEnd()
+    {
+        foreach(GameObject chargePoint in ChargePoints)
+        {
+            chargePoint.GetComponent<ChargePoint>().OnBattleEnd();
+        }
     }
 }

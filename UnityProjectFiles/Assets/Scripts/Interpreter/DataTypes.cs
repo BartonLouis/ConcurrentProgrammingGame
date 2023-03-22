@@ -140,6 +140,11 @@ namespace Interpreter
         {
             return $"Side Object: {Value.ToString()}";
         }
+
+        public override SideValue GetAsSide()
+        {
+            return this;
+        }
     }
 
     public class MessageValue : Value

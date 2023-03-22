@@ -29,7 +29,6 @@ public class EnergyBar : MonoBehaviour
 
     public void Setup(string text)
     {
-        Debug.Log("here");
         mode = 1;
         Text.enabled = true;
         Text.text = text;
@@ -42,7 +41,6 @@ public class EnergyBar : MonoBehaviour
 
     public void Setup(int numEnergyBlocks)
     {
-        Debug.Log("here2");
         mode = 0;
         Text.enabled = false;
         currentBlock = 0;
@@ -95,6 +93,9 @@ public class EnergyBar : MonoBehaviour
                 block.GetComponent<Animator>().ResetTrigger("Hide");
                 block.GetComponent<Animator>().SetTrigger("Show");
             }
+        } else
+        {
+            Text.color = VisibleColour;
         }
     }
 
@@ -107,7 +108,10 @@ public class EnergyBar : MonoBehaviour
                 block.GetComponent<Animator>().ResetTrigger("Show");
                 block.GetComponent<Animator>().SetTrigger("Hide");
             }
-        } 
+        }  else
+        {
+            Text.color = HiddenColour;
+        }
     }
 
 

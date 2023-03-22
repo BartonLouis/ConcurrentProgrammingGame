@@ -17,9 +17,11 @@ public abstract class Character : MonoBehaviour
     [SerializeField] GameObject DebuffStackPrefab;
     [SerializeField] GameObject GetHitParticlePrefab;
     [SerializeField] GameObject AttackParticlePrefab;
+    [SerializeField] GameObject ChargedEffectPrefab;
 
     [Space(10)]
-    
+
+    [SerializeField] protected float ChargeMultiplier = 5;
     [SerializeField] protected float BaseMaxHealth  = 100;
     [SerializeField] protected float BaseDamage     = 20;
     [SerializeField] protected float BaseSelfHeal   = 10;
@@ -55,6 +57,21 @@ public abstract class Character : MonoBehaviour
     private bool tookTurn = false;
 
     private BattleModel BattleModel;
+
+    public ChargePoint LeftChargePoint;
+    public ChargePoint RightChargePoint;
+
+    private GameObject chargeEffect;
+
+    public void SetLeft(ChargePoint c)
+    {
+        LeftChargePoint = c;
+    }
+
+    public void SetRight(ChargePoint c)
+    {
+        RightChargePoint = c;
+    }
     
 
     public void Setup()
@@ -100,14 +117,6 @@ public abstract class Character : MonoBehaviour
         alive = true;
 
         BattleModel = BattleModel.instance;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && BattleModel.instance.CurrentTimeStep > 0)
-        {
-            Damage(10);
-        }
     }
 
     public void Step()
@@ -213,6 +222,10 @@ public abstract class Character : MonoBehaviour
         tookTurn = false;
         EnergyBar.Hide();
         Platform.Hide();
+        if (LeftChargePoint.Target == this)
+            LeftChargePoint.Unlock();
+        if (RightChargePoint.Target == this)
+            RightChargePoint.Unlock();
         Destroy(EnergyBar.gameObject);
         Destroy(HealthBar.gameObject);
         Destroy(DefenseStack.gameObject);
@@ -268,6 +281,18 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    public float getChargedMultiplier()
+    {
+        if (charged){
+            charged = false;
+            Destroy(chargeEffect);
+            return ChargeMultiplier;
+        } else
+        {
+            return 1;
+        }
+    }
+
     public virtual void Attack(Value target)
     {
         Character player;
@@ -283,6 +308,7 @@ public abstract class Character : MonoBehaviour
             }
             totalMultiplier = Mathf.Max(totalMultiplier, 0);
             damage *= totalMultiplier;
+            damage *= getChargedMultiplier();
             player.Damage(damage);
             Anim.SetTrigger("Attack");
             GameObject particles = Instantiate(AttackParticlePrefab, transform.position, Quaternion.identity);
@@ -302,6 +328,7 @@ public abstract class Character : MonoBehaviour
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         Heal(amount);
         Anim.SetTrigger("Cast");
     }
@@ -316,6 +343,7 @@ public abstract class Character : MonoBehaviour
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         AddDefenseMultiplier(amount, 10);
         Anim.SetTrigger("Cast");
     }
@@ -340,14 +368,36 @@ public abstract class Character : MonoBehaviour
         Debug.Log(this + "Blocking Enemy");
     }
 
-    public virtual void Lock(Value side)
+    public virtual void Lock(SideValue.Side side)
     {
-        Debug.Log(this + "Locking");
+        if (side == SideValue.Side.Left && !LeftChargePoint.Locked)
+        {
+            LeftChargePoint.Lock(this);
+        } else if (!RightChargePoint.Locked)
+        {
+            RightChargePoint.Lock(this);
+        }
     }
 
     public virtual void ChargeUp()
     {
-        Debug.Log(this + "Charging Up");
+        if (LeftChargePoint.Target == this && RightChargePoint.Target == this)
+        {
+            charged = true;
+            LeftChargePoint.Unlock();
+            RightChargePoint.Unlock();
+            chargeEffect = Instantiate(ChargedEffectPrefab, transform.position, Quaternion.identity);
+            Debug.Log("ChargeUp Successful!");
+        } else if (LeftChargePoint.Target == this)
+        {
+            Debug.Log("ChargeUp Unseccseeful!");
+            LeftChargePoint.Unlock();
+        } else if (RightChargePoint.Target == this)
+        {
+            Debug.Log("ChargeUp Unseccseeful!");
+            RightChargePoint.Unlock();
+        }
+        Debug.Log("Charging Up!");
     }
 
     public virtual void SendMessageTo(Value player, Value message)
@@ -416,6 +466,8 @@ public abstract class Character : MonoBehaviour
             Destroy(BuffStack.gameObject);
         if (DebuffStack != null)
             Destroy(DebuffStack.gameObject);
+        if (chargeEffect != null)
+            Destroy(chargeEffect);
         Anim.ResetTrigger("Attack");
         Anim.ResetTrigger("Cast");
         Anim.SetTrigger("Default");

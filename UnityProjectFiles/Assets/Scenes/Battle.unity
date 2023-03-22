@@ -641,8 +641,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -10.9, y: 2.8}
-  m_SizeDelta: {x: 300, y: 39.0932}
+  m_AnchoredPosition: {x: -10, y: 3.5}
+  m_SizeDelta: {x: 300, y: 31.5394}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &617435243 stripped
 MonoBehaviour:
@@ -894,7 +894,7 @@ GameObject:
   - component: {fileID: 990785322}
   - component: {fileID: 990785324}
   - component: {fileID: 990785323}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: DebugInfoInGame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1044,7 +1044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223302703}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.05, y: -12.68, z: 0}
+  m_LocalPosition: {x: 0.16, y: -12.16, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2542,7 +2542,7 @@ PrefabInstance:
     - target: {fileID: 6717355849738572072, guid: 1386f88daca113941ba72a1936bc3a4d,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.22741699
+      value: -0.22743225
       objectReference: {fileID: 0}
     - target: {fileID: 6855531519537655212, guid: 1386f88daca113941ba72a1936bc3a4d,
         type: 3}
@@ -3167,6 +3167,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WorldCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6083729875560081121, guid: 9581256a8aaab4a49af3592af85d82b9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6083729875560081149, guid: 9581256a8aaab4a49af3592af85d82b9,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3210,7 +3215,7 @@ PrefabInstance:
     - target: {fileID: 6083729875560081149, guid: 9581256a8aaab4a49af3592af85d82b9,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 37.8376
+      value: 38.0158
       objectReference: {fileID: 0}
     - target: {fileID: 6083729875560081149, guid: 9581256a8aaab4a49af3592af85d82b9,
         type: 3}
@@ -3255,7 +3260,7 @@ PrefabInstance:
     - target: {fileID: 6083729875560081149, guid: 9581256a8aaab4a49af3592af85d82b9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5.2569
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 6083729875560081149, guid: 9581256a8aaab4a49af3592af85d82b9,
         type: 3}

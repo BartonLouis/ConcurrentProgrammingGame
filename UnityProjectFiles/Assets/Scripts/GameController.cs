@@ -263,6 +263,8 @@ public class GameController : MonoBehaviour
             characters.AddRange(Team2.GetCharacters());
             ScheduleVisualiser.Setup(NumCores);
             BattleModel.StartBattle(characters.ToArray(), NumCores, Team1, Team2);
+            Team1.OnBattleBegin();
+            Team2.OnBattleBegin();
 
             // Setup UI elements
             CharacterPanel.Hide();
@@ -310,6 +312,8 @@ public class GameController : MonoBehaviour
         CharacterPanel.Load(MaxPlayers);
         PlayControls.GameStop();
         BattleModel.EndBattle();
+        Team1.OnBattleEnd();
+        Team2.OnBattleEnd();
         ScheduleVisualiser.BattleEnd();
     }
 

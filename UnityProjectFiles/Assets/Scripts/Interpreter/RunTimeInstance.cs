@@ -29,7 +29,7 @@ namespace Interpreter
             {"Boost",           (c) => {return 3;} },
             {"Defend",          (c) => {return 4;} },
             {"Block",           (c) => {return 6;} },
-            {"Lock",            (c) => {return 0;} },
+            {"Lock",            (c) => {return 5;} },
             {"ChargeUp",        (c) => {return 8;} },
             {"SendMessageTo",   (c) => {return 1;} },
             {"SendMessageToAll",(c) => {
@@ -43,6 +43,7 @@ namespace Interpreter
 
         private int WaitTime;                       // Number of steps required before action complete
         private RunTimeState State;                 // Hold the current state of execution
+        private SideValue.Side WaitingSide;         // The side that the character may be trying to lock
         private Func<Value> OnExecute;              // Function to execute once time wait complete
         private Queue<MessageValue> MessageQueue;   // Hold the current incoming messages
 
@@ -178,6 +179,8 @@ namespace Interpreter
                         bool free = false;
                         WaitTime--;
                         WaitTime = Math.Max(WaitTime, 0);
+                        if (WaitingSide == SideValue.Side.Left && Character.LeftChargePoint.Target == null) free = true;
+                        else if (WaitingSide == SideValue.Side.Right && Character.RightChargePoint.Target == null) free = true;
                         if (free && WaitTime == 0)
                         {
                             OnExecute?.Invoke();
@@ -449,14 +452,28 @@ namespace Interpreter
         public override Value VisitLock([NotNull] LanguageParserParser.LockContext context)
         {
             WaitTime = WaitTimes["Lock"](Character);
-            State = RunTimeState.Locking;
-            OnExecute = () =>
+            try
             {
-                Value side = VisitAtom(context.a);
-                Character.Lock(side);
+                WaitingSide = Visit(context.a).GetAsSide().Value;
+                State = RunTimeState.Locking;
+                OnExecute = () =>
+                {
+                    Character.Lock(WaitingSide);
+                    return null;
+                };
+                Debug.Log("Locking started");
                 return null;
-            };
-            return null;
+            } catch (Exception e)
+            {
+                Debug.Log(e.Message);
+                State = RunTimeState.Waiting;
+                OnExecute = () =>
+                {
+                    Debug.Log("Error, no valid side provided");
+                    return null;
+                };
+                return null;
+            }
         }
 
         public override Value VisitChargeUp([NotNull] LanguageParserParser.ChargeUpContext context)
