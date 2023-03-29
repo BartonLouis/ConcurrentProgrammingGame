@@ -14,7 +14,6 @@ public class BattleModel : MonoBehaviour
     private Core[] Cores;
     private ThreadScheduler ThreadScheduler;
     private GameController Controller;
-    private TextMeshProUGUI DebugInfo;
 
     [SerializeField] private int ForecastSize;
 
@@ -25,6 +24,7 @@ public class BattleModel : MonoBehaviour
     private int MinTimeBetweenTurns;
 
     private bool shouldReschedule = false;
+    private bool started = false;
     private System.Random Rnd;
 
     private TeamCenter Team1;
@@ -44,12 +44,24 @@ public class BattleModel : MonoBehaviour
         YieldBoost = GameController.YieldBoost;
         PassivePriorityBoost = GameController.PassivePriorityBoost;
         MinTimeBetweenTurns = GameController.TimeBetweenTurns;
+        
+    }
 
-        DebugInfo = GameObject.Find("DebugInfoInGame").GetComponent<TextMeshProUGUI>();
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && started)
+        {
+            foreach(Character c in Characters)
+            {
+                c.Damage(1000);
+            }
+            Step();
+        }
     }
 
     public void StartBattle(Character[] characters, int numCores, TeamCenter t1, TeamCenter t2)
     {
+        started = true;
         CurrentTimeStep = 0;
         Characters = characters;
         foreach (Character character in Characters)
@@ -87,6 +99,7 @@ public class BattleModel : MonoBehaviour
             character.OnGameEnd();
         }
         CurrentTimeStep = 0;
+        started = false;
     }
 
     public void Step()
@@ -109,7 +122,7 @@ public class BattleModel : MonoBehaviour
 
         if (Team1.AllDead())
             Controller.GameOver(Team2);
-        if (Team2.AllDead())
+        else if (Team2.AllDead())
             Controller.GameOver(Team1);
         
         if (shouldReschedule)

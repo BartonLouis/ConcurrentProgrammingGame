@@ -42,6 +42,7 @@ public class Tank : Character
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         player.AddDefenseMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
     }
@@ -65,6 +66,7 @@ public class Tank : Character
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         player.AddDamageMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
     }

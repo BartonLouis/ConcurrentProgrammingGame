@@ -65,7 +65,6 @@ public class ScheduleVisualiser : MonoBehaviour
 
     public void Reset(List<List<KeyValuePair<Character, int>>> representation)
     {
-        Debug.Log("Resetting");
         for (int i = 0; i < representation.Count; i++)
         {
             CoreLines[i].Reset(representation[i]);

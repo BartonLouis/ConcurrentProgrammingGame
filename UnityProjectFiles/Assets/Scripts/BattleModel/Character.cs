@@ -8,19 +8,6 @@ public abstract class Character : MonoBehaviour
 
     [Space(10)]
 
-    [SerializeField] GameObject EnergyBarPrefab;
-    [SerializeField] GameObject HealthBarPrefab;
-    [SerializeField] GameObject PlatformPrefab;
-    [SerializeField] GameObject DamageTextPrefab;
-    [SerializeField] GameObject DefenseBuffStackPrefab;
-    [SerializeField] GameObject BuffStackPrefab;
-    [SerializeField] GameObject DebuffStackPrefab;
-    [SerializeField] GameObject GetHitParticlePrefab;
-    [SerializeField] GameObject AttackParticlePrefab;
-    [SerializeField] GameObject ChargedEffectPrefab;
-
-    [Space(10)]
-
     [SerializeField] protected float ChargeMultiplier = 5;
     [SerializeField] protected float BaseMaxHealth  = 100;
     [SerializeField] protected float BaseDamage     = 20;
@@ -78,27 +65,36 @@ public abstract class Character : MonoBehaviour
     {
         // Visual Elements
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
-        GameObject energyBar = Instantiate(EnergyBarPrefab, worldCanvas.transform);
-        GameObject healthBar = Instantiate(HealthBarPrefab, worldCanvas.transform);
-        GameObject platform = Instantiate(PlatformPrefab, transform);
-        GameObject defenseStack = Instantiate(DefenseBuffStackPrefab, worldCanvas.transform);
-        GameObject buffStack = Instantiate(BuffStackPrefab, worldCanvas.transform);
-        GameObject debuffStack = Instantiate(DebuffStackPrefab, worldCanvas.transform);
+        GameObject energyBar = Instantiate(PrefabLibrary.instance.EnergyBarPrefab, worldCanvas.transform);
+        GameObject healthBar = Instantiate(PrefabLibrary.instance.HealthBarPrefab, worldCanvas.transform);
+        GameObject platform = Instantiate(PrefabLibrary.instance.CharacterBasePrefab, transform);
+
         energyBar.transform.position = transform.position;
         healthBar.transform.position = transform.position;
-        defenseStack.transform.position = transform.position;
-        buffStack.transform.position = transform.position;
-        debuffStack.transform.position = transform.position;
         EnergyBar = energyBar.GetComponent<EnergyBar>();
         HealthBar = healthBar.GetComponent<HealthBar>();
         Platform = platform.GetComponent<PlayerPlatform>();
-        DefenseStack = defenseStack.GetComponent<BuffStack>();
-        BuffStack = buffStack.GetComponent<BuffStack>();
-        DebuffStack = debuffStack.GetComponent<BuffStack>();
 
         HealthBar.SetMaxHealth(BaseMaxHealth);
         HealthBar.SetHealth(BaseMaxHealth);
         Platform.SetTeam(Team);
+
+        // Setup Buff, Debuff and Defense Stacks
+        GameObject defenseStack = Instantiate(PrefabLibrary.instance.DefenseBuffStackPrefab, worldCanvas.transform);
+        GameObject buffStack = Instantiate(PrefabLibrary.instance.BuffStackPrefab, worldCanvas.transform);
+        GameObject debuffStack = Instantiate(PrefabLibrary.instance.DebuffStackPrefab, worldCanvas.transform);
+        defenseStack.transform.position = transform.position;
+        buffStack.transform.position = transform.position;
+        debuffStack.transform.position = transform.position;
+
+        DefenseStack = defenseStack.GetComponent<BuffStack>();
+        BuffStack = buffStack.GetComponent<BuffStack>();
+        DebuffStack = debuffStack.GetComponent<BuffStack>();
+
+        DefenseStack.Init(PrefabLibrary.instance.ShieldPrefab);
+        BuffStack.Init(PrefabLibrary.instance.BuffPrefab);
+        DebuffStack.Init(PrefabLibrary.instance.DebuffPrefab);
+
 
         // Other bits
         Anim = GetComponent<Animator>();
@@ -182,7 +178,7 @@ public abstract class Character : MonoBehaviour
 
     public void Damage(float amount)
     {
-        Instantiate(GetHitParticlePrefab, transform.position, Quaternion.identity);
+        Instantiate(PrefabLibrary.instance.GetHitParticlePrefab, transform.position, Quaternion.identity);
         if (!alive) return;
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multiplier in DefenseMultipliers)
@@ -197,7 +193,8 @@ public abstract class Character : MonoBehaviour
 
         HealthBar.SetHealth(currentHealth);
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
-        HealthText text = Instantiate(DamageTextPrefab, worldCanvas.transform).GetComponent<HealthText>();
+        Anim.SetTrigger("Hurt");
+        HealthText text = Instantiate(PrefabLibrary.instance.DamageTextPrefab, worldCanvas.transform).GetComponent<HealthText>();
         text.transform.position = transform.position;
         text.Init(-amount);
     }
@@ -209,7 +206,7 @@ public abstract class Character : MonoBehaviour
 
         HealthBar.SetHealth(currentHealth);
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
-        HealthText text = Instantiate(DamageTextPrefab, transform.position, Quaternion.identity, worldCanvas.transform).GetComponent<HealthText>();
+        HealthText text = Instantiate(PrefabLibrary.instance.DamageTextPrefab, transform.position, Quaternion.identity, worldCanvas.transform).GetComponent<HealthText>();
         text.transform.position = transform.position;
         text.Init(amount);
     }
@@ -311,7 +308,7 @@ public abstract class Character : MonoBehaviour
             damage *= getChargedMultiplier();
             player.Damage(damage);
             Anim.SetTrigger("Attack");
-            GameObject particles = Instantiate(AttackParticlePrefab, transform.position, Quaternion.identity);
+            GameObject particles = Instantiate(PrefabLibrary.instance.AttackParticlePrefab, transform.position, Quaternion.identity);
             particles.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         } catch {
             return;
@@ -386,7 +383,7 @@ public abstract class Character : MonoBehaviour
             charged = true;
             LeftChargePoint.Unlock();
             RightChargePoint.Unlock();
-            chargeEffect = Instantiate(ChargedEffectPrefab, transform.position, Quaternion.identity);
+            chargeEffect = Instantiate(PrefabLibrary.instance.ChargedParticlePrefab, transform.position, Quaternion.identity);
             Debug.Log("ChargeUp Successful!");
         } else if (LeftChargePoint.Target == this)
         {

@@ -26,7 +26,6 @@ public class GameController : MonoBehaviour
     {
         Setup,          // For when the game is in setup phase
         Play,           // For when the game is in play mode, at regular speed
-        FastPlay,       // For when the game is in fast forward mode
         Paused          // For when the battle is paused
     }
 
@@ -49,10 +48,12 @@ public class GameController : MonoBehaviour
 
     // Gameplay attributes
     [SerializeField] private float PauseSpeed = 0;
-    [SerializeField] private float PlaySpeed = 1;
-    [SerializeField] private float FastSpeed = 2;
+    [SerializeField] private float Speed1 = 1;
+    [SerializeField] private float Speed2 = 2;
+    [SerializeField] private float Speed3 = 4;
     [HideInInspector] public float CurrentSpeed;
     private float CurrentTime = 1;
+    private float ChosenSpeed = 1;
 
 
     private bool characterPanelOpen = true;
@@ -85,7 +86,7 @@ public class GameController : MonoBehaviour
         Team2.SetTeamNum(2);
 
         CurrentGameState = GameState.Setup;
-        CurrentSpeed = PlaySpeed;
+        CurrentSpeed = Speed1;
         CurrentTime = 1;
 
         // Populate Enemy Team
@@ -278,15 +279,29 @@ public class GameController : MonoBehaviour
     public void Play()
     {
         CurrentTime = 1;
-        CurrentSpeed = PlaySpeed;
+        CurrentSpeed = ChosenSpeed;
         CurrentGameState = GameState.Play;
     }
 
-    public void FastForward()
+    public void SetSpeed(int choice)
     {
-        CurrentTime = 1;
-        CurrentSpeed = FastSpeed;
-        CurrentGameState = GameState.FastPlay;
+        switch (choice)
+        {
+            case 1:
+                ChosenSpeed = Speed1;
+                break;
+            case 2:
+                ChosenSpeed = Speed2;
+                break;
+            case 3:
+                ChosenSpeed = Speed3;
+                break;
+        }
+        if (CurrentGameState == GameState.Play)
+        {
+            CurrentTime = 1;
+            CurrentSpeed = ChosenSpeed;
+        }
     }
 
     public void Pause()
@@ -298,9 +313,14 @@ public class GameController : MonoBehaviour
 
     public void Step()
     {
-        if (CurrentGameState != GameState.Paused) CurrentGameState = GameState.Paused;
         BattleModel.Step();
         ScheduleVisualiser.Step(BattleModel.CurrentTimeStep);
+    }
+
+    public void StepClicked()
+    {
+        if (CurrentGameState != GameState.Paused) CurrentGameState = GameState.Paused;
+        Step();
     }
 
     public void Stop()
@@ -339,7 +359,6 @@ public class GameController : MonoBehaviour
     public void EndGameNext()
     {
         Paused = false;
-        Debug.Log("Next Button Pressed");
         GameOverScreen.Hide();
         // Temporary, later on this will go to the next level
         MainMenu();
@@ -348,7 +367,6 @@ public class GameController : MonoBehaviour
     public void EndGameRetry()
     {
         Paused = false;
-        Debug.Log("Retrying...");
         GameOverScreen.Hide();
         Stop();
     }

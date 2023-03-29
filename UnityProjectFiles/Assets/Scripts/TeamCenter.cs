@@ -6,12 +6,6 @@ public class TeamCenter : MonoBehaviour
 {
     private List<GameObject> Players;
     private List<GameObject> EmptySlots;
-    public GameObject EmptySlotPrefab;
-    public GameObject ChargePointPrefab;
-
-    public GameObject DamagePrefab;
-    public GameObject SupportPrefab;
-    public GameObject TankPrefab;
 
     public float Xradius = 10f;
     public float Yradius = 2f;
@@ -37,7 +31,7 @@ public class TeamCenter : MonoBehaviour
         for (int i = 0; i < Mathf.Max(2, NumSpawns); i++) {
             float x = Mathf.Cos(angle + (Mathf.PI / 180) * 90 - direction * 90 * (Mathf.PI / 180)) * Xradius;
             float y = Mathf.Sin(angle + (Mathf.PI / 180) * 90 - direction * 90 * (Mathf.PI / 180)) * Yradius;
-            GameObject chargePoint = Instantiate(ChargePointPrefab, transform.position, Quaternion.identity);
+            GameObject chargePoint = Instantiate(PrefabLibrary.instance.ChargePointPrefab, transform.position, Quaternion.identity);
             chargePoint.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
             ChargePoints.Add(chargePoint);
             if (angle <= 0)
@@ -90,13 +84,13 @@ public class TeamCenter : MonoBehaviour
         switch (classType)
         {
             case ClassValue.ClassType.Damage:
-                player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.DamagePrefab, transform.position, Quaternion.identity);
                 break;
             case ClassValue.ClassType.Support:
-                player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.SupportPrefab, transform.position, Quaternion.identity);
                 break;
             default:
-                player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.TankPrefab, transform.position, Quaternion.identity);
                 break;
         }
         Character c = player.GetComponent<Character>();
@@ -118,13 +112,13 @@ public class TeamCenter : MonoBehaviour
         switch (classType)
         {
             case ClassValue.ClassType.Damage:
-                player = Instantiate(DamagePrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.DamagePrefab, transform.position, Quaternion.identity);
                 break;
             case ClassValue.ClassType.Support:
-                player = Instantiate(SupportPrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.SupportPrefab, transform.position, Quaternion.identity);
                 break;
             default:
-                player = Instantiate(TankPrefab, transform.position, Quaternion.identity);
+                player = Instantiate(PrefabLibrary.instance.TankPrefab, transform.position, Quaternion.identity);
                 break;
         }
         Character c = player.GetComponent<Character>();
@@ -165,7 +159,7 @@ public class TeamCenter : MonoBehaviour
                 }
             } else
             {
-                GameObject emptySlot = Instantiate(EmptySlotPrefab, transform.position, Quaternion.identity);
+                GameObject emptySlot = Instantiate(PrefabLibrary.instance.EmptySlotPrefab, transform.position, Quaternion.identity);
                 emptySlot.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
                 EmptySlots.Add(emptySlot);
             }

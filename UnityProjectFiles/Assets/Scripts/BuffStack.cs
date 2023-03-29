@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class BuffStack : MonoBehaviour
 {
-    [SerializeField] GameObject BuffPrefab;
     [SerializeField] Vector3 Offset;
+
+    private GameObject Prefab;
 
     private void Start()
     {
         transform.position += Offset;
+    }
+
+    public void Init(GameObject prefab)
+    {
+        Prefab = prefab;
     }
 
     public void ReDraw(int numBuffs)
@@ -21,7 +27,7 @@ public class BuffStack : MonoBehaviour
 
         for(int i = 0; i < numBuffs; i++)
         {
-            Instantiate(BuffPrefab, transform);
+            Instantiate(Prefab, transform);
         }
     }
     

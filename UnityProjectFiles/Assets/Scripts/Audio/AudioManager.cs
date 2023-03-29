@@ -5,6 +5,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
+    public Sound[] music;
 
     public static AudioManager instance;
 
@@ -26,6 +27,22 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
         }
+    }
+
+    public void PlayMusic(string name)
+    {
+        Sound s = Array.Find(music, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Sound " + name + " not found");
+            return;
+        }
+        foreach (Sound s2 in music)
+        {
+            if (s2.source.isPlaying && s2 != s) s2.source.Stop();
+        }
+        if (!s.source.isPlaying)
+            s.source.Play();
     }
 
     public void Play(string name)

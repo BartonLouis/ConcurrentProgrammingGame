@@ -83,7 +83,6 @@ public class ThreadScheduler
         if (ShouldReschedule)
         {
             Schedule(timeStep-1, ForecastSize+1, true);
-            Debug.Log("Rescheduling");
         }
         else Schedule(timeStep + ForecastSize - 1, 1, false);
         ShouldReschedule = false;

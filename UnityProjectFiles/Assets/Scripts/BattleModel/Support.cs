@@ -38,6 +38,7 @@ public class Support : Character
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         player.Heal(amount);
         Anim.SetTrigger("Cast");
     }
@@ -62,6 +63,7 @@ public class Support : Character
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         amount *= totalMultiplier;
+        amount *= getChargedMultiplier();
         player.AddDamageMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
     }

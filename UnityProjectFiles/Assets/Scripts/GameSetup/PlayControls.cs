@@ -14,7 +14,9 @@ public class PlayControls : MonoBehaviour
 
     [SerializeField] Image PlayButton;
     [SerializeField] Image PauseButton;
-    [SerializeField] Image FastButton;
+    [SerializeField] Image Speed1Button;
+    [SerializeField] Image Speed2Button;
+    [SerializeField] Image Speed3Button;
 
     private bool Expanded = true;
 
@@ -51,7 +53,6 @@ public class PlayControls : MonoBehaviour
     {
         PlayButton.color = Color.grey;
         PauseButton.color = Color.white;
-        FastButton.color = Color.white;
         Controller.Play();
     }
 
@@ -59,7 +60,6 @@ public class PlayControls : MonoBehaviour
     {
         PlayButton.color = Color.white;
         PauseButton.color = Color.grey;
-        FastButton.color = Color.white;
         Controller.Pause();
     }
 
@@ -68,24 +68,14 @@ public class PlayControls : MonoBehaviour
     {
         PlayButton.color = Color.white;
         PauseButton.color = Color.grey;
-        FastButton.color = Color.white;
         Controller.Pause();
-        Controller.Step();
-    }
-
-    public void FastButtonPressed()
-    {
-        PlayButton.color = Color.white;
-        PauseButton.color = Color.white;
-        FastButton.color = Color.grey;
-        Controller.FastForward();
+        Controller.StepClicked();
     }
 
     public void StopButtonPressed()
     {
         PlayButton.color = Color.white;
         PauseButton.color = Color.white;
-        FastButton.color = Color.white;
         Controller.Stop();
     }
 
@@ -94,11 +84,39 @@ public class PlayControls : MonoBehaviour
         Controller.GameStart();
     }
 
+    public void Speed1Pressed()
+    {
+        Controller.SetSpeed(1);
+        Speed1Button.color = Color.grey;
+        Speed2Button.color = Color.white;
+        Speed3Button.color = Color.white;
+    }
+
+    public void Speed2Pressed()
+    {
+        Controller.SetSpeed(2);
+        Speed1Button.color = Color.white;
+        Speed2Button.color = Color.grey;
+        Speed3Button.color = Color.white;
+    }
+
+    public void Speed3Pressed()
+    {
+        Controller.SetSpeed(3);
+        Speed1Button.color = Color.white;
+        Speed2Button.color = Color.white;
+        Speed3Button.color = Color.grey;
+    }
+
+
     public void GameStart()
     {
         PlayButton.color = Color.white;
         PauseButton.color = Color.grey;
-        FastButton.color = Color.white;
+        Speed1Button.color = Color.grey;
+        Speed2Button.color = Color.white;
+        Speed3Button.color = Color.white;
+        Controller.SetSpeed(1);
         Anim.SetTrigger("GameStart");
     }
 
@@ -106,7 +124,6 @@ public class PlayControls : MonoBehaviour
     {
         PlayButton.color = Color.white;
         PauseButton.color = Color.white;
-        FastButton.color = Color.white;
         Anim.SetTrigger("GameEnd");
     }
 

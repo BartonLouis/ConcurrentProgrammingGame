@@ -31,8 +31,8 @@ public class ChargePoint : MonoBehaviour
             Target = target;
             Line.enabled = true;
             Line.positionCount = 2;
-            Line.SetPosition(0, transform.position);
-            Line.SetPosition(1, target.transform.position);
+            Line.SetPosition(1, transform.position);
+            Line.SetPosition(0, target.transform.position);
         }
     }
 

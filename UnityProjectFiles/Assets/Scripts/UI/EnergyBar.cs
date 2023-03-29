@@ -6,8 +6,6 @@ using TMPro;
 
 public class EnergyBar : MonoBehaviour
 {
-
-    public GameObject EnergyBlockPrefab;
     public Transform Parent;
     public Vector3 Offset;
     public Color VisibleColour = new Color(0, 0, 0, 0.3f);
@@ -52,7 +50,7 @@ public class EnergyBar : MonoBehaviour
 
         for(int i = 0; i < numEnergyBlocks; i++)
         {
-            GameObject block = Instantiate(EnergyBlockPrefab, Parent);
+            GameObject block = Instantiate(PrefabLibrary.instance.EnergyBlockPrefab, Parent);
             foreach (Transform child in block.transform)
             {
                 if (child.name == "Mask") child.GetComponent<Image>().color = HiddenColour;
