@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -26,22 +27,36 @@ public class AudioManager : MonoBehaviour
             s.source.volume = s.volume;
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
+            s.source.playOnAwake = false;
         }
+        foreach (Sound s in music)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
+            s.source.playOnAwake = false;
+        }
+
     }
 
     public void PlayMusic(string name)
     {
+        Debug.Log("Playing: " + name);
         Sound s = Array.Find(music, sound => sound.name == name);
         if (s == null)
         {
             Debug.LogWarning("Sound " + name + " not found");
             return;
         }
+        Debug.Log("Stopping all other music");
         foreach (Sound s2 in music)
         {
-            if (s2.source.isPlaying && s2 != s) s2.source.Stop();
+            if (s2 != s && s2.source.isPlaying) s2.source.Stop();
         }
         if (!s.source.isPlaying)
+            Debug.Log("Playing Music");
             s.source.Play();
     }
 

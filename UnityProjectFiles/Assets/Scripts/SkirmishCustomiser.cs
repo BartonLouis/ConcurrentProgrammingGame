@@ -48,6 +48,7 @@ public class SkirmishCustomiser : MonoBehaviour
         MaxQueueTimeChanged();
         YieldBoostChanged();
         TimeBetweenTurnsChanged();
+        AudioManager.instance.PlayMusic("SkirmishSetup");
     }
 
     public void MainMenu()
@@ -114,7 +115,7 @@ public class SkirmishCustomiser : MonoBehaviour
     }
 
     public void YieldBoostChanged() {
-        YieldBoost = Mathf.FloorToInt(NumCoresSlider.value);
+        YieldBoost = Mathf.FloorToInt(YieldBoostSlider.value);
         YieldBoostText.text = "Yield Boost: " + YieldBoost;
     }
 

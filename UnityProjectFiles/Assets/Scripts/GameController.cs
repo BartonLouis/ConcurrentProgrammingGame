@@ -65,6 +65,7 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        AudioManager.instance.PlayMusic("Battle");
         IDE = IDEController.instance;
         CharacterPanel = ControlPanelManager.instance;
         PlayControls = PlayControls.instance;

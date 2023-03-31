@@ -41,6 +41,7 @@ public class Support : Character
         amount *= getChargedMultiplier();
         player.Heal(amount);
         Anim.SetTrigger("Cast");
+        AudioManager.instance.Play("Buff");
     }
 
     public override void Boost(Value target)
@@ -66,6 +67,7 @@ public class Support : Character
         amount *= getChargedMultiplier();
         player.AddDamageMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
+        AudioManager.instance.Play("Buff");
     }
 
 }

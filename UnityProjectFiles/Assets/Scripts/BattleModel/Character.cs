@@ -197,6 +197,7 @@ public abstract class Character : MonoBehaviour
         HealthText text = Instantiate(PrefabLibrary.instance.DamageTextPrefab, worldCanvas.transform).GetComponent<HealthText>();
         text.transform.position = transform.position;
         text.Init(-amount);
+        AudioManager.instance.Play("Damage");
     }
 
     public void Heal(float amount)
@@ -308,6 +309,7 @@ public abstract class Character : MonoBehaviour
             damage *= getChargedMultiplier();
             player.Damage(damage);
             Anim.SetTrigger("Attack");
+            AudioManager.instance.Play("Attack");
             GameObject particles = Instantiate(PrefabLibrary.instance.AttackParticlePrefab, transform.position, Quaternion.identity);
             particles.transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
         } catch {
@@ -328,6 +330,7 @@ public abstract class Character : MonoBehaviour
         amount *= getChargedMultiplier();
         Heal(amount);
         Anim.SetTrigger("Cast");
+        AudioManager.instance.Play("Buff");
     }
 
     public virtual void DefendSelf()
@@ -343,6 +346,7 @@ public abstract class Character : MonoBehaviour
         amount *= getChargedMultiplier();
         AddDefenseMultiplier(amount, 10);
         Anim.SetTrigger("Cast");
+        AudioManager.instance.Play("Defend");
     }
 
     public virtual void Heal(Value target)
@@ -374,6 +378,7 @@ public abstract class Character : MonoBehaviour
         {
             RightChargePoint.Lock(this);
         }
+        AudioManager.instance.Play("Lock");
     }
 
     public virtual void ChargeUp()
@@ -395,6 +400,7 @@ public abstract class Character : MonoBehaviour
             RightChargePoint.Unlock();
         }
         Debug.Log("Charging Up!");
+        AudioManager.instance.Play("Buff");
     }
 
     public virtual void SendMessageTo(Value player, Value message)

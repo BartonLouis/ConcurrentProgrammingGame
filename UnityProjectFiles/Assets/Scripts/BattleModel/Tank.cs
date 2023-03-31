@@ -45,6 +45,7 @@ public class Tank : Character
         amount *= getChargedMultiplier();
         player.AddDefenseMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
+        AudioManager.instance.Play("Defend");
     }
 
     public override void Block(Value target)
@@ -69,5 +70,7 @@ public class Tank : Character
         amount *= getChargedMultiplier();
         player.AddDamageMultiplier(amount, BuffTime);
         Anim.SetTrigger("Cast");
+
+        AudioManager.instance.Play("Debuff");
     }
 }

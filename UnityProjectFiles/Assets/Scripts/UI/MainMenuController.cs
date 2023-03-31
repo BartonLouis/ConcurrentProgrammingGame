@@ -14,26 +14,24 @@ public class MainMenuController : MonoBehaviour
     {
         MainMenuAnimator = GameObject.Find("Main Menu").GetComponent<Animator>();
         SettingsAnimator = GameObject.Find("Settings Menu").GetComponent<Animator>();
+        AudioManager.instance.PlayMusic("MainMenu");
     }
 
     public void Campaign()
     {
         Debug.Log("Campaign Button Pressed");
-        AudioManager.instance.Play("MenuNavigate");
         SceneManager.LoadScene("SkirmishSetup");
     }
 
     public void Skirmish()
     {
         Debug.Log("Skirmish Button Pressed");
-        AudioManager.instance.Play("MenuNavigate");
         SceneManager.LoadScene("SkirmishSetup");
     }
 
     public void SettingsOpen()
     {
         Debug.Log("Settings Button Pressed");
-        AudioManager.instance.Play("MenuNavigate");
         MainMenuAnimator.SetBool("Open", false);
         SettingsAnimator.SetBool("Open", true);
     }
@@ -41,14 +39,12 @@ public class MainMenuController : MonoBehaviour
     public void SettingsClose()
     {
         Debug.Log("Settings Back Button Pressed");
-        AudioManager.instance.Play("Back");
         MainMenuAnimator.SetBool("Open", true);
         SettingsAnimator.SetBool("Open", false);
     }
 
     public void Quit()
     {
-        AudioManager.instance.Play("Back");
         Debug.Log("Quit Button Pressed");
         Application.Quit();
     }
