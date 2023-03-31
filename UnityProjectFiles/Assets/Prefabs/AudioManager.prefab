@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: Attack
-    clip: {fileID: 8300000, guid: 9e63a67c575be5e4395b9b411b3e4396, type: 3}
+    clip: {fileID: 8300000, guid: 811d36b4845c63a42a32f3e13ab3a5d9, type: 3}
     volume: 1
     pitch: 1
     loop: 0
@@ -81,22 +81,52 @@ MonoBehaviour:
     pitch: 1
     loop: 0
     source: {fileID: 0}
+  - name: Menu1
+    clip: {fileID: 8300000, guid: 9b05bf85194a6994e87a326b55b12087, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Menu2
+    clip: {fileID: 8300000, guid: aebae0e89d575dc43ae340319487ef87, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: Menu3
+    clip: {fileID: 8300000, guid: e49874f19fdb7114bbf776cb9e5f53c0, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
   music:
   - name: Battle
     clip: {fileID: 8300000, guid: 7e8758aa964065748bfd92cd0784cb4f, type: 3}
     volume: 1
-    pitch: 0
+    pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: MainMenu
     clip: {fileID: 8300000, guid: e5910d7da50f7464da4957f722741f14, type: 3}
     volume: 1
-    pitch: 0
+    pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: SkirmishSetup
     clip: {fileID: 8300000, guid: 1a55da3c2649236469bebb18f982a7ac, type: 3}
     volume: 1
-    pitch: 0
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Defeat
+    clip: {fileID: 8300000, guid: 86f98471388057445816a8fe67502238, type: 3}
+    volume: 1
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: Victory
+    clip: {fileID: 8300000, guid: 3cd7c983dcdf144428eedfc363c6cb2c, type: 3}
+    volume: 1
+    pitch: 1
     loop: 1
     source: {fileID: 0}

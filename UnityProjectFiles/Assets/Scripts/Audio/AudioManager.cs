@@ -53,11 +53,13 @@ public class AudioManager : MonoBehaviour
         Debug.Log("Stopping all other music");
         foreach (Sound s2 in music)
         {
-            if (s2 != s && s2.source.isPlaying) s2.source.Stop();
+            if (s2.name != s.name) s2.source.Stop();
         }
         if (!s.source.isPlaying)
+        {
             Debug.Log("Playing Music");
             s.source.Play();
+        }
     }
 
     public void Play(string name)

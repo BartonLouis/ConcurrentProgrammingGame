@@ -297,6 +297,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1230091678152894628, guid: 1386f88daca113941ba72a1936bc3a4d,
         type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230091678152894628, guid: 1386f88daca113941ba72a1936bc3a4d,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -324,6 +329,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230091678152894628, guid: 1386f88daca113941ba72a1936bc3a4d,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1230091678152894628, guid: 1386f88daca113941ba72a1936bc3a4d,
         type: 3}
@@ -473,7 +483,7 @@ PrefabInstance:
     - target: {fileID: 9070976340312773032, guid: 1386f88daca113941ba72a1936bc3a4d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.3337975
+      value: 2.3337936
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1386f88daca113941ba72a1936bc3a4d, type: 3}
@@ -1142,9 +1152,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "Press\nSpace to \nKill Everyone"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: eadcf4c8cfb78ad47b5aa50ff171710e, type: 2}
-  m_sharedMaterial: {fileID: -8877103798295913562, guid: eadcf4c8cfb78ad47b5aa50ff171710e,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1168,7 +1177,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 2
+  m_fontSize: 1.85
   m_fontSizeBase: 1
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2082,7 +2091,7 @@ PrefabInstance:
     - target: {fileID: 1055350971208011988, guid: 6646787b3a5297e448243bf0553374c5,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 15.78
+      value: 15.780029
       objectReference: {fileID: 0}
     - target: {fileID: 1055350971208011988, guid: 6646787b3a5297e448243bf0553374c5,
         type: 3}
@@ -2399,6 +2408,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336841766076396571, guid: 633b556e1b14bbe4fb3d2ba04397de09,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2336841766076396571, guid: 633b556e1b14bbe4fb3d2ba04397de09,
         type: 3}
