@@ -1478,6 +1478,39 @@ MonoBehaviour:
     type: 3}
   ChargePointPrefab: {fileID: 7720339651540741979, guid: 7edf27d85b249b247bdd377f5b75de1d,
     type: 3}
+--- !u!114 &1489562523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489562518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9a2f103e3da7b348a0880e5bca44d48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scripts:
+  - name: Default
+    script: {fileID: 4900000, guid: 528bb1081411b94419733fcd440e4d06, type: 3}
+  - name: Damage1
+    script: {fileID: 4900000, guid: 4a3d7f9dd37558a4b8f23e43717c0d02, type: 3}
+  - name: Support1
+    script: {fileID: 4900000, guid: 475554872acfc634f9bdafeb6f6dcc32, type: 3}
+  - name: Tank1
+    script: {fileID: 4900000, guid: 259ce665a6345b74b970b713d82ef42a, type: 3}
+  - name: Damage2
+    script: {fileID: 4900000, guid: c3f395f41e9de4c43ad884beb3473c7d, type: 3}
+  - name: Support2
+    script: {fileID: 4900000, guid: e78fc8fc2c7e0154c8c7cbb817eab191, type: 3}
+  - name: Tank2
+    script: {fileID: 4900000, guid: 835fcc89dfc1de64c9d7d5cef79f2818, type: 3}
+  - name: Damage3
+    script: {fileID: 4900000, guid: 2ab8865e54f10d345b9a2bc8e1e73104, type: 3}
+  - name: Support3
+    script: {fileID: 4900000, guid: 6ae14b87d4ade054da4ea0976b914b1c, type: 3}
+  - name: Tank3
+    script: {fileID: 4900000, guid: 6c71c8406f8731741b5c29951f3beb4a, type: 3}
 --- !u!224 &1631668698 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5868041051108668963, guid: ecab50a43f1b44a49b179107a3a68c40,
