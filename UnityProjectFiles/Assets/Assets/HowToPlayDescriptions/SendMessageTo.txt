@@ -1,0 +1,11 @@
+Available To: Any
+Time Cost: 	 1
+Parameters:
+	- Teammate: PlayerValue
+	- Message: MessageValue
+Example Use
+	teammate <- GetTeammateOfType Support
+	SendMessageTo teammate {Self, "Help Me!"}
+
+
+Sends a message to the given character. (See Messaging for more details).

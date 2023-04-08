@@ -1,0 +1,13 @@
+Comments are lines in script which get ignored by the character when running the instructions. They can be helpful for explaining what bits of code do, or keeping code organised. Comments are written with a hashtag '#' followed by the comment. Anything after the hashtag is treated as a comment. Here is an example:
+	
+	# Section of code to contact a teammate and ask for support
+	teammate <- GetTeammateOfType Support
+	SendMessageTo teammate {Self, "Help Me!"}
+
+	# Section of code to choose an enemy and attack them until they die
+	enemy <- GetEnemyOfType Any
+	alive <- IsNotNone enemy
+	while alive {
+		Attack enemy
+		alive <- IsNotNone enemy
+	}

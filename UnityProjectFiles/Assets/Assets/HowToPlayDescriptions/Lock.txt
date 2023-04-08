@@ -1,0 +1,11 @@
+Available To: Any
+Time Cost: 	  5
+Parameters:
+	- Side: SideValue
+Example Use
+	Lock Left
+	Lock Right
+	ChargeUp
+
+
+Locks the power resource on the given side of the character. If that resource is locked already, then the character will wait until it is available. This introduces the risk of deadlock if all characters are waiting for resources which will never become available. (See Charging Up).

@@ -1,0 +1,1 @@
+A script is a file with a list of instructions for a character to follow during a battle. The character will run each instruction one after the other from top to bottom. When it runs out of instructions, it will loop back to the beginning. Your job is to write scripts which allow the characters to battle their way to victory effectively.

@@ -1,0 +1,10 @@
+Available To: Support
+Time Cost: 	  3
+Parameters:
+	- Teammate: PlayerValue
+Example Use
+	teammate <- GetTeammateOfType Damage
+	Boost teammate
+
+
+Increases that characters outgoing damage for a short time.

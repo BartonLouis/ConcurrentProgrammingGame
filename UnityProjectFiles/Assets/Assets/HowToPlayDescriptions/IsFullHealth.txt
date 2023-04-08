@@ -1,0 +1,8 @@
+Parameters:
+	- None
+Returns:
+	- Full Health: Boolean
+Example Use:
+	is_full_health <- IsFullHealth
+
+returns True if this character is full health, otherwise False.

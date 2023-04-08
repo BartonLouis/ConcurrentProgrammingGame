@@ -1,0 +1,7 @@
+Messaging is an important part of teamwork, and is vital for making your characters coordinate attacks effectively.
+
+Messages can be sent using the SendMessageTo or SendMessageToAll Operations (See respective pages for more details) and can be received using the Listen command (See Listen).
+
+Every character has a Buffer (Like a queue) of received messages. When one character sends a message to another, it will enter the Buffer and stay there until the character reads from the Queue of messages, this means that you don't have to worry about whether or not a character is listening before sending a message.
+
+When a character calls the Listen command, it will repetitively check the Buffer of messages until one appears. If there is already a message, then it instantly returns the first message in that queue. If no messages are received, then the listening character will be stuck waiting forever. It's important to protect characters who send lots of messages, for example, Tanks, as them dieing can cause you whole team to get stuck!

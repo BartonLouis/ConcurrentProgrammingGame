@@ -1,0 +1,9 @@
+Parameters:
+	- Character: Player
+Returns:
+	- Charged: Boolean
+Example Use:
+	teammate <- GetTeammateOfType Damage
+	is_charged <- IsCharged teammate
+
+returns True if the given character is charged up (See Charging Up), otherwise False.

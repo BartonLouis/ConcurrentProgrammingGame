@@ -1,0 +1,29 @@
+Selection is a way of deciding whether or not to take an action. It has the following syntax:
+	if <boolexpr> {
+		<Code>
+	}
+
+Firstly, it evaluates the boolean expression (See Boolean Expressions). If the expression evaluates to True, then it will enter the curly braces and execute the code inside. If it evaulates to False, then it skips the code inside the if-statement.
+
+Optionally, you can extend the if-statement to include further options. The code will evaluate all the boolean expressions in order, until it finds one which is true, at which point it executes that block of code, and skips all remaining blocks. This is written as below:
+	if <boolexpr1> {
+		<code block 1>
+	} else if <boolexpr2> {
+		<code block 2>
+	} else if <boolexpr3> {
+		<code block 3>
+	} else {
+		<final code block>
+	}
+
+You can add as many as you want, however, the final else statement must be placed at the end, as this represents the block which should execute if all other boolean expressions evaluate to False.
+
+Here is an example use of selection:
+	message <- Listen
+	text <- GetTextComponent message
+ 	if message == "Attack"{
+		enemy <- GetPlayerComponent message
+		Attack enemy
+	} else {
+		HealSelf
+	}

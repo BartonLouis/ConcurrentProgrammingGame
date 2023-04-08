@@ -1,0 +1,10 @@
+Available To: Tank
+Time Cost: 	  6
+Parameters:
+	- Enemy: PlayerValue
+Example Use
+	enemy <- GetEnemyOfType Damage
+	Block enemy
+
+
+Significantly reduces the damage that character can do for a short while.

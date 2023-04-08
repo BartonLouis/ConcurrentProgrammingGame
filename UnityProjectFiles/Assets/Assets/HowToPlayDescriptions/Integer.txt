@@ -1,0 +1,15 @@
+An Integer can represent any whole number, positive or negative. Many maths operations can be performed on integers, these include addition, subtraction, multiplication, division, modulo division, and raising one number to the exponent of another, as seen below:
+	num1 <- 5
+	num2 <- 10
+	a <- num1 + num2
+	b <- num1 - num2
+	c <- num1 * num2
+	d <- num1 / num2
+	e <- num1 ^ num2
+	f <- num1 % num2
+
+Note that any operation which would result in a decimal result (for example 1 / 2) will be converted back to an integer using floor rounding, meaning it always gets rounded down to the nearest whole number.
+	1.2 -> 1
+	-5.8 -> -5
+	2.7 -> 2
+	

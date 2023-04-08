@@ -1,0 +1,10 @@
+Available To: Any
+Time Cost: 	  8
+Parameters:
+	- Enemy: PlayerValue
+Example Use
+	enemy <- GetEnemyOfType Any
+
+
+Attacks that enemy.
+

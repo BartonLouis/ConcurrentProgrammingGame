@@ -14,12 +14,16 @@ public class GameController : MonoBehaviour
     public static int MaxPlayers = 3;
     public static int Team2Players = 3;
     public static int Team2Difficulty = 1;
+    public static string level;
     public static int NumCores = 3;
     public static int MinQueueTime = 5;
     public static int MaxQueueTime = 15;
     public static int YieldBoost = 5;
     public static int PassivePriorityBoost = 1;
     public static int TimeBetweenTurns = 0;
+    public static int numDamage = 0;
+    public static int numSupport = 0;
+    public static int numTank = 0;
     private System.Random Rnd;
 
     public enum GameState
@@ -91,7 +95,39 @@ public class GameController : MonoBehaviour
         CurrentTime = 1;
 
         // Populate Enemy Team
-        for (int i = 0; i < Team2Players; i++)
+        int count = 0;
+        // Load Damage Characters
+        for (int i = 0; i < numDamage; i++)
+        {
+            ClassValue.ClassType playerClass = ClassValue.ClassType.Damage;
+            if (level == null)
+                Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            else
+                Team2.AddPlayer(playerClass, level + playerClass.ToString());
+            count++;
+        }
+        // Load Support Characters
+        for (int i = 0; i < numSupport; i++)
+        {
+            ClassValue.ClassType playerClass = ClassValue.ClassType.Support;
+            if (level == null)
+                Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            else
+                Team2.AddPlayer(playerClass, level + playerClass.ToString());
+            count++;
+        }
+        // Load Tank Characters
+        for (int i = 0; i < numTank; i++)
+        {
+            ClassValue.ClassType playerClass = ClassValue.ClassType.Tank;
+            if (level == null)
+                Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            else
+                Team2.AddPlayer(playerClass, level + playerClass.ToString());
+            count++;
+        }
+        // Fill in gaps
+        for (int i = count; i < Team2Players; i++)
         {
             int choice = Rnd.Next(3);
             ClassValue.ClassType playerClass;
@@ -107,7 +143,10 @@ public class GameController : MonoBehaviour
                     playerClass = ClassValue.ClassType.Tank;
                     break;
             }
-            Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty + ".txt");
+            if (level == null)
+                Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            else
+                Team2.AddPlayer(playerClass, level + playerClass.ToString());
 
         }
     }
@@ -187,7 +226,7 @@ public class GameController : MonoBehaviour
 
     public void DeleteScript(string filename)
     {
-        FileManager.DeleteFile("Player", filename);
+        FileManager.DeleteFile(filename);
         CharacterPanel.DeleteAll(filename);
         CharacterPanel.Load(MaxPlayers);
     }

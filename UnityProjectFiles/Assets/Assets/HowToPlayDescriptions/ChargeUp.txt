@@ -1,0 +1,11 @@
+Available To: Any
+Time Cost: 	  8
+Parameters:
+	- None
+Example Use
+	Lock Left
+	Lock Right
+	ChargeUp
+
+
+If both resources have been locked up, then the character can charge up, which will significantly increase the potency of their next move, whether attacking, defending, or healing. If the character hasn't locked both resources, it will still take the time to charge up, but nothing will happen at the end. (See Charging Up for more details).

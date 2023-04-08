@@ -1,0 +1,8 @@
+Parameters:
+	- None
+Returns:
+	- Health: Int
+Example Use:
+	health <- GetHealth
+
+Returns the health of this character.

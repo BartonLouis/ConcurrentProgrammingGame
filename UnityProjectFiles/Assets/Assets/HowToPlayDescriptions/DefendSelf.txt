@@ -1,0 +1,9 @@
+Available To: Any
+Time Cost: 	  3
+Parameters:
+	- None
+Example Use
+	DefendSelf
+
+
+Block all incoming damage for a short amount of time.

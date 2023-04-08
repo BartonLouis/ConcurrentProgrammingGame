@@ -1,0 +1,12 @@
+Available To: Any
+Time Cost: 	  4
+Parameters:
+	- None
+Example Use
+	full_health <- IsMaxHealth
+	if not full_health {
+		HealSelf
+	}
+
+
+Heal this character

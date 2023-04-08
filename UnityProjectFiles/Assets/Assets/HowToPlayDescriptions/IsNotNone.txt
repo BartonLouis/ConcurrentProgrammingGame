@@ -1,0 +1,14 @@
+Parameters:
+	- Variable: Anything
+Returns:
+	- Is Not None: Boolean
+Example Use:
+	teammate <- GetTeammateOfType Damage
+	alive <- IsNotNone teammate
+	while alive {
+		Boost teammate
+		Heal teammate
+		alive <- IsNotNone teammate
+	}
+
+returns True if the given variable is not None, or if it represents a character which has died, otherwise returns False.

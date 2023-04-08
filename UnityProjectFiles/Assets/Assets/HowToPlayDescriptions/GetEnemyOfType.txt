@@ -1,0 +1,9 @@
+Parameters:
+	- ExpectedClass: ClassValue
+Returns:
+	- Enemy: PlayerValue
+Example Use:
+	enemy <- GetEnemyOfType Damage
+	enemy <- GetEnemyOfType Any
+
+Returns a reference to an Enemy with the expected class. If none exist or they have all died, then it returns None.

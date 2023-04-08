@@ -1,0 +1,8 @@
+Parameters:
+	- None
+Returns:
+	- Message: MessageValue
+Example Use:
+	message <- Listen
+
+This command will make the player wait until a message is received. If a message is received before the command is called then it will be queued up and read as soon as the command is called. Be careful though! If no message is ever received then the character will be stuck listening out for one to arrive. (See Messaging).

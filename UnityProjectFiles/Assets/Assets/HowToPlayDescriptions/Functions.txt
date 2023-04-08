@@ -1,0 +1,16 @@
+A Function is like an operation, except that it has no effect on the state of the battle. A Function is only used for retreiving information about the battle itself. For example, getting an enemy, checking if a character is charged, or checking how much health a character has left. They all return values, which must be stored in a variable using the same notation as before:
+	variable_name <- FunctionName <parameter>
+
+Here is a complete list of all functions, for more information about their purpose, check their individual pages:
+	GetEnemyOfType <Type>
+	GetTeammateOfType <Type>
+	GetHealth
+	GetMaxHealth
+	IsFullHealth
+	IsCharged <Player>
+	IsNone <Variable>
+	IsNotNone <Variable>
+	GetPlayerComponent <Message>
+	GetTextComponent <Message>
+	GetClass <Player>
+	Listen

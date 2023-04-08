@@ -10,6 +10,7 @@ public class DocumentationController : MonoBehaviour
 
     public static DocumentationController instance;
 
+    public bool SubCategory;
     public TextMeshProUGUI title;
     public TextMeshProUGUI description;
     public Image image;
@@ -31,7 +32,7 @@ public class DocumentationController : MonoBehaviour
         foreach(TutorialElement e in tutorialElements)
         {
             GameObject button = Instantiate(buttonPrefab, parent);
-            button.GetComponent<TopicButton>().Setup(index, e.name);
+            button.GetComponent<TopicButton>().Setup(index, e.name, e.subCategory);
             index++;
         }
     }

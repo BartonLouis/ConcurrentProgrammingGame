@@ -1,0 +1,26 @@
+A Boolean expression is any expression which evaluates to True or False when run by the interpreter. They can be written using any combination of the following sub-expressions where 'expr' represents a valid bool expression:
+	(expr)
+	expr And expr
+	expr Or expr
+	Not expr
+	expr == expr
+	expr != expr
+
+	Integer < Integer
+	Integer <= Integer
+	Integer > Integer
+	Integer >= Integer
+	Integer == Integer
+
+
+And: returns True if both the left and right expressions also return True
+Or : returns True if at least one of the left or right expressions return True
+Not: returns True if the expression is False, or False if it is True
+
+== : returns True if the left expression equals the right expression
+!= : returns True if the left expression doesn't equal the right expression
+>  : returns True if the left expression is greater than the right expression
+<  : returns True if the left expression is less than the right expression
+>= : returns True if the left expression is greater than or equal to the right expression
+<= : returns True if the left expression is less than or equal to the right expression
+	

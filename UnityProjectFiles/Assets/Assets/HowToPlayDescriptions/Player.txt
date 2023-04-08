@@ -1,0 +1,7 @@
+A Player value represents a reference to a character, it can be used to attack an enemy, heal a teammate or send a message.
+
+A Player value can either reference a teammate or an enemy, the actions you can take with that value is dependant on which value it holds. For example, you can't attack a teammate, and you can't heal an enemy.
+
+Here is an example of a player value:
+	player <- GetTeammateOfType Support
+	player <- GetEnemyOfType Any

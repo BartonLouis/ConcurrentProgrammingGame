@@ -1,0 +1,5 @@
+Charged moves are incredibly powerful, but also risky and difficult to pull off as there are multiple steps involved. Firstly, a character must lock both power resources either side of them. This is done using the Lock command (See Lock). Then they must use these resources to charge up, using the ChargeUp command (See ChargeUp). This will cause the character to glow white with power.
+
+The next move that character makes will be overcharged, making it much more powerful. A charged attack has the power to one-shot an enemy. A charged heal will return a teammate to full health, or a charged defend can block all incoming damage for a short time.
+
+The biggest risk of this strategy is deadlock (Google the Dining Philosophers problem). If every character tries to lock the left resource, then lock the right resource, then there is a high risk that all characters will end up holding only a left fork, whilst waiting for the right one to become available. This can cause your whole team to grind to a halt and get whittled down by the enemy team.

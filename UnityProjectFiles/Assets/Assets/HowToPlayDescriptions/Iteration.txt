@@ -1,0 +1,25 @@
+Iteration is a way to repeat commands multiple commands based on some condition. For example, attacking an enemy repetitively until they die. Iteration is achieved with the following syntax:
+while <boolexpr> {
+	<code block>
+}
+
+Just like with if-statements, a while-statement firstly evaluates the boolean expression. If it evaluates to True, then it executes the code inside the curly braces, otherwise, it exits the while-statement and carries on with normal execution. If the code inside is executed, then once completed, the character will loop back to the while-statement and evaluate it again. It will keep doing this until it evaluates to False. This introduces a risk of infinite loops, as the statement may always be True.
+
+Here are 2 examples of loops:	
+	# Example 1: keeps attacking until the character is dead
+	enemy <- GetEnemyOfType Any
+	alive <- IsNotNone enemy
+	while alive{
+		Attack enemy
+		alive <- IsNotNone enemy
+	}
+	
+	# Example 2: Boost a teammate 3 times
+	teammate <- GetTeammateOfType Damage
+	count <- 0
+	while count < 3 {
+		Boost teammate
+		count <- count + 1
+	}
+
+	

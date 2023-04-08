@@ -1,0 +1,12 @@
+Parameters:
+	- Message: MessageValue
+Returns:
+	- Text: StringValue
+Example Use:
+	message <- Listen
+	text <- GetTextComponent message
+	if text == "Heal!" {
+		HealSelf
+	}
+
+Reads the text part of a message, and returns it. Will return None if an invalid message is given.

@@ -1,0 +1,10 @@
+Parameters:
+	- Message: MessageValue
+Returns:
+	- Player: PlayerValue
+Example Use:
+	message <- Listen
+	player <- GetPlayerComponent message
+	Attack player
+
+Reads the player part of a message, and returns it. Will return None if an invalid message is given.

@@ -1,0 +1,9 @@
+Available To: Tank
+Time Cost: 	  4
+Parameters:
+	- Teammate: PlayerValue
+Example Use
+	teammate <- GetTeammateOfType Support
+	Defend teammate
+
+Reduce incoming damage for the given teammate for a short time.

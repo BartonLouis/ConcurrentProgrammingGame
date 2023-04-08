@@ -1,0 +1,11 @@
+Parameters:
+	- Variable: Anything
+Returns:
+	- Is None: Boolean
+Example Use:
+	enemy <- GetEnemyOfType Any
+	dead <- IsNone enemy
+	while not dead {
+		Attack enemy
+		dead <- IsNone enemy
+	}

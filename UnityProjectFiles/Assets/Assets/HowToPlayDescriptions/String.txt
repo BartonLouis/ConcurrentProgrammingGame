@@ -1,0 +1,23 @@
+A String Value represents any text. They must be written inside speech marks, like so:
+	- "Hello World"
+
+Strings are most helpful for writing messages to other characters (See Messaging):
+	text <- "Help Me!"
+	teammate <- GetTeammateOfType Support
+	SendMessageTo teammate {Self, text}
+
+The receiving character can then read the text and decide what to do:
+
+	# receive message
+	message <- Listen
+	text <- GetTextComponent message
+	player <- GetPlayerComponent message
+
+	# decide what to do
+	if text == "Help Me!" {
+		Heal player
+	} else if text == "Boost Me!"{
+		Boost player
+	} else if text == "Attack!" {
+		Attack player
+	}

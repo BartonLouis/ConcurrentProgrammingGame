@@ -1,0 +1,9 @@
+The scheduler is responsible for making sure all characters on the battlefield have a turn running their scripts.
+
+The schedule is made up of multiple 'cores'. Each core can only have one character executing on it at any one time, so if there are 5 cores, then 5 characters can move at once. 
+
+When a character is not executing, it has what's called a 'priority' associated with it. When the scheduler is deciding which character can move next, it checks the priorities of each character. Characters with a higher priority have a higher chance of getting a turn next, but at the end of the day, it's still random and impossible to predict what will happen. Just like on a real computer!
+
+Normally, the priority of each character increases over time at a rate of 1 per turn. So a character who has waited 5 turns will have a priority of 5. However, this can be boosted using the Yield command (See Yield). When a character Yields, it forces the schedule to re-forecast. But when it does so, all characters on the yielding characters team will recieve a boost to their priority equal to the battle YieldBoost (Set in the Skirmish Setup). High YieldBoost makes Yielding very worthwhile for your team, whilst low YieldBoost makes it less impactfull.
+
+Finally, the schedule will also re-forecast when a character dies.

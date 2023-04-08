@@ -1,0 +1,9 @@
+Available To: Any
+Time Cost: 	  0
+Parameters:
+	- None
+Example Use
+	Yield
+
+
+This command forces the thread scheduler to re-forecast, interrupting all enemy and teammate actions. The benefit to this command is that when it re-forecasts, friendly characters have a boost to their queue priority (See Scheduler) This means that your team will be prioritised to take their turn sooner.

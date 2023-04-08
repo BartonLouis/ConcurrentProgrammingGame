@@ -1,0 +1,12 @@
+Available To: Any
+Time Cost:
+	For Support and Damage: X where X is the number of living teammates
+	For Tanks:			3, unless there are less than 3 living teammates, in which case the normal rule applies
+Parameters:
+	- Message: MessageValue
+Example Use
+	priority_target <- GetEnemyOfType Tank
+	SendMessageToAll {priority_target, "Kill Them!"}
+
+
+Sends a message to all teammates. This can be a very expensive command to run, which is why it should be used sparingly. However, Tank characters have a lower cost for sending message, this makes them good commanders, as they can quickly send commands across the battlefield. (See Messaging for more detail).

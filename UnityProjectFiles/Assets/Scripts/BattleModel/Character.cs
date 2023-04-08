@@ -99,8 +99,8 @@ public abstract class Character : MonoBehaviour
         // Other bits
         Anim = GetComponent<Animator>();
         string sourceCode;
-        if (Team.TeamNum == 1) sourceCode = FileManager.LoadFile("Player", ScriptFilename);
-        else sourceCode = FileManager.LoadFile("Enemy", ScriptFilename);
+        if (Team.TeamNum == 1) sourceCode = FileManager.LoadFile(ScriptFilename);
+        else sourceCode = GameObject.Find("Controller").GetComponent<EnemyScriptLoader>().LoadScript(ScriptFilename);
         RuntimeInstance = new RuntimeInstance(sourceCode);
         RuntimeInstance.BindEnergyBar(EnergyBar);
         RuntimeInstance.BindCharacter(this);

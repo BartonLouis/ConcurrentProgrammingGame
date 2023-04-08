@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -9,6 +9,8 @@ public class AudioManager : MonoBehaviour
     public Sound[] music;
 
     public static AudioManager instance;
+
+    public AudioMixer Mixer;
 
     private void Awake()
     {
@@ -28,6 +30,7 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
             s.source.playOnAwake = false;
+            s.source.outputAudioMixerGroup = s.mixerGroup;
         }
         foreach (Sound s in music)
         {
@@ -37,6 +40,7 @@ public class AudioManager : MonoBehaviour
             s.source.pitch = s.pitch;
             s.source.loop = s.loop;
             s.source.playOnAwake = false;
+            s.source.outputAudioMixerGroup = s.mixerGroup;
         }
 
     }
@@ -82,5 +86,23 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Stop();
+    }
+    
+
+    public void ChangeVolume(string channel, float volume)
+    {
+        Mixer.SetFloat(channel, volume);
+    }
+
+    public float GetVolume(string channel)
+    {
+        bool result = Mixer.GetFloat(channel, out float value);
+        if (result)
+        {
+            return value;
+        } else
+        {
+            return 0f;
+        }
     }
 }

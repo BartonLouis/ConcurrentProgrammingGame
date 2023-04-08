@@ -1,0 +1,16 @@
+Variables are like boxes to store information. For example, a number, a boolean, or more complex information like a Teammate or Enemy.
+
+Variables are created by giving them a name and any piece of information. For example:
+	my_variable <- 5
+	my_variable <- "Hello World"
+	my_variable <- True
+	my_variable <- GetEnemyOfType Damage
+A variable is assigned by putting a value into it, using the "<-" symbol.
+The value on the right can be a literal value, like an integer, a string, a boolean or the result of some Function (See Functions).
+
+The value in a variable can then be read at any time by using the name of the variable. The program then knows to look inside the variable and retrieve the value. For example:
+	num1 <- 5
+	num2 <- 10
+	num3 <- num1 + num2
+
+Note that if you try to read the value inside a variable before is has been created, then it will return None (See None).

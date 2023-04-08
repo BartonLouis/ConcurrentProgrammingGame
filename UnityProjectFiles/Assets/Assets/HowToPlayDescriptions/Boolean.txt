@@ -1,0 +1,4 @@
+A Boolean value can take on 2 values, True or False. These are extremelly useful for logical operations and comparisons. For example:
+	enemy <- GetEnemyOfType Any
+	is_alive <- IsAlive enemy
+		(IsAlive returns True or False)

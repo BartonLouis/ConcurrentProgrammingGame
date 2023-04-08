@@ -1,0 +1,10 @@
+A None value is an important concept to understand. A None value represents an empty variable, or an invalid value. This can be a result of a function not receiving the correct input parameters, or from using a reference to a player which is no longer alive. For example:
+
+	player <- GetTeammateOfType False
+	# this function will return None, as <False> is not a value player class
+
+	player <- GetEnemyOfType Any
+	alive <- IsNotNone player
+	# if the character has died, then their reference == None, so we can check if they are dead or not using this function.
+
+The None value is most helpful for checking if a character is still alive or not.

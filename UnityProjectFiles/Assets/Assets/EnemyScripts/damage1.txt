@@ -1,0 +1,6 @@
+enemy <- GetEnemyOfType Any
+Attack enemy
+is_full <- IsMaxHealth
+if not is_full {
+	defend_self
+}

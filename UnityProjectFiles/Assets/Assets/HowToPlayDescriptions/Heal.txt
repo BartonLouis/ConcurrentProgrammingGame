@@ -1,0 +1,10 @@
+Available To: Support
+Time Cost: 	  3
+Parameters:
+	- Teammate: PlayerValue
+Example Use
+	teammate <- GetTeammateOfType Damage
+	Heal teammate
+
+
+Recovers some missing HP for that character. Support characters can heal players for more health than they can heal themselves for.

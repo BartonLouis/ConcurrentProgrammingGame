@@ -46,58 +46,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: Attack
-    clip: {fileID: 8300000, guid: 811d36b4845c63a42a32f3e13ab3a5d9, type: 3}
+    clip: {fileID: 8300000, guid: 3df9bbbc130ccb344af5f3fc793a630f, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Lock
     clip: {fileID: 8300000, guid: 42d592f366bcd3947a75fc72e78e4cbb, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Debuff
     clip: {fileID: 8300000, guid: 45b938d060bdee74ba8484bd023c8c5c, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Damage
     clip: {fileID: 8300000, guid: 7cbd6cd765888ff418d01d98bd1ce9c2, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Buff
     clip: {fileID: 8300000, guid: cc6699269b4c1d44ea1e860518b9bb73, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Defend
     clip: {fileID: 8300000, guid: 6f37f83647e1a1c4e8cae49521915ee9, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Menu1
     clip: {fileID: 8300000, guid: 9b05bf85194a6994e87a326b55b12087, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Menu2
     clip: {fileID: 8300000, guid: aebae0e89d575dc43ae340319487ef87, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Menu3
     clip: {fileID: 8300000, guid: e49874f19fdb7114bbf776cb9e5f53c0, type: 3}
     volume: 1
     pitch: 1
     loop: 0
+    mixerGroup: {fileID: 5895765949795400196, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   music:
   - name: Battle
@@ -105,28 +123,39 @@ MonoBehaviour:
     volume: 1
     pitch: 1
     loop: 1
+    mixerGroup: {fileID: 9078527439276815512, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: MainMenu
     clip: {fileID: 8300000, guid: e5910d7da50f7464da4957f722741f14, type: 3}
     volume: 1
     pitch: 1
     loop: 1
+    mixerGroup: {fileID: 9078527439276815512, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: SkirmishSetup
     clip: {fileID: 8300000, guid: 1a55da3c2649236469bebb18f982a7ac, type: 3}
     volume: 1
     pitch: 1
     loop: 1
+    mixerGroup: {fileID: 9078527439276815512, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Defeat
     clip: {fileID: 8300000, guid: 86f98471388057445816a8fe67502238, type: 3}
     volume: 1
     pitch: 1
     loop: 1
+    mixerGroup: {fileID: 9078527439276815512, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
   - name: Victory
     clip: {fileID: 8300000, guid: 3cd7c983dcdf144428eedfc363c6cb2c, type: 3}
     volume: 1
     pitch: 1
     loop: 1
+    mixerGroup: {fileID: 9078527439276815512, guid: 3bf321e027344914194f1b21e95ba412,
+      type: 2}
     source: {fileID: 0}
+  Mixer: {fileID: 24100000, guid: 3bf321e027344914194f1b21e95ba412, type: 2}

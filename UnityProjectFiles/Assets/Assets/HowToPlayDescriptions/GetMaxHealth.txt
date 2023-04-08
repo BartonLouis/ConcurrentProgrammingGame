@@ -1,0 +1,8 @@
+Parameters:
+	- None
+Returns:
+	- Health: Integer
+Example Use:
+	max_health <- GetMaxHealth
+
+returns the maximum health of this character.

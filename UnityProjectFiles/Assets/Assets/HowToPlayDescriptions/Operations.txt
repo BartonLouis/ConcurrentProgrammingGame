@@ -1,0 +1,29 @@
+An Operation is any action a character can take in a battle. This may include Attacking, Healing or Defending. Every Operation has a different time cost, so it's worth taking the time to know every instruction available.
+
+Here are some examples of Operations:
+	- HealSelf
+	- DefendSelf
+	- ChargeUp
+
+Some Operations require additional bits of information, known as Parameters. To include a parameter, simply write the input parameters after the operation. If multiple parameters are required, it's important to include them in the correct order. Here is an example of an operation which requires a parameter:
+	enemy <- GetEnemyOfType Tank
+	Attack enemy
+
+And here is one which requires multiple parameters (See Messaging)
+	target <- GetEnemyOfType Tank
+	teammate <- GetTeammateOfType Damage
+	SendMessageTo teammate {target, "Attack"} 
+
+Here is a complete list of all available operations, for more information, check their individual pages:
+	Attack <Enemy>
+	Heal <Teammate>
+	Boost <Teammate>
+	Defend <Teammate>
+	Block <Enemy>
+	HealSelf
+	DefendSelf
+	Lock <Side>
+	ChargeUp
+	SendMessageTo <Teammate> <Message>
+	SendMessageToAll <Message>
+	Yield

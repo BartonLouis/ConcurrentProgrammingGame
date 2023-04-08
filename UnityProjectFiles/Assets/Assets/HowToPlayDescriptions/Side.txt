@@ -1,0 +1,6 @@
+A Side value is used when Locking power resources (See Locking). It has 2 possible values, Left, or Right. This represents the side of the player the power resource is located.
+
+Here is an example of a side values use:
+	Lock Left
+	Lock Right
+	ChargeUp

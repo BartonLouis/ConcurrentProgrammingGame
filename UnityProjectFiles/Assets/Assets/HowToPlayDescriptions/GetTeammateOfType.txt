@@ -1,0 +1,8 @@
+Parameters:
+	- ExpectedClass: ClassValue
+Returns:
+	- Teammate: PlayerValue
+Example Use:
+	teammate <- GetTeammateOfType Support
+
+Returns a reference to a Teammate with the expected class. If none exist or they have all died, then it returns None.

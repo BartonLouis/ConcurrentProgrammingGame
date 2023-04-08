@@ -1,0 +1,7 @@
+teammate <- GetTeammateOfType Damage
+Heal teammate
+teammate <- GetTeammateOfType Tank
+Heal teammate
+teammate <- GetTeammateOfType Support
+Heal teammate
+HealSelf

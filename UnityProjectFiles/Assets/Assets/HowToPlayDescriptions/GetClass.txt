@@ -1,0 +1,15 @@
+Parameters:
+	- Player: PlayerValue
+Returns:
+	- Class: ClassValue
+Example Use:
+	enemy <- GetEnemyOfType Any
+	class <- GetClass enemy
+	if class == Tank or class == Support{
+		Attack enemy
+	} else {
+		Block enemy
+	}
+	
+
+Gets the class of a given character, returns None if an invalid player value is given.

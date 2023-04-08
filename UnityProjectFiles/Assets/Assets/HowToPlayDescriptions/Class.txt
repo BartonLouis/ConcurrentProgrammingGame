@@ -1,0 +1,16 @@
+The Class data type represents the different types of classes a character can take. There are 4 values available:
+	- Damage
+	- Support
+	- Tank
+	- Any
+
+Damage Character deal more damage, but have very few supporting abilities, they are like the forward spear of your team.
+Support Characters have less health, and deal less characters, but they can heal teammates, and boost their damage if they choose to.
+Tank Characters have more health, but also deal less damage, they are good at defending teammates, and blocking enemies. As well as this, they have a lower cost for sending messages to teammates, so they make good commanders.
+Any represents Any class, this value is most used when getting a character reference without caring which type of character.
+
+Here is an example of their use:
+	teammate <- GetTeammateOfType Support
+	teammate <- GetTeammateOfType Damage
+	teammate <- GetEnemyOfType Tank
+	target <- GetEnemyOfType Any

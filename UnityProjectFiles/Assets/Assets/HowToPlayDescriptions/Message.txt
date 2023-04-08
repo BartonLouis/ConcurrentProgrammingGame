@@ -1,0 +1,13 @@
+A Message value represents a block of information which can be transferred between 2 players (See Messaging). A Message has 2 components, a player reference, and a text component. A message is contructed as below:
+	- {<player>, <string>}
+For example:
+	target <- GetEnemyOfType Any
+	message <- {target, "Attack"}
+
+	teammate <- GetTeammateOfType Damage
+	SendMessageToAll {teammate, "Keep Alive"}
+
+	teammate <- GetTeammateOfType Support
+	SendMessageTo teammate {Self, "Boost"}
+
+The best way to use these 2 components is to use the player component as a reference to that player, and the text component as some command for a receiver to read and understand what to do with the player.
