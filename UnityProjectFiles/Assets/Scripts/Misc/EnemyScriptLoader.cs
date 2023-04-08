@@ -18,14 +18,16 @@ public class EnemyScriptLoader : MonoBehaviour
 
     public string LoadScript(string scriptName)
     {
-        TextAsset scriptText = Array.Find(scripts, script => script.name == scriptName).script;
+        Debug.Log("Trying to load: " + scriptName);
+        Script scriptText = Array.Find(scripts, script => script.name == scriptName);
         if (scriptText == null)
         {
             Debug.Log("Tried to load Script: " + scriptName + " but it didn't exist");
             return LoadScript("Default");
         } else
         {
-            return scriptText.text;
+            Debug.Log("Found: " + scriptText.name);
+            return scriptText.script.text;
         }
 
 

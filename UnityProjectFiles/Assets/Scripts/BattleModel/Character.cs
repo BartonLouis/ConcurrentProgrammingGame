@@ -59,10 +59,10 @@ public abstract class Character : MonoBehaviour
     {
         RightChargePoint = c;
     }
-    
 
     public void Setup()
     {
+        applyEnemyMultipliers();
         // Visual Elements
         GameObject worldCanvas = GameObject.Find("WorldCanvas");
         GameObject energyBar = Instantiate(PrefabLibrary.instance.EnergyBarPrefab, worldCanvas.transform);
@@ -100,7 +100,10 @@ public abstract class Character : MonoBehaviour
         Anim = GetComponent<Animator>();
         string sourceCode;
         if (Team.TeamNum == 1) sourceCode = FileManager.LoadFile(ScriptFilename);
-        else sourceCode = GameObject.Find("Controller").GetComponent<EnemyScriptLoader>().LoadScript(ScriptFilename);
+        else {
+            Debug.Log("Loading Enemy Script");
+            sourceCode = GameObject.Find("Controller").GetComponent<EnemyScriptLoader>().LoadScript(ScriptFilename);
+        }
         RuntimeInstance = new RuntimeInstance(sourceCode);
         RuntimeInstance.BindEnergyBar(EnergyBar);
         RuntimeInstance.BindCharacter(this);
@@ -113,6 +116,21 @@ public abstract class Character : MonoBehaviour
         alive = true;
 
         BattleModel = BattleModel.instance;
+    }
+
+    private void applyEnemyMultipliers()
+    {
+        if (Team.TeamNum == 2)
+        {
+            ChargeMultiplier *= .8f;
+            BaseMaxHealth *= .8f;
+            BaseDamage *= .8f;
+            BaseSelfHeal *= .8f;
+            BaseTeamHeal *= .8f;
+            BaseSelfDefend *= .8f;
+            BaseBoost *= .8f;
+            BaseBlock *= .8f;
+        }
     }
 
     public void Step()
@@ -214,7 +232,7 @@ public abstract class Character : MonoBehaviour
 
     public void Die()
     {
-        Anim.SetBool("IsDead", true);
+        Anim.SetTrigger("IsDead");
         Anim.SetTrigger("Hurt");
         alive = false;
         tookTurn = false;

@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Interpreter;
 
 public class CampaignMapController : MonoBehaviour
 {
+
+    public static CampaignMapController instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     public void Start()
     {
@@ -16,10 +24,11 @@ public class CampaignMapController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void LoadLevel(string levelName, int team1Players, int team2Players, int team2Difficulty, int numCores, int minQueueTime, int maxQueueTime, int yieldBoost, int timeBetweenTurns, int numDamage, int numSupport, int numTank)
+    public void LoadLevel(string levelName, int team1Players, int team2Players, int numCores, int minQueueTime, int maxQueueTime, int yieldBoost, int timeBetweenTurns, int numDamage, int numSupport, int numTank, ClassValue.ClassType[] enabledClasses)
     {
         Debug.Log("Loading Level: " + levelName);
         AudioManager.instance.Play("Menu1");
+        GameController.level = levelName;
         GameController.MinPlayers = team1Players;
         GameController.MaxPlayers = team1Players;
         GameController.Team2Players = team2Players;
@@ -31,6 +40,7 @@ public class CampaignMapController : MonoBehaviour
         GameController.numDamage = numDamage;
         GameController.numSupport = numSupport;
         GameController.numTank = numTank;
+        GameController.enabledClasses = enabledClasses;
         SceneManager.LoadScene("Battle");
     }
 

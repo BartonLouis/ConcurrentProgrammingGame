@@ -21,7 +21,7 @@ You can add as many as you want, however, the final else statement must be place
 Here is an example use of selection:
 	message <- Listen
 	text <- GetTextComponent message
- 	if message == "Attack"{
+ 	if text == "Attack"{
 		enemy <- GetPlayerComponent message
 		Attack enemy
 	} else {

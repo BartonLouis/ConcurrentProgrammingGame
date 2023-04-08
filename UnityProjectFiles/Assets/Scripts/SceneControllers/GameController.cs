@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
     public static int MaxPlayers = 3;
     public static int Team2Players = 3;
     public static int Team2Difficulty = 1;
-    public static string level;
+    public static string level = "";
     public static int NumCores = 3;
     public static int MinQueueTime = 5;
     public static int MaxQueueTime = 15;
@@ -24,6 +24,7 @@ public class GameController : MonoBehaviour
     public static int numDamage = 0;
     public static int numSupport = 0;
     public static int numTank = 0;
+    public static ClassValue.ClassType[] enabledClasses = { ClassValue.ClassType.Damage, ClassValue.ClassType.Support, ClassValue.ClassType.Tank };
     private System.Random Rnd;
 
     public enum GameState
@@ -100,7 +101,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < numDamage; i++)
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Damage;
-            if (level == null)
+            if (level == "")
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
@@ -110,7 +111,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < numSupport; i++)
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Support;
-            if (level == null)
+            if (level == "")
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
@@ -120,7 +121,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < numTank; i++)
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Tank;
-            if (level == null)
+            if (level == "")
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
@@ -406,6 +407,7 @@ public class GameController : MonoBehaviour
 
     public void EndGameRetry()
     {
+        AudioManager.instance.PlayMusic("Battle");
         Paused = false;
         GameOverScreen.Hide();
         Stop();

@@ -9,7 +9,8 @@ public class ControlPanelElement : MonoBehaviour
 {
     [HideInInspector] public int index = 0;
     [HideInInspector] public string scriptName;
-    [HideInInspector] public ClassValue.ClassType ClassType = ClassValue.ClassType.Damage;
+    [HideInInspector] public int currentClass = 0;
+    [HideInInspector] public ClassValue.ClassType ClassType;
 
     [SerializeField] TextMeshProUGUI NameText;
     [SerializeField] Image CharacterIcon;
@@ -18,11 +19,14 @@ public class ControlPanelElement : MonoBehaviour
     [SerializeField] Sprite SupportIcon;
     [SerializeField] Sprite TankIcon;
 
+    [HideInInspector] public ClassValue.ClassType[] enabledClasses;
+
     private ControlPanelManager manager;
     
 
     private void Start()
     {
+        ClassType = enabledClasses[currentClass];
         NameText.text = scriptName;
         animator.SetBool("Open", true);
         manager = ControlPanelManager.instance;
@@ -56,21 +60,20 @@ public class ControlPanelElement : MonoBehaviour
     public void IconClicked()
     {
         AudioManager.instance.Play("Menu3");
+        currentClass = (currentClass + 1) % enabledClasses.Length;
+        ClassType = enabledClasses[currentClass];
         switch (ClassType)
         {
             case ClassValue.ClassType.Damage:
-                ClassType = ClassValue.ClassType.Support;
-                CharacterIcon.sprite = SupportIcon;
-                break;
-            case ClassValue.ClassType.Support:
-                ClassType = ClassValue.ClassType.Tank;
-                CharacterIcon.sprite = TankIcon;
-                break;
-            case ClassValue.ClassType.Tank:
-                ClassType = ClassValue.ClassType.Damage;
                 CharacterIcon.sprite = DamageIcon;
                 break;
+            case ClassValue.ClassType.Support:
+                CharacterIcon.sprite = SupportIcon;
+                break;
+            case ClassValue.ClassType.Tank:
+                CharacterIcon.sprite = TankIcon;
+                break;
         }
-        manager.UpdateClass(index, ClassType);
+        manager.UpdateClass(index, currentClass);
     }
 }

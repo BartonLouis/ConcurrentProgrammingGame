@@ -34,7 +34,6 @@ public class PauseMenuController : MonoBehaviour
     public void PauseButtonPressed()
     {
         AudioManager.instance.Play("Menu1");
-        Debug.Log("Here");
         Controller.PauseGame();
     }
 

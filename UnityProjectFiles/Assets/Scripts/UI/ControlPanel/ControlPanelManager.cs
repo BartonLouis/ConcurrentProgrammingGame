@@ -14,7 +14,7 @@ public class ControlPanelManager : MonoBehaviour
     [SerializeField] Animator animator;
 
     private GameController Controller;
-    private List<Tuple<string, ClassValue.ClassType>> scripts = new List<Tuple<string, ClassValue.ClassType>>();
+    private List<Tuple<string, int>> scripts = new List<Tuple<string, int>>();
 
     private void Awake()
     {
@@ -23,7 +23,7 @@ public class ControlPanelManager : MonoBehaviour
 
     private void Start()
     {
-        scripts = new List<Tuple<string, ClassValue.ClassType>>();
+        scripts = new List<Tuple<string, int>>();
         Controller = GameController.instance;
     }
     
@@ -34,12 +34,13 @@ public class ControlPanelManager : MonoBehaviour
             Destroy(child.gameObject);
         }
         int index = 0;
-        foreach (Tuple<string, ClassValue.ClassType> script in scripts)
+        foreach (Tuple<string, int> script in scripts)
         {
             GameObject btnObj = Instantiate(ControlElementPrefab, Parent);
             btnObj.GetComponent<ControlPanelElement>().index = index;
             btnObj.GetComponent<ControlPanelElement>().scriptName = script.Item1;
-            btnObj.GetComponent<ControlPanelElement>().ClassType = script.Item2;
+            btnObj.GetComponent<ControlPanelElement>().currentClass = script.Item2;
+            btnObj.GetComponent<ControlPanelElement>().enabledClasses = GameController.enabledClasses;
             index++;
         }
         if (scripts.Count < maxPlayers)
@@ -118,12 +119,12 @@ public class ControlPanelManager : MonoBehaviour
 
     public void EditComplete(string filename, int index)
     {
-        scripts[index]= new Tuple<string, ClassValue.ClassType>(filename, scripts[index].Item2);
+        scripts[index]= new Tuple<string, int>(filename, scripts[index].Item2);
     }
 
     public void Add(string filename)
     {
-        scripts.Add(new Tuple<string, ClassValue.ClassType>(filename, ClassValue.ClassType.Damage));
+        scripts.Add(new Tuple<string, int>(filename, 0));
         Controller.AddPlayer(ClassValue.ClassType.Damage, filename);
     }
 
@@ -132,10 +133,10 @@ public class ControlPanelManager : MonoBehaviour
         Controller.LoadScript(filename);
     }
 
-    public void UpdateClass(int index, ClassValue.ClassType classType)
+    public void UpdateClass(int index, int currentClass)
     {
-        scripts[index] = new Tuple<string, ClassValue.ClassType>(scripts[index].Item1, classType);
-        Controller.UpdatePlayerClass(index, classType, scripts[index].Item1);
+        scripts[index] = new Tuple<string, int>(scripts[index].Item1, currentClass);
+        Controller.UpdatePlayerClass(index, GameController.enabledClasses[currentClass], scripts[index].Item1);
     }
 
 }

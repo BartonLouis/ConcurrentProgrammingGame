@@ -101,6 +101,9 @@ namespace Interpreter
                 this.Root = program;
                 NextInstructionCallStack = new Stack<RuleContext>();
                 NextInstructionCallStack.Push(Root);
+            } else
+            {
+                Debug.Log("Script Error!: " + ErrorListener.GetErrors());
             }
         }
         
