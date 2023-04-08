@@ -382,8 +382,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6029346466492614412, guid: 1c3f218908a91c849801ef5354fcac29,
         type: 3}
+      propertyPath: m_text
+      value: Battle For ConcurrenCity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6029346466492614412, guid: 1c3f218908a91c849801ef5354fcac29,
+        type: 3}
       propertyPath: m_fontSize
-      value: 55.5
+      value: 59.15
       objectReference: {fileID: 0}
     - target: {fileID: 6029346466492614412, guid: 1c3f218908a91c849801ef5354fcac29,
         type: 3}
