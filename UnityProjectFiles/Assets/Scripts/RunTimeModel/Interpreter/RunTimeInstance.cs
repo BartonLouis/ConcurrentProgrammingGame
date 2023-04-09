@@ -30,7 +30,7 @@ namespace Interpreter
             {"Defend",          (c) => {return 4;} },
             {"Block",           (c) => {return 6;} },
             {"Lock",            (c) => {return 5;} },
-            {"ChargeUp",        (c) => {return 8;} },
+            {"ChargeUp",        (c) => {return 6;} },
             {"SendMessageTo",   (c) => {return 1;} },
             {"SendMessageToAll",(c) => {
                 // Logic to get the number of players alive and multiple by cost of sending one message

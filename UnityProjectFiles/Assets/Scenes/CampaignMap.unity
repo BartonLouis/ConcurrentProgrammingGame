@@ -278,7 +278,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.3
+  m_fontSize: 54.55
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -360,12 +360,22 @@ PrefabInstance:
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: numTank
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: numCores
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: 87ed822d026ff1741846b9272d6827a8, type: 3}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
+      propertyPath: levelName
+      value: Level5
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
@@ -789,6 +799,11 @@ PrefabInstance:
       propertyPath: numCores
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: 6cd54f43ec689fc4d803692b24e55119, type: 3}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: levelName
@@ -1238,6 +1253,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: a7f178320c60b4a40a52161b7ec6ca77, type: 3}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
       propertyPath: numDamage
       value: 3
       objectReference: {fileID: 0}
@@ -1439,6 +1459,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: 2dbf42565071c80409431636fc899839, type: 3}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
       propertyPath: levelName
       value: Level4
       objectReference: {fileID: 0}
@@ -1636,7 +1661,7 @@ PrefabInstance:
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: numTank
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
@@ -1645,13 +1670,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: 6c6f38b80c757f34b84f592fbd78e4f0, type: 3}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
       propertyPath: levelName
       value: Level3
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: numDamage
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
@@ -2190,6 +2220,11 @@ PrefabInstance:
       propertyPath: numCores
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
+        type: 3}
+      propertyPath: levelHint
+      value: 
+      objectReference: {fileID: 4900000, guid: a1a3ecc4041cd914985384419b8384ac, type: 3}
     - target: {fileID: 6207511480464278803, guid: 95d30e93bb5830247a639f0f54cc1dfe,
         type: 3}
       propertyPath: numDamage

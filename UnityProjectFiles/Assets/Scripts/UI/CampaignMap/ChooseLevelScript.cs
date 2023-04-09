@@ -20,6 +20,7 @@ public class ChooseLevelScript : MonoBehaviour
     public int numSupport = 0;
     public int numTank = 0;
     public ClassValue.ClassType[] enabledClasses;
+    public TextAsset levelHint;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +33,6 @@ public class ChooseLevelScript : MonoBehaviour
 
     public void LoadLevel()
     {
-        CampaignMapController.instance.LoadLevel(levelName, team1Players, team2Players, numCores, minQueueTime, maxQueueTime, yieldBoost, timeBetweenTurns, numDamage, numSupport, numTank, enabledClasses);
+        CampaignMapController.instance.LoadLevel(levelName, team1Players, team2Players, numCores, minQueueTime, maxQueueTime, yieldBoost, timeBetweenTurns, numDamage, numSupport, numTank, enabledClasses, levelHint);
     }
 }

@@ -1,6 +1,6 @@
-DefendSelf
 enemy <- GetEnemyOfType Any
 Block enemy
+DefendSelf
 teammate <- GetTeammateOfType Any
 Defend teammate
 Attack enemy

@@ -1,0 +1,5 @@
+teammate <- GetTeammateOfType Any
+Boost teammate
+HealSelf
+Heal teammate
+HealSelf

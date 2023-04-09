@@ -1,0 +1,18 @@
+You're heavily outnumbered here!
+
+It's time to learn your most powerful weapon. Charged Moves.
+To perform a charged move, a character must draw energy from the resource points either side of them. To do this, use the Lock command to Lock them, like this:
+
+	Lock Left
+	Lock Right
+
+Both resources must be locked, and only one character can lock them at a time. Once both resources are locked, a character can charge up, like this:
+
+	Lock Left
+	Lock Right
+	ChargeUp
+
+Their next operation will be vastly more powerful, attacking an enemy will likely one-shot them, healing a teammate will return them to full HP, etc.
+
+Here's the catch. Locking resources is time-consuming, and there is a risk of deadlock. This is where all characters get stuck waiting for a resource to become available, and eventually get picked off one by one by the enemy.
+Your challenge is to write scripts which avoid deadlock, and can kill the enemy team fast enough to avoid defeat!

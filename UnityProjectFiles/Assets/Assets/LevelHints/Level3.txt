@@ -1,0 +1,17 @@
+You've unlocked a new Character type!
+To change a characters class, just click on their icon in the control panel.
+
+Meet the Support hero. They have less health, and deal less damage, but can heal teammates or boost their damage.
+
+Try out the following instructions with your new hero:
+
+	teammate <- GetTeammateOfType Any/Damage/Support
+	Heal teammate
+	Boost teammate
+
+It's worth knowing now that all characters can heal themselves for a small amount, or defend themselves to block some incoming damage. This can be done with these instructions:
+
+	HealSelf
+	DefendSelf
+
+You may need them to keep your support alive!

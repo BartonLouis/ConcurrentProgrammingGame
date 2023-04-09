@@ -1,6 +1,18 @@
-enemy <- GetEnemyOfType Any
-Attack enemy
-is_full <- IsMaxHealth
-if not is_full {
-	defend_self
+# Prepare 1st attack
+Lock Left
+Lock Right
+ChargeUp
+
+while True {
+	# Request support
+	teammate <- GetTeammateOfType Support
+	exists <- IsNotNone teammate
+	if exists {
+		SendMessageToTeammate {Self "Boost"}
+	}
+
+	# Attack enemy
+	message <- Listen
+	target <- GetPlayerComponent message
+	Attack target
 }

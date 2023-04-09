@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
 
     public static GameController instance;
 
+    public static TextAsset levelHint;
     public static int MinPlayers = 3;
     public static int MaxPlayers = 3;
     public static int Team2Players = 3;
@@ -70,6 +71,10 @@ public class GameController : MonoBehaviour
 
     private void Start()
     {
+        if (levelHint == null)
+            LevelHintController.instance.gameObject.SetActive(false);
+        else
+            LevelHintController.instance.SetText(levelHint);
         AudioManager.instance.PlayMusic("Battle");
         IDE = IDEController.instance;
         CharacterPanel = ControlPanelManager.instance;
@@ -102,7 +107,10 @@ public class GameController : MonoBehaviour
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Damage;
             if (level == "")
+            {
+                Debug.Log("Here");
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            }
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
             count++;
@@ -112,7 +120,10 @@ public class GameController : MonoBehaviour
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Support;
             if (level == "")
+            {
+                Debug.Log("Here");
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            }
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
             count++;
@@ -122,7 +133,10 @@ public class GameController : MonoBehaviour
         {
             ClassValue.ClassType playerClass = ClassValue.ClassType.Tank;
             if (level == "")
+            {
+                Debug.Log("Here");
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
+            }
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());
             count++;
@@ -144,7 +158,7 @@ public class GameController : MonoBehaviour
                     playerClass = ClassValue.ClassType.Tank;
                     break;
             }
-            if (level == null)
+            if (level == "")
                 Team2.AddPlayer(playerClass, playerClass.ToString() + Team2Difficulty);
             else
                 Team2.AddPlayer(playerClass, level + playerClass.ToString());

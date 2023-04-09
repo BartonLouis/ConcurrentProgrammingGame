@@ -1,6 +1,11 @@
-DefendSelf
-enemy <- GetEnemyOfType Any
+enemy <- GetEnemyOfType Damage
 Block enemy
-teammate <- GetTeammateOfType Any
-Defend teammate
-Attack enemy
+
+teammate <- GetTeammateOfType Support
+exists <- IsNotNone teammate
+if exists {
+	Defend teammate
+}
+
+
+SendMessageTo teammate {Self, "Help"}

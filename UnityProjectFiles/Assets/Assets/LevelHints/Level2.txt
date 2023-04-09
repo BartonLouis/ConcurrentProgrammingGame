@@ -1,0 +1,15 @@
+Now there's 2 of you!
+
+Attacking randomly can work, but is unreliable. To win this level, you'll have to pick your targets, and focus on them until they're dead.
+
+To do this, use if statements to check if your target is still alive.
+
+alive <- IsNotNone enemy
+if alive {
+	Attack enemy	
+} else {
+	enemy <- GetEnemyOfType Any
+}
+
+Note that when you reach the end of a script, it loops back to the beginning. You can use this to your advantage!
+Good Luck!

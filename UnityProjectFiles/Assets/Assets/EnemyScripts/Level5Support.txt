@@ -1,0 +1,6 @@
+teammate <- GetTeammateOfType Any
+max_health <- IsMaxHealth teammate
+if not max_health {
+	Heal teammate
+}
+Boost teammate

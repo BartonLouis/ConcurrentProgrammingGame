@@ -1,7 +1,5 @@
-teammate <- GetTeammateOfType Damage
+message <- Listen
+teammate <- GetPlayerComponent message
 Heal teammate
-teammate <- GetTeammateOfType Tank
-Heal teammate
-teammate <- GetTeammateOfType Support
-Heal teammate
+Boost teammate
 HealSelf

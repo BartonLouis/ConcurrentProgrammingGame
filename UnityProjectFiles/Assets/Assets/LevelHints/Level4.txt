@@ -1,0 +1,41 @@
+This is a big one! Your next new character is the Tank class.
+
+These guys can take a hit! They're good at defending teammates, or blocking enemy attacks, mitigating damage to your team.
+They're also good at sending messages, taking less time to communicate to the whole team, making them strong commanders.
+
+The operations available to a Tank are the following:
+	
+	teammate <- GetTeammateOfType Any/Damage/Support/Tank
+	Defend teammate
+
+	enemy <- GetEnemyOfType Any Any/Damage/Support/Tank
+	Block enemy
+
+Messaging is key to success. You can coordinate attacks on the same target, or ask for help from teammates.
+To Send a message, you need a player reference, whether thats an enemy, a teammate or Self (meaning the character controlled by this script)
+You also need a text component, stating what to do with the information in the message. The two are put together like this:
+
+	{ <player>, <text> }
+
+The curly brackets are really important.
+
+
+You can send a message to one teammate, with:
+
+	SendMessageTo <teammate> <message>
+
+Or, you can send a message to all teammates with:
+
+	SendMessageToAll <message>
+
+
+To receive a message, a character can use the command:
+
+	message <- Listen
+
+and then read the text and player components with these commands:
+
+	player <- GetPlayerComponent message
+	text <- GetTextComponent message
+
+Spend some time getting used to sending messages, and then use them to coordinate your team to better defeat the enemy!

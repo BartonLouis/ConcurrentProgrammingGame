@@ -123,12 +123,12 @@ public abstract class Character : MonoBehaviour
         if (Team.TeamNum == 2)
         {
             ChargeMultiplier *= .8f;
-            BaseMaxHealth *= .8f;
+            BaseMaxHealth *= 1f;
             BaseDamage *= .8f;
-            BaseSelfHeal *= .8f;
-            BaseTeamHeal *= .8f;
-            BaseSelfDefend *= .8f;
-            BaseBoost *= .8f;
+            BaseSelfHeal *= 1f;
+            BaseTeamHeal *= 1f;
+            BaseSelfDefend *= 1f;
+            BaseBoost *= 1.2f;
             BaseBlock *= .8f;
         }
     }
@@ -201,7 +201,7 @@ public abstract class Character : MonoBehaviour
         float totalMultiplier = 1;
         foreach(KeyValuePair<float, int> multiplier in DefenseMultipliers)
         {
-            totalMultiplier += multiplier.Key;
+            totalMultiplier -= multiplier.Key;
         }
         totalMultiplier = Mathf.Max(totalMultiplier, 0);
         // Subtract adjusted amount from health and cap it at 0
@@ -232,8 +232,7 @@ public abstract class Character : MonoBehaviour
 
     public void Die()
     {
-        Anim.SetTrigger("IsDead");
-        Anim.SetTrigger("Hurt");
+        Anim.SetBool("IsDead", true);
         alive = false;
         tookTurn = false;
         EnergyBar.Hide();
@@ -489,6 +488,7 @@ public abstract class Character : MonoBehaviour
             Destroy(DebuffStack.gameObject);
         if (chargeEffect != null)
             Destroy(chargeEffect);
+        Anim.SetBool("IsDead", false);
         Anim.ResetTrigger("Attack");
         Anim.ResetTrigger("Cast");
         Anim.SetTrigger("Default");

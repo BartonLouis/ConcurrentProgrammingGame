@@ -12,10 +12,10 @@ public class Tank : Character
         BaseDamage = 20;
         BaseSelfHeal = 15;
         BaseTeamHeal = 0;
-        BaseSelfDefend = 0.6f;
-        BaseTeamDefend = 0.6f;
+        BaseSelfDefend = 0.4f;
+        BaseTeamDefend = 0.4f;
         BaseBoost = 0.0f;
-        BaseBlock = -0.5f;
+        BaseBlock = 0.5f;
 
         ClassType = ClassValue.ClassType.Tank;
     }

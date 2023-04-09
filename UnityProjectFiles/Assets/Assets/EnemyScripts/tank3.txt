@@ -1,6 +1,21 @@
-DefendSelf
-enemy <- GetEnemyOfType Any
-Block enemy
-teammate <- GetTeammateOfType Any
-Defend teammate
-Attack enemy
+exists <- True
+teammate <- GetTeammateOfType Support
+while exits {
+	target <- GetEnemyOfType Tank
+	exists <- IsNotNone target
+	if exists {
+		SendMessageToAll {target, "Target"}
+		SendMessageTo teammate {Self, "Heal"}
+	}
+}
+while True {
+	target <- GetEnemyOfType Any
+	alive <- IsNotNone target
+	while alive {
+		Block target
+		teammate2 <- GetTeammateOfType Any
+		Defend teammate2
+	}
+	SendMessageToAll {target, "Target"}
+	SendMessageTo teammate {Self, "Heal"}
+}

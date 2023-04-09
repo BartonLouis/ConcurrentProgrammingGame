@@ -1,0 +1,14 @@
+This is your first enemy! 
+Your job is to build an army to defend against them.
+To add a character to your army, click on the plus icon on the control bar, then "new script +" to write their instructions for the upcoming battle.
+
+To attack an enemy, you first need a reference to that enemy.
+You can achieve this using the line:
+
+enemy <- GetEnemyOfType Any
+
+To Attack that enemy, you can then call the Attack operation, like this:
+
+Attack enemy
+
+Put it all together into one script to defeat your foe!

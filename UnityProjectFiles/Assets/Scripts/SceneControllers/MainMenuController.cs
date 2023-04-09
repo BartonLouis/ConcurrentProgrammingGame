@@ -73,7 +73,6 @@ public class MainMenuController : MonoBehaviour
 
     public void MasterVolumeChanged(float volume)
     {
-        Debug.Log(volume);
         AudioManager.instance.ChangeVolume("MasterVolume", volume);
     }
 

@@ -24,7 +24,7 @@ public class CampaignMapController : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void LoadLevel(string levelName, int team1Players, int team2Players, int numCores, int minQueueTime, int maxQueueTime, int yieldBoost, int timeBetweenTurns, int numDamage, int numSupport, int numTank, ClassValue.ClassType[] enabledClasses)
+    public void LoadLevel(string levelName, int team1Players, int team2Players, int numCores, int minQueueTime, int maxQueueTime, int yieldBoost, int timeBetweenTurns, int numDamage, int numSupport, int numTank, ClassValue.ClassType[] enabledClasses, TextAsset levelHint)
     {
         Debug.Log("Loading Level: " + levelName);
         AudioManager.instance.Play("Menu1");
@@ -41,6 +41,7 @@ public class CampaignMapController : MonoBehaviour
         GameController.numSupport = numSupport;
         GameController.numTank = numTank;
         GameController.enabledClasses = enabledClasses;
+        GameController.levelHint = levelHint;
         SceneManager.LoadScene("Battle");
     }
 

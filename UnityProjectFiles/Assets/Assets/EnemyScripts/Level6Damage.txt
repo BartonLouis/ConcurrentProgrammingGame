@@ -1,0 +1,15 @@
+Lock Left
+Lock Right
+ChargeUp
+
+while True {
+	teammate <- GetTeammateOfType Support
+	exists <- IsNotNone teammate
+	if exists {
+		SendMessageToTeammate {Self "Boost"}
+	}
+
+	message <- Listen
+	target <- GetPlayerComponent message
+	Attack target
+}
